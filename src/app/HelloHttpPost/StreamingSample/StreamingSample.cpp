@@ -3,17 +3,23 @@
 #include <string>
 #include <thread>
 #include <chrono>
+#include <memory>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/lexical_cast.hpp>
 #include "opencvlib.h"
 #include <opencv2/opencv.hpp>
 
+#include "DeviceFinder.h"
+#include "CameraController.h"
+
 using namespace std;
 using namespace boost;
+using boost::lexical_cast;
 
 // http://pastebin.com/ji6CfjBc#
 class multicast_manager
@@ -86,66 +92,54 @@ public:
 		}
 	}
 
+	// get device description
 	void LaunchConnection(string description_url){
 		size_t last_slash = description_url.rfind('/');
 		size_t colon = description_url.rfind(':');
 		string server = description_url.substr(7, colon - 7);
 		string port = description_url.substr(colon + 1, last_slash - colon - 1);
-		//server = "10.0.0.1";
+
 		string path = description_url.substr(last_slash);
+		stringstream ss;
+		ss << "GET " << path << " HTTP/1.1\r\n";
+		ss << "Host: " << server << "\r\n";
+		ss << "Accept: */*\r\n";
+		ss << "Connection: close\r\n\r\n";
+
 		ostream request_stream(&tcp_request_);
-		request_stream << "GET " << path << " HTTP/1.1\r\n";
-		request_stream << "Host: " << server << "\r\n";
-		request_stream << "Accept: */*\r\n";
-		request_stream << "Connection: close\r\n\r\n";
-		asio::ip::tcp::resolver::query query(server, port);
-		tcp_resolver_.async_resolve(query,
-			boost::bind(&multicast_manager::handle_resolve, this,
-			boost::asio::placeholders::error,
-			boost::asio::placeholders::iterator));
+		request_stream << ss.str();
+
+		cout << "-- device description get request ---" << endl;
+		cout << ss.str() << endl;
+		cout << "-- end of device description get request --" << endl;
+
+		// The connection was successful. Send the request.
+		boost::asio::ip::address addr = boost::asio::ip::address::from_string(server);
+		boost::asio::ip::tcp::endpoint endpoint = boost::asio::ip::tcp::endpoint(addr, lexical_cast<unsigned short>(port.c_str()));
+		tcp_socket_.connect(endpoint);
+
+		boost::asio::async_write(tcp_socket_, tcp_request_,
+			boost::bind(&multicast_manager::handle_write_request, this,
+			boost::asio::placeholders::error));
 	}
 
-	void handle_resolve(const boost::system::error_code& err,
-		asio::ip::tcp::resolver::iterator endpoint_iterator)    {
-		if (!err) {
-			// Attempt a connection to each endpoint in the list until we
-			// successfully establish a connection.
-			boost::asio::async_connect(tcp_socket_, endpoint_iterator,
-				boost::bind(&multicast_manager::handle_connect, this,
-				boost::asio::placeholders::error));
-		}
-		else {
-			cout << "Error: " << err.message() << "\n";
-		}
-	}
-
-	void handle_connect(const boost::system::error_code& err) {
-		if (!err) {
-			// The connection was successful. Send the request.
-			boost::asio::async_write(tcp_socket_, tcp_request_,
-				boost::bind(&multicast_manager::handle_write_request, this,
-				boost::asio::placeholders::error));
-		}
-		else {
-			std::cout << "Error: " << err.message() << "\n";
-		}
-	}
-
-
+	// write device descritpion get request to socket
 	void handle_write_request(const boost::system::error_code& err) {
 		if (!err) {
 			// Read the response status line. The response_ streambuf will
 			// automatically grow to accommodate the entire line. The growth may be
 			// limited by passing a maximum size to the streambuf constructor.
-			boost::asio::async_read_until(tcp_socket_, tcp_response_, "\r\n",
+			boost::asio::async_read_until(tcp_socket_, tcp_response_, "\0",
 				boost::bind(&multicast_manager::handle_read_status_line, this,
 				boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 		}
 		else {
+			std::cout << "Failed to write device description get request" << endl;
 			std::cout << "Error: " << err.message() << "\n";
 		}
 	}
 
+	// read device description get request response header
 	void handle_read_status_line(const boost::system::error_code& err, const size_t bytes_transferred) {
 		if (!err) {
 			// Check that response is OK.
@@ -171,22 +165,49 @@ public:
 				boost::asio::placeholders::error));
 		}
 		else {
+			cout << "failed to read device description get response" << endl;
 			std::cout << "Error: " << err << "\n";
 			cout << err.message();
 		}
 	}
 
+	// read get device description response header
 	void handle_read_headers(const boost::system::error_code& err) {
 		if (!err) {
 			// Process the response headers.
 			std::istream response_stream(&tcp_response_);
 			std::string header;
-			while (std::getline(response_stream, header) && header != "\r")
+			//while (std::getline(response_stream, header) && header != "\r")
+			while (std::getline(response_stream, header))
 				std::cout << header << "\n";
 			std::cout << "\n";
 
+			cout << "-- Device Description --" << endl;
+			while (std::getline(response_stream, header)) {
+				std::cout << header << "\n";
+			}
 
-			if (reading_image) {
+			const boost::system::error_code err2;
+			//while (boost::asio::read(tcp_socket_, tcp_response_,
+			//	boost::asio::transfer_at_least(1), err2))
+			//	std::cout << &tcp_response_;
+			cout << "-- End of Device Description --" << endl;
+			
+			boost::asio::async_read_until(tcp_socket_, tcp_response_, "\0",
+				boost::bind(&multicast_manager::handle_read_content, this,
+				boost::asio::placeholders::error));
+
+			// Read the response headers, which are terminated by a blank line.
+			//boost::asio::async_read(tcp_socket_, tcp_response_, 
+			//	boost::bind(&multicast_manager::handle_read_content, this,
+			//	boost::asio::placeholders::error));
+
+			//boost::asio::read(tcp_socket_, tcp_response_);
+			//while (std::getline(response_stream, header)) {
+			//	std::cout << header << "\n";
+			//}
+
+			/*if (reading_image) {
 				size_t n = tcp_response_.size();
 				vector<uint8_t> v;
 				if (n < 12) {
@@ -229,7 +250,7 @@ public:
 					boost::asio::transfer_at_least(1),
 					boost::bind(&multicast_manager::handle_read_content, this,
 					boost::asio::placeholders::error));
-			}
+			}*/
 		}
 		else {
 			std::cout << "Error: " << err << "\n";
@@ -239,7 +260,12 @@ public:
 	void handle_read_content(const boost::system::error_code& err) {
 		if (!err) {
 			// Write all of the data that has been read so far.
-			content << &tcp_response_;
+			 content << &tcp_response_;
+
+			 cout << "-- Device Description --" << endl;
+			 cout << content.rdbuf();
+			 cout << "-- End of Device Description --" << endl;
+
 			// Continue reading remaining data until EOF.
 			boost::asio::async_read(tcp_socket_, tcp_response_,
 				boost::asio::transfer_at_least(1),
@@ -247,6 +273,9 @@ public:
 				boost::asio::placeholders::error));
 		}
 		else if (err != boost::asio::error::eof) {
+			std::cout << "Error: " << err << "\n";
+		}
+		else {
 			std::cout << "Error: " << err << "\n";
 		}
 	}
@@ -282,10 +311,10 @@ public:
 		asio::ip::tcp::resolver::query query(server, port);
 		content.clear();
 		content.str("");
-		tcp_resolver_.async_resolve(query,
+		/*tcp_resolver_.async_resolve(query,
 			boost::bind(&multicast_manager::handle_resolve, this,
 			boost::asio::placeholders::error,
-			boost::asio::placeholders::iterator));
+			boost::asio::placeholders::iterator));*/
 
 	}
 
@@ -308,6 +337,7 @@ public:
 		//request_stream << "Content-Type: application/json-rpc\r\n";
 		request_stream << "Host: " << server << "\r\n";
 		request_stream << "\r\n";
+		cout << request_stream.rdbuf();
 		asio::ip::tcp::resolver::query query(server, port);
 		asio::ip::tcp::resolver::iterator endpoint_iterator = tcp_resolver_.resolve(query);
 		asio::connect(liveview_socket_, endpoint_iterator);
@@ -381,6 +411,7 @@ private:
 	bool reading_image;
 };
 
+/*
 int main(int argc, char* argv[])
 {
 	try
@@ -401,7 +432,56 @@ int main(int argc, char* argv[])
 		std::cerr << "Exception: " << e.what() << "\n";
 	}
 	return 0;
+}*/
+
+int main()
+{
+	try
+	{
+		DeviceFinder finder;
+		finder.Start(NULL);
+		std::shared_ptr<CameraController> cp;
+		string input;
+
+		while (true) {
+			cin >> input;
+
+			if ("x" == input) {
+				break;
+			}
+			else if ("g" == input) {
+				cp = make_shared<CameraController>(finder.GetDeviceDescription());
+				cp->StartStreaming();
+			}
+		}
+	}
+	catch (std::exception& e) {
+		std::cerr << "Exception: " << e.what() << "\n";
+	}
+	return 0;
 }
+
+#include "AsyncTask.h"
+
+class MyTask : public AsyncTask
+{
+public:
+	MyTask(){
+		IoService().post([]() { cout << "post..." << endl; Sleep(1000); cout << "posted" << endl; });
+	}
+	~MyTask(){}
+};
+
+/*int main()
+{
+	MyTask mt;
+	mt.Start(NULL);
+
+	string input;
+	cin >> input;
+
+	return 0;
+}*/
 
 /*
 int main()

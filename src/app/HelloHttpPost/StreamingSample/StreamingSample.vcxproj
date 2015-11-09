@@ -86,11 +86,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraController.h" />
+    <ClInclude Include="DeviceDescription.h" />
+    <ClInclude Include="DeviceFinder.h" />
     <ClInclude Include="opencvlib.h" />
+    <ClInclude Include="AsyncTask.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="DeviceDescription.cpp" />
+    <ClCompile Include="DeviceFinder.cpp" />
+    <ClCompile Include="AsyncTask.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="StreamingSample.cpp" />
   </ItemGroup>
