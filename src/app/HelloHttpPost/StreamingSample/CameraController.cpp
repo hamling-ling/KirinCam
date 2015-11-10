@@ -107,12 +107,12 @@ void CameraController::getLiveImage() {
 	ss << "\r\n";
 
 	cout << ss.str();
-	ostream request_stream(&tcp_request_);
+	ostream request_stream(&liveview_request_);
 	request_stream << ss.str();
 
 	boost::asio::ip::address addr = boost::asio::ip::address::from_string(server);
-	boost::asio::ip::tcp::endpoint endpoint = boost::asio::ip::tcp::endpoint(addr, lexical_cast<unsigned short>(port));
-	liveview_socket_.connect(endpoint);
+	liveview_endpoint_ = boost::asio::ip::tcp::endpoint(addr, lexical_cast<unsigned short>(port));
+	liveview_socket_.connect(liveview_endpoint_);
 
 	boost::asio::async_write(
 		liveview_socket_,
@@ -131,7 +131,7 @@ void CameraController::handleGetLiveImageResponse(const boost::system::error_cod
 		return;
 	}
 
-	boost::asio::async_read_until(liveview_socket_, liveview_response_, "\r\n\r\n",
+	boost::asio::async_read_until(liveview_socket_, liveview_response_, "\r\n",
 		boost::bind(&CameraController::handleGetLiveImageStatusCode, this,
 		boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
@@ -176,15 +176,20 @@ void CameraController::handleGetLiveImageHeader(const boost::system::error_code&
 		return;
 	}
 
-	// Process the response headers.
 	std::istream response_stream(&liveview_response_);
 	std::string header;
+	while (std::getline(response_stream, header) && header != "\r")
+		std::cout << header << "\n";
+	std::cout << "\n";
 
-	while (std::getline(response_stream, header))
-		std::cout << header << endl;
-	std::cout << endl;
+	// Write whatever content we already have to output.
+	if (liveview_response_.size() > 0)
+		std::cout << &liveview_response_;
 
-	boost::asio::async_read_until(liveview_socket_, liveview_response_, "\0",
+
+	// Start reading remaining data until EOF.
+	boost::asio::async_read(liveview_socket_, liveview_response_,
+		boost::asio::transfer_at_least(1),
 		boost::bind(&CameraController::handleGetLiveViewContent, this,
 		boost::asio::placeholders::error));
 }
@@ -196,13 +201,14 @@ void CameraController::handleGetLiveViewContent(const boost::system::error_code&
 		content_ << &liveview_response_;
 
 		// Continue reading remaining data until EOF.
-		boost::asio::async_read(tcp_socket_, liveview_response_,
+		boost::asio::async_read(liveview_socket_, liveview_response_,
 			boost::asio::transfer_at_least(1),
 			boost::bind(&CameraController::handleGetLiveViewContent, this,
 			boost::asio::placeholders::error));
 	}
 	else if (error == boost::asio::error::eof) {
 		std::cout << "End of Content" << endl;
+		Close();
 	}
 	else {
 		std::cout << "Error: " << error << endl;
@@ -213,4 +219,5 @@ void CameraController::handleGetLiveViewContent(const boost::system::error_code&
 void CameraController::Close()
 {
 	tcp_socket_.close();
+	liveview_socket_.close();
 }

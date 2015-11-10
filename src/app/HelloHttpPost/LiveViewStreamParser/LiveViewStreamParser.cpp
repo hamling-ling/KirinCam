@@ -196,10 +196,6 @@ class Status : public FixedSizeData<1>
 class AdditionalStatus : public FixedSizeData<1>
 {};
 
-class PayloadHeader : public BaseField
-{
-};
-
 class CommonHeader : public BaseField
 {
 public:
@@ -228,7 +224,7 @@ class ImagePayloadHeader : public PayloadHeader
 {
 	FixedSizeEmptyData<4> _reserved;
 	FixedSizeEmptyData<1> _flag;
-	FixedSizeEmptyData<5> _reserved;
+	FixedSizeEmptyData<5> _reserved2;
 };
 
 class FramePayloadHeader : public PayloadHeader

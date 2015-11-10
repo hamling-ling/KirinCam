@@ -16,6 +16,7 @@ private:
 	DeviceDescription deviceDescription_;
 	boost::asio::ip::tcp::endpoint tcp_endpoint_;
 	boost::asio::ip::tcp::socket tcp_socket_;
+	boost::asio::ip::tcp::endpoint liveview_endpoint_;
 	boost::asio::ip::tcp::socket liveview_socket_;
 	boost::asio::streambuf tcp_request_;
 	boost::asio::streambuf tcp_response_;
