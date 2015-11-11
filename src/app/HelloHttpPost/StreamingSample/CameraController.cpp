@@ -1,5 +1,6 @@
 #include "CameraController.h"
 #include <ostream>
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -36,8 +37,6 @@ bool CameraController::StartStreaming()
 	request_stream << "\r\n";
 	request_stream << json_request;
 	asio::ip::tcp::resolver::query query(server, port);
-	content_.clear();
-	content_.str("");
 
 	boost::asio::ip::address addr = boost::asio::ip::address::from_string(server);
 	boost::asio::ip::tcp::endpoint endpoint = boost::asio::ip::tcp::endpoint(addr, lexical_cast<unsigned short>(port.c_str()));
@@ -54,7 +53,7 @@ bool CameraController::StartStreaming()
 void CameraController::handleWriteRequest(const boost::system::error_code& err) {
 	if (err) {
 		std::cout << "Error: " << err.message() << "\n";
-		Close();
+		Cleanup();
 		return;
 	}
 	boost::asio::async_read_until(tcp_socket_, tcp_response_, "\0",
@@ -65,7 +64,7 @@ void CameraController::handleWriteRequest(const boost::system::error_code& err) 
 void CameraController::handleReadStatusLine(const boost::system::error_code& err, const size_t bytes_transferred) {
 	if (err) {
 		std::cout << "Error: " << err.message() << "\n";
-		Close();
+		Cleanup();
 		return;
 	}
 
@@ -127,7 +126,7 @@ void CameraController::handleGetLiveImageResponse(const boost::system::error_cod
 {
 	if (error) {
 		cout << "handleGetLiveImageResponse error: " << error.message() << endl;
-		Close();
+		Cleanup();
 		return;
 	}
 
@@ -140,7 +139,7 @@ void CameraController::handleGetLiveImageStatusCode(const boost::system::error_c
 {
 	if (error) {
 		cout << "handleGetLiveImageStatusCode error: " << error.message() << endl;
-		Close();
+		Cleanup();
 		return;
 	}
 
@@ -154,13 +153,13 @@ void CameraController::handleGetLiveImageStatusCode(const boost::system::error_c
 	std::getline(response_stream, status_message);
 	if (!response_stream || http_version.substr(0, 5) != "HTTP/") {
 		std::cout << "Invalid response" << endl;
-		Close();
+		Cleanup();
 		return;
 	}
 	if (status_code != 200) {
 		std::cout << "Response returned with status code ";
 		std::cout << status_code << endl;
-		Close();
+		Cleanup();
 		return;
 	}
 	// Read the response headers, which are terminated by a blank line.
@@ -186,6 +185,8 @@ void CameraController::handleGetLiveImageHeader(const boost::system::error_code&
 	if (liveview_response_.size() > 0)
 		std::cout << &liveview_response_;
 
+	liveview_response_.consume(liveview_response_.size());
+	contentbuf_.consume(contentbuf_.size());
 
 	// Start reading remaining data until EOF.
 	boost::asio::async_read(liveview_socket_, liveview_response_,
@@ -197,9 +198,17 @@ void CameraController::handleGetLiveImageHeader(const boost::system::error_code&
 void CameraController::handleGetLiveViewContent(const boost::system::error_code& error)
 {
 	if (!error) {
-		// Write all of the data that has been read so far.
-		content_ << &liveview_response_;
+		ostream os(&contentbuf_);
+		int respsize = liveview_response_.size();
 
+		os << &liveview_response_;
+		cout << "content size:" << contentbuf_.size() << ", response size:" << respsize << endl;
+
+		if (contentbuf_.size() > 1024 * 64) {
+			Dump();
+			Cleanup();
+			return;
+		}
 		// Continue reading remaining data until EOF.
 		boost::asio::async_read(liveview_socket_, liveview_response_,
 			boost::asio::transfer_at_least(1),
@@ -208,16 +217,33 @@ void CameraController::handleGetLiveViewContent(const boost::system::error_code&
 	}
 	else if (error == boost::asio::error::eof) {
 		std::cout << "End of Content" << endl;
-		Close();
+		Cleanup();
 	}
 	else {
 		std::cout << "Error: " << error << endl;
-		Close();
+		Cleanup();
 	}
 }
 
-void CameraController::Close()
+void CameraController::Cleanup()
 {
 	tcp_socket_.close();
 	liveview_socket_.close();
+	tcp_request_.consume(tcp_request_.size());
+	tcp_response_.consume(tcp_response_.size());
+	liveview_request_.consume(liveview_request_.size());
+	liveview_response_.consume(liveview_response_.size());
+	contentbuf_.consume(contentbuf_.size());
+}
+
+void CameraController::Dump()
+{
+	ofstream ofs("out.dat");
+	if (!ofs) {
+		cout << "dump failed" << endl;
+		return;
+	}
+
+	cout << "content size:" << contentbuf_.size() << endl;
+	ofs << &contentbuf_;
 }

@@ -22,7 +22,8 @@ private:
 	boost::asio::streambuf tcp_response_;
 	boost::asio::streambuf liveview_request_;
 	boost::asio::streambuf liveview_response_;
-	std::stringstream content_;
+	boost::asio::streambuf contentbuf_;
+	//std::stringstream content_;
 
 	void handleWriteRequest(const boost::system::error_code& err);
 	void handleReadStatusLine(const boost::system::error_code& err, const size_t bytes_transferred);
@@ -32,6 +33,7 @@ private:
 	void handleGetLiveImageHeader(const boost::system::error_code& error);
 	void handleGetLiveViewContent(const boost::system::error_code& error);
 
-	void Close();
+	void Cleanup();
+	void Dump();
 };
 

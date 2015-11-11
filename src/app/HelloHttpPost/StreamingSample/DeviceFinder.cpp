@@ -233,5 +233,7 @@ void DeviceFinder::Cleanup()
 {
 	udp_socket_.close();
 	tcp_socket_.close();
+	tcp_request_.consume(tcp_request_.size());
+	tcp_response_.consume(tcp_response_.size());
 	content_.clear();
 }
