@@ -23,6 +23,65 @@ enum PayloadType
 	kPayloadTypeLiveViewFrameInformation = 0x02,
 };
 
+enum FrameCategory {
+	kFrameCategoryInvalid = 0x00,
+	kFrameCategoryContrastAF = 0x01,
+	kFrameCategoryPhaseDetectioniAF = 0x02,
+	kFrameCategoryReserved = 0x03,
+	kFrameCategoryFace = 0x04,
+	kFrameCategoryTracking = 0x05,
+};
+
+enum FrameStatus {
+	kFrameStatusInvalid = 0x00,
+	kFrameStatusNormal = 0x01,
+	kFrameStatusMain = 0x02,
+	kFrameStatusSub = 0x03,
+	kFrameStatusFocused = 0x04,
+	kFrameStatusReserved1 = 0x05,
+	kFrameStatusReserved2 = 0x06,
+	kFrameStatusReserved3 = 0x07,
+};
+
+enum FrameAdditionalStatus {
+	kFrameAdditionalStatusInvalid = 0x00,
+	kFrameAdditionalStatusNormal = 0x01,
+	kFrameAdditionalStatusLargeFrame = 0x02,
+};
+
+std::vector<PayloadType> kPayloadTypes =
+{
+	kPayloadTypeLiveViewImages,
+	kPayloadTypeLiveViewFrameInformation,
+
+};
+
+std::vector<FrameCategory> kFrameCategories = {
+	kFrameCategoryInvalid,
+	kFrameCategoryContrastAF,
+	kFrameCategoryPhaseDetectioniAF,
+	kFrameCategoryReserved,
+	kFrameCategoryFace,
+	kFrameCategoryTracking,
+};
+
+std::vector<FrameStatus> kFrameStatus = {
+	kFrameStatusInvalid,
+	kFrameStatusNormal,
+	kFrameStatusMain,
+	kFrameStatusSub,
+	kFrameStatusFocused,
+	kFrameStatusReserved1,
+	kFrameStatusReserved1,
+	kFrameStatusReserved1,
+};
+
+std::vector<FrameAdditionalStatus> kFrameAdditionalStatus = {
+	kFrameAdditionalStatusInvalid,
+	kFrameAdditionalStatusNormal,
+	kFrameAdditionalStatusLargeFrame,
+};
+
 uint8_t kCommonHaderStartByte = 0xFF;
 uint8_t kPayloadHeaderStartCode[4] = { 0x24, 0x35, 0x68, 0x79 };
 uint8_t kFrameDataVersion[2] = { 0x01, 0x00 };
@@ -46,6 +105,7 @@ public:
 	uint32_t Pos() { return _pos; }
 protected:
 	void SetPos(uint32_t pos) { _pos = pos; }
+	virtual void Filled() = 0;
 private:
 	uint32_t _pos;
 	size_t _size;
@@ -58,6 +118,15 @@ class BaseElement : public IIncrementalFill
 public:
 	BaseElement() {}
 	virtual ~BaseElement(){};
+	virtual bool Fill(asio::streambuf& buf)
+	{
+		if (IsFull()) {
+			Filled();
+		}
+		return true;
+	}
+protected:
+	void Filled() {}
 };
 
 template<int byteLength>
@@ -79,6 +148,9 @@ public:
 		buf.consume(copyBytes);
 
 		SetPos(pos + copyBytes);
+
+		BaseElement::Fill(buf);
+
 		return true;
 	}
 	const uint8_t* Data() { return &_data[0]; }
@@ -97,7 +169,7 @@ public:
 	~FixedSizeEmptyData(){}
 	virtual bool Fill(asio::streambuf& buf)
 	{
-		return false;
+		return true;
 	}
 };
 
@@ -110,7 +182,7 @@ public:
 	~EmptyData(){}
 	virtual bool Fill(asio::streambuf& buf)
 	{
-		return false;
+		return true;
 	}
 };
 
@@ -136,6 +208,9 @@ public:
 		buf.consume(copyBytes);
 
 		SetPos(pos + copyBytes);
+
+		BaseElement::Fill(buf);
+
 		return true;
 	}
 	const uint8_t* Data() { return &_data[0]; }
@@ -213,74 +288,258 @@ private:
 	std::list<BaseElement* >::iterator _it;
 };
 
-class StartByte : public FixedSizeData<1>
+class ConstByte : public FixedSizeData<1>
 {
 public:
+	ConstByte(uint8_t val) : _expectedValue(val) { }
 	virtual bool Fill(asio::streambuf& buf)
 	{
 		const char* cp = boost::asio::buffer_cast<const char*>(buf.data());
-		if (static_cast<const char>(kCommonHaderStartByte) != *cp) {
+		if (static_cast<const char>(_expectedValue) != *cp) {
 			return false;
 		}
 		return FixedSizeData<1>::Fill(buf);
 	}
+protected:
+	const uint8_t _expectedValue;
 };
 
-class PayloadTypeByte : public FixedSizeData<1>
+class StartByte : public ConstByte
 {
 public:
-	virtual bool Fill(asio::streambuf& buf)
-	{
-		const char* cp = asio::buffer_cast<const char*>(buf.data());
-		if (static_cast<const char>(kPayloadTypeLiveViewImages) != *cp &&
-			kPayloadTypeLiveViewFrameInformation != *cp) {
-			return false;
-		}
-		return FixedSizeData<1>::Fill(buf);
-	}
-	PayloadType PayloadType()
+	StartByte() : ConstByte(0xFF) {}
+	~StartByte() {}
+};
+
+class SingleByteNumber : public FixedSizeData<1>
+{
+public:
+	SingleByteNumber() : _value(0) {}
+	~SingleByteNumber(){}
+protected:
+	void Filled()
 	{
 		const uint8_t *data = Data();
-		enum PayloadType pt = static_cast<enum PayloadType>(*data);
-		return pt;
+		_value = *(data + 0);
 	}
+	uint8_t Value() { return _value; }
+private:
+	uint8_t _value;
 };
 
-class SequenceNumber : public FixedSizeData<2>
+class WByteNumber : public FixedSizeData<2>
 {
+public:
+	WByteNumber() : _value(0) {}
+	~WByteNumber(){}
+protected:
+	void Filled()
+	{
+		const uint8_t *data = Data();
+		const uint8_t val0 = *(data + 0);
+		const uint8_t val1 = *(data + 1);
+
+		_value = val0 << 8 | val1;
+	}
+	uint16_t Value() { return _value; }
+private:
+	uint16_t _value;
 };
 
-class TimeStamp : public FixedSizeData<4>
+class TriByteNumber : public FixedSizeData<3>
 {
+public:
+	TriByteNumber() : _value(0) {}
+	~TriByteNumber(){}
+protected:
+	void Filled()
+	{
+		const uint8_t *data = Data();
+		const uint8_t val0 = *(data + 0);
+		const uint8_t val1 = *(data + 1);
+		const uint8_t val2 = *(data + 2);
+
+		_value = val0 << 16 | val1 << 8 | val2;
+	}
+	uint32_t Value() { return _value; }
+private:
+	uint32_t _value;
 };
 
-class StartCode : public FixedSizeData<4>
+class QuadByteNumber : public FixedSizeData<4>
 {
+public:
+	QuadByteNumber() : _value(0) {}
+	~QuadByteNumber(){}
+protected:
+	void Filled()
+	{
+		const uint8_t *data = Data();
+		const uint8_t val0 = *(data + 0);
+		const uint8_t val1 = *(data + 1);
+		const uint8_t val2 = *(data + 2);
+		const uint8_t val3 = *(data + 3);
+
+		_value = val0 << 24 | val1 << 16 | val2 << 8 | val3;
+	}
+	uint32_t Value() { return _value; }
+private:
+	uint32_t _value;
 };
 
-class TByteNumber : public FixedSizeData<3>
+
+template<typename T>
+class ByteEnum : public FixedSizeData<1>
 {
+public:
+	ByteEnum(){}
+	~ByteEnum(){}
+	T Value() { return _value; }
+	virtual bool Fill(asio::streambuf& buf)
+	{
+		const T* cp = asio::buffer_cast<const T*>(buf.data());
+		const std::vector<T>& allKinds = AllKinds();
+
+		//vector<T>::const_iterator it = std::find(allKinds.begin(), allKinds.end(), *cp);
+		//if (it == allKinds.end()) {
+		//	return false;
+		//}
+		bool found = false;
+		for (auto v : allKinds) {
+			if (v == *cp) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			return false;
+		}
+
+		return FixedSizeData<1>::Fill(buf);
+	}
+protected:
+	const std::vector<T>& AllKinds();
+	void Filled()
+	{
+		const uint8_t *data = Data();
+		_value = static_cast<T>(*data);
+	}
+private:
+	T _value;
+};
+
+class PayloadTypeByte : public ByteEnum<PayloadType>
+{
+public:
+	PayloadTypeByte(){}
+	~PayloadTypeByte(){}
+protected:
+	const std::vector<PayloadType>& AllKinds() { return kPayloadTypes; }
+};
+
+class SequenceNumber : public WByteNumber
+{
+public:
+	SequenceNumber(){}
+	~SequenceNumber(){}
+};
+
+class TimeStamp : public QuadByteNumber
+{
+public:
+	TimeStamp() {}
+	~TimeStamp(){}
+};
+
+class StartCode : public BaseField
+{
+public:
+	StartCode()
+		:
+		_byte0(kPayloadHeaderStartCode[0]),
+		_byte1(kPayloadHeaderStartCode[1]),
+		_byte2(kPayloadHeaderStartCode[2]),
+		_byte3(kPayloadHeaderStartCode[3])
+	{
+		_elements.push_back(&_byte0);
+		_elements.push_back(&_byte1);
+		_elements.push_back(&_byte2);
+		_elements.push_back(&_byte3);
+	}
+	~StartCode(){}
+private:
+	ConstByte _byte0;
+	ConstByte _byte1;
+	ConstByte _byte2;
+	ConstByte _byte3;
 };
 
 class DataVersion : public FixedSizeData<2>
 {
+public:
+	DataVersion() : _version(0.f), _major(0), _minor(0) {}
+	~DataVersion(){}
+protected:
+	void Filled()
+	{
+		const uint8_t *data = Data();
+		_major = *(data + 0);
+		_minor = *(data + 1);
+		_version = _major + _minor * 0.1f;
+	}
+	uint8_t Major() { return _major; }
+	uint8_t Minor() { return _minor; }
+	float Version() { return _version; }
+private:
+	float _version;
+	uint8_t _major;
+	uint8_t _minor;
 };
-
-class WByteNumber : public FixedSizeData<2>
-{};
 
 class Coordinate : public FixedSizeData<4>
 {
+public:
+	Coordinate(){}
+	~Coordinate(){}
+	uint16_t X() { return _x; }
+	uint16_t Y() { return _y; }
+	void Filled()
+	{
+		const uint8_t *data = Data();
+		_x = *(data + 0);
+		_y = *(data + 1);
+	}
+private:
+	uint16_t _x;
+	uint16_t _y;
 };
 
-class Category : public FixedSizeData<1>
-{};
+class Category : public ByteEnum<FrameCategory>
+{
+public:
+	Category(){}
+	~Category(){}
+protected:
+	const std::vector<FrameCategory>& AllKinds() { return kFrameCategories; }
+};
 
-class Status : public FixedSizeData<1>
-{};
+class Status : public ByteEnum<FrameStatus>
+{
+public:
+	Status(){}
+	~Status(){}
+protected:
+	const std::vector<FrameStatus>& AllKinds() { return kFrameStatus; }
+};
 
-class AdditionalStatus : public FixedSizeData<1>
-{};
+class AdditionalStatus : public ByteEnum<FrameAdditionalStatus>
+{
+public:
+	AdditionalStatus(){}
+	~AdditionalStatus(){}
+protected:
+	const std::vector<FrameAdditionalStatus>& AllKinds() { return kFrameAdditionalStatus; }
+};
 
 class CommonHeader : public BaseField
 {
@@ -297,7 +556,7 @@ public:
 
 	~CommonHeader(){}
 	PayloadType PayloadType() {
-		return _payloadType.PayloadType();
+		return _payloadType.Value();
 	}
 private:
 
@@ -319,7 +578,7 @@ public:
 	~PayloadHeader(){}
 protected:
 	StartCode _startCode;
-	TByteNumber _dataSize;
+	TriByteNumber _dataSize;
 	FixedSizeEmptyData<3> _paddingSize;
 };
 
@@ -495,9 +754,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	char tmp[64];
 	ostream ofs(&buf);
 	while (!ifs.eof()){
-		int posBefore = ifs.tellg();
+		size_t posBefore = ifs.tellg();
 		ifs.read(&tmp[0], sizeof(tmp));
-		int posAfter = ifs.tellg();
+		size_t posAfter = ifs.tellg();
 		cout << posBefore << " -> " << posAfter << endl;
 		ofs.write(&tmp[0], posAfter-posBefore);
 	}
