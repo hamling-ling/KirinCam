@@ -190,7 +190,7 @@ void CameraController::handleGetLiveImageHeader(const boost::system::error_code&
 
 	// Start reading remaining data until EOF.
 	boost::asio::async_read(liveview_socket_, liveview_response_,
-		boost::asio::transfer_at_least(1),
+		boost::asio::transfer_at_least(100),
 		boost::bind(&CameraController::handleGetLiveViewContent, this,
 		boost::asio::placeholders::error));
 }
@@ -201,8 +201,12 @@ void CameraController::handleGetLiveViewContent(const boost::system::error_code&
 		ostream os(&contentbuf_);
 		int respsize = liveview_response_.size();
 
-		os << &liveview_response_;
 		cout << "content size:" << contentbuf_.size() << ", response size:" << respsize << endl;
+		//os << &liveview_response_;
+
+		const char* cp = boost::asio::buffer_cast<const char*>(liveview_response_.data());
+		os.write(cp, liveview_response_.size());
+		liveview_response_.consume(liveview_response_.size());
 
 		if (contentbuf_.size() > 1024 * 64) {
 			Dump();
@@ -211,7 +215,7 @@ void CameraController::handleGetLiveViewContent(const boost::system::error_code&
 		}
 		// Continue reading remaining data until EOF.
 		boost::asio::async_read(liveview_socket_, liveview_response_,
-			boost::asio::transfer_at_least(1),
+			boost::asio::transfer_at_least(100),
 			boost::bind(&CameraController::handleGetLiveViewContent, this,
 			boost::asio::placeholders::error));
 	}
