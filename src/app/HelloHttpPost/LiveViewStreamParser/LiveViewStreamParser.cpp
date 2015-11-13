@@ -100,9 +100,9 @@ public:
 		- returns true even if input data is empty
 	*/
 	virtual bool Fill(asio::streambuf& buf) = 0;
-	size_t Size() { return _size; }
+	size_t Size() const { return _size; }
 	void SetSize(uint32_t sz) { _size = sz; }
-	uint32_t Pos() { return _pos; }
+	uint32_t Pos() const { return _pos; }
 protected:
 	void SetPos(uint32_t pos) { _pos = pos; }
 	virtual void Filled() = 0;
@@ -153,7 +153,7 @@ public:
 
 		return true;
 	}
-	const uint8_t* Data() { return &_data[0]; }
+	const uint8_t* Data() const { return &_data[0]; }
 private:
 	uint8_t _data[byteLength];
 };
@@ -232,7 +232,7 @@ public:
 
 		return true;
 	}
-	const uint8_t* Data() { return &_data[0]; }
+	const uint8_t* Data() const { return &_data[0]; }
 
 private:
 	std::vector<uint8_t> _data;
@@ -677,7 +677,7 @@ public:
 		_jpeg.SetSize(sz_jpg);
 		_padding.SetSize(sz_pad);
 	}
-	const VariableSizeData& GetImage() { return _jpeg; }
+	const VariableSizeData* GetImage() const { return &_jpeg; }
 private:
 	VariableSizeData _jpeg;
 	EmptyData _padding;
@@ -726,7 +726,7 @@ public:
 		_elements.push_back(&_imageData);
 	}
 	~ImagePayload(){}
-	const VariableSizeData& GetImage() { return _imageData.GetImage(); }
+	const VariableSizeData* GetImage() const { return _imageData.GetImage(); }
 protected:
 	virtual void Fulfilled(int idx) {
 		if (idx == 0) {
@@ -800,6 +800,16 @@ public:
 		}
 		return true;
 	}
+	const VariableSizeData* GetImage() const {
+		if (commonHeader_->PayloadType() != kPayloadTypeLiveViewImages) {
+			return NULL;
+		}
+		std::shared_ptr<ImagePayload> sptr = std::dynamic_pointer_cast<ImagePayload>(payload_);
+		return sptr->GetImage();
+	}
+private:
+	std::shared_ptr<CommonHeader> commonHeader_;
+	std::shared_ptr<Payload> payload_;
 
 	void SkipUntil(char c, asio::streambuf& buf) {
 		if (Pos() == 0) {
@@ -814,9 +824,6 @@ public:
 			}
 		}
 	}
-private:
-	std::shared_ptr<CommonHeader> commonHeader_;
-	std::shared_ptr<Payload> payload_;
 };
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -838,6 +845,13 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	Packet packet0;
 	packet0.Fill(buf);
+
+	{
+		ofstream ofs("test.jpg");
+		const VariableSizeData* img = packet0.GetImage();
+		cout << "image size:" << img->Size() << endl;
+		ofs.write((const char*)img->Data(), img->Size());
+	}
 
 	Packet packet1;
 	packet1.Fill(buf);
