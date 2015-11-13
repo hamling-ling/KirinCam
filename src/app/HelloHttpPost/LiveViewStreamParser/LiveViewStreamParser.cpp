@@ -400,25 +400,15 @@ public:
 		const T* cp = asio::buffer_cast<const T*>(buf.data());
 		const std::vector<T>& allKinds = AllKinds();
 
-		//vector<T>::const_iterator it = std::find(allKinds.begin(), allKinds.end(), *cp);
-		//if (it == allKinds.end()) {
-		//	return false;
-		//}
-		bool found = false;
-		for (auto v : allKinds) {
-			if (v == *cp) {
-				found = true;
-				break;
-			}
-		}
-		if (!found) {
+		vector<T>::const_iterator it = std::find(allKinds.begin(), allKinds.end(), *cp);
+		if (it == allKinds.end()) {
 			return false;
 		}
 
 		return FixedSizeData<1>::Fill(buf);
 	}
 protected:
-	const std::vector<T>& AllKinds();
+	virtual const std::vector<T>& AllKinds() = 0;
 	void Filled()
 	{
 		const uint8_t *data = Data();
@@ -465,6 +455,7 @@ public:
 		_elements.push_back(&_byte1);
 		_elements.push_back(&_byte2);
 		_elements.push_back(&_byte3);
+		SetSize(4);
 	}
 	~StartCode(){}
 private:
@@ -650,7 +641,7 @@ private:
 	BaseField _payload;
 };
 
-class ImagePayload : public BaseField
+class ImagePayload : public Payload
 {
 public:
 	ImagePayload()
@@ -664,7 +655,7 @@ private:
 	EmptyData _padding;
 };
 
-class FramePayload : public BaseField
+class FramePayload : public Payload
 {
 public:
 	FramePayload()
@@ -754,11 +745,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	char tmp[64];
 	ostream ofs(&buf);
 	while (!ifs.eof()){
-		size_t posBefore = ifs.tellg();
-		ifs.read(&tmp[0], sizeof(tmp));
-		size_t posAfter = ifs.tellg();
-		cout << posBefore << " -> " << posAfter << endl;
-		ofs.write(&tmp[0], posAfter-posBefore);
+		size_t readsize = ifs.read(&tmp[0], sizeof(tmp)).gcount();
+		cout << "readsize:" << readsize << endl;
+		ofs.write(&tmp[0], readsize);
 	}
 
 	Packet packet;
