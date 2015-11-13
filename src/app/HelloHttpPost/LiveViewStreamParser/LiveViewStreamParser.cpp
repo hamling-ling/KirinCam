@@ -169,6 +169,11 @@ public:
 	~FixedSizeEmptyData(){}
 	virtual bool Fill(asio::streambuf& buf)
 	{
+		uint32_t pos = Pos();
+		const uint32_t copyBytes = std::min(buf.size(), Size() - pos);
+		buf.consume(copyBytes);
+		SetPos(pos + copyBytes);
+
 		return true;
 	}
 };
@@ -180,8 +185,18 @@ public:
 	{
 	}
 	~EmptyData(){}
+	void SetSize(size_t size) {
+		BaseElement::SetSize(size);
+	}
 	virtual bool Fill(asio::streambuf& buf)
 	{
+		assert(Size() != UNDEFINED_SIZE);
+
+		uint32_t pos = Pos();
+		const uint32_t copyBytes = std::min(buf.size(), Size() - pos);
+		buf.consume(copyBytes);
+		SetPos(pos + copyBytes);
+
 		return true;
 	}
 };
@@ -194,9 +209,13 @@ public:
 	}
 	VariableSizeData(int size)
 	{
-		_data.reserve(size);
+		SetSize(size);
 	}
 	~VariableSizeData(){}
+	void SetSize(size_t size) {
+		_data.reserve(size);
+		BaseElement::SetSize(size);
+	}
 	virtual bool Fill(asio::streambuf& buf)
 	{
 		uint32_t pos = Pos();
@@ -214,6 +233,7 @@ public:
 		return true;
 	}
 	const uint8_t* Data() { return &_data[0]; }
+
 private:
 	std::vector<uint8_t> _data;
 };
@@ -234,8 +254,6 @@ public:
 		}
 
 		while (buf.size() > 0 && _it !=  _elements.end()) {
-			assert(!(*_it)->IsFull());
-
 			/**
 			filled    , full    , data remaining : => fill next elem
 			filled    , full    , data runout    : => fill next elem
@@ -250,8 +268,11 @@ public:
 				return false;
 			}
 			if ((*_it)->IsFull()) {
+				Fulfilled(std::distance(_elements.begin(), _it));
 				_it++;
+				continue;
 			}
+			break;
 		}
 		CalcPos();
 		return true;
@@ -284,6 +305,9 @@ protected:
 		}
 		SetPos(sum);
 	}
+
+	virtual void Fulfilled(int idx) { }
+
 private:
 	std::list<BaseElement* >::iterator _it;
 };
@@ -316,13 +340,13 @@ class SingleByteNumber : public FixedSizeData<1>
 public:
 	SingleByteNumber() : _value(0) {}
 	~SingleByteNumber(){}
+	uint8_t Value() { return _value; }
 protected:
 	void Filled()
 	{
 		const uint8_t *data = Data();
 		_value = *(data + 0);
 	}
-	uint8_t Value() { return _value; }
 private:
 	uint8_t _value;
 };
@@ -332,6 +356,7 @@ class WByteNumber : public FixedSizeData<2>
 public:
 	WByteNumber() : _value(0) {}
 	~WByteNumber(){}
+	uint16_t Value() { return _value; }
 protected:
 	void Filled()
 	{
@@ -341,7 +366,6 @@ protected:
 
 		_value = val0 << 8 | val1;
 	}
-	uint16_t Value() { return _value; }
 private:
 	uint16_t _value;
 };
@@ -351,6 +375,7 @@ class TriByteNumber : public FixedSizeData<3>
 public:
 	TriByteNumber() : _value(0) {}
 	~TriByteNumber(){}
+	uint32_t Value() { return _value; }
 protected:
 	void Filled()
 	{
@@ -361,7 +386,6 @@ protected:
 
 		_value = val0 << 16 | val1 << 8 | val2;
 	}
-	uint32_t Value() { return _value; }
 private:
 	uint32_t _value;
 };
@@ -567,10 +591,12 @@ public:
 		_elements.push_back(&_paddingSize);
 	}
 	~PayloadHeader(){}
+	uint32_t DataSize() { return _dataSize.Value(); }
+	uint8_t PaddingSize() { return _paddingSize.Value(); }
 protected:
 	StartCode _startCode;
 	TriByteNumber _dataSize;
-	FixedSizeEmptyData<3> _paddingSize;
+	SingleByteNumber _paddingSize;
 };
 
 class ImagePayloadHeader : public PayloadHeader
@@ -581,12 +607,15 @@ public:
 		_elements.push_back(&_reserved);
 		_elements.push_back(&_flag);
 		_elements.push_back(&_reserved2);
+
+		CalcSize();
 	}
 	~ImagePayloadHeader(){}
+
 private:
 	FixedSizeEmptyData<4> _reserved;
 	FixedSizeEmptyData<1> _flag;
-	FixedSizeEmptyData<5> _reserved2;
+	FixedSizeEmptyData<115> _reserved2;
 };
 
 class FramePayloadHeader : public PayloadHeader
@@ -596,14 +625,19 @@ public:
 	{
 		_elements.push_back(&_dataVersion);
 		_elements.push_back(&_frameCount);
-		_elements.push_back(&singleFrameDataSize);
+		_elements.push_back(&_singleFrameDataSize);
 		_elements.push_back(&_reserved);
+
+		CalcSize();
 	}
 	~FramePayloadHeader(){}
+	const DataVersion& Version() { return _dataVersion; }
+	uint16_t FrameCount() { return _frameCount.Value(); }
+	uint16_t SingleFrameDataSize() { return _singleFrameDataSize.Value(); }
 private:
 	DataVersion _dataVersion;
 	WByteNumber _frameCount;
-	WByteNumber singleFrameDataSize;
+	WByteNumber _singleFrameDataSize;
 	FixedSizeEmptyData<114> _reserved;
 };
 
@@ -617,6 +651,8 @@ public:
 		_elements.push_back(&_category);
 		_elements.push_back(&_status);
 		_elements.push_back(&_additionalStatus);
+
+		CalcSize();
 	}
 	~FrameInformation(){}
 private:
@@ -627,42 +663,33 @@ private:
 	AdditionalStatus _additionalStatus;
 };
 
-class Payload : public BaseField
-{
-public:
-	Payload()
-	{
-		_elements.push_back(&_header);
-		_elements.push_back(&_payload);
-	}
-	~Payload(){}
-private:
-	PayloadHeader _header;
-	BaseField _payload;
-};
 
-class ImagePayload : public Payload
+class ImageData : public BaseField
 {
 public:
-	ImagePayload()
+	ImageData()
 	{
 		_elements.push_back(&_jpeg);
 		_elements.push_back(&_padding);
 	}
-	~ImagePayload(){}
+	~ImageData(){}
+	void SetSize(size_t sz_jpg, size_t sz_pad) {
+		_jpeg.SetSize(sz_jpg);
+		_padding.SetSize(sz_pad);
+	}
+	const VariableSizeData& GetImage() { return _jpeg; }
 private:
 	VariableSizeData _jpeg;
 	EmptyData _padding;
 };
 
-class FramePayload : public Payload
+class FrameData : public BaseField
 {
 public:
-	FramePayload()
+	FrameData()
 	{
-
 	}
-	~FramePayload(){}
+	~FrameData(){}
 	void SetFrameNumber(int num)
 	{
 		_elements.clear();
@@ -672,10 +699,69 @@ public:
 			_elements.push_back(sptr.get());
 		}
 		_elements.push_back(&_reserved);
+
+		CalcSize();
+	}
+	const std::list<std::shared_ptr<FrameInformation> >& Frames() {
+		_frameInformations;
 	}
 private:
 	std::list<std::shared_ptr<FrameInformation> > _frameInformations;
 	FixedSizeEmptyData<5> _reserved;
+};
+
+class Payload : public BaseField
+{
+public:
+	Payload(){}
+	~Payload(){}
+};
+
+class ImagePayload : public Payload
+{
+public:
+	ImagePayload()
+	{
+		_elements.push_back(&_header);
+		_elements.push_back(&_imageData);
+	}
+	~ImagePayload(){}
+	const VariableSizeData& GetImage() { return _imageData.GetImage(); }
+protected:
+	virtual void Fulfilled(int idx) {
+		if (idx == 0) {
+			uint32_t jpgSize = _header.DataSize();
+			uint8_t padSize = _header.PaddingSize();
+			_imageData.SetSize(jpgSize, padSize);
+			CalcSize();
+		}
+	}
+
+private:
+	ImagePayloadHeader _header;
+	ImageData _imageData;
+};
+
+class FramePayload : public Payload
+{
+public:
+	FramePayload()
+	{
+		_elements.push_back(&_header);
+		_elements.push_back(&_frameData);
+	}
+	~FramePayload(){}
+
+protected:
+	virtual void Fulfilled(int idx) {
+		if (idx == 0) {
+			_frameData.SetFrameNumber(_header.FrameCount());
+			CalcSize();
+		}
+	}
+private:
+	FramePayloadHeader _header;
+	FrameData _frameData;
 };
 
 class Packet : public BaseField
@@ -750,8 +836,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		ofs.write(&tmp[0], readsize);
 	}
 
-	Packet packet;
-	packet.Fill(buf);
+	Packet packet0;
+	packet0.Fill(buf);
+
+	Packet packet1;
+	packet1.Fill(buf);
+
 	return 0;
 }
 
