@@ -20,10 +20,6 @@ bool DeviceDescription::ParseXml(std::string xml)
 {
 	stringstream ss(xml);
 
-	cout << "-- ParseXml --" << endl;
-	cout << xml << endl;
-	cout << "-- End of ParseXml --" << endl;
-
 	ptree pt;
 	read_xml(ss, pt);
 	_liveViewUrl = pt.get<string>("root.device.av:X_ScalarWebAPI_DeviceInfo.av:X_ScalarWebAPI_ImagingDevice.av:X_ScalarWebAPI_LiveView_URL");
