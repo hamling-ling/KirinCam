@@ -14,26 +14,21 @@ public:
 
 private:
 	DeviceDescription deviceDescription_;
-	boost::asio::ip::tcp::endpoint tcp_endpoint_;
-	boost::asio::ip::tcp::socket tcp_socket_;
-	boost::asio::ip::tcp::endpoint liveview_endpoint_;
-	boost::asio::ip::tcp::socket liveview_socket_;
-	boost::asio::streambuf tcp_request_;
-	boost::asio::streambuf tcp_response_;
-	boost::asio::streambuf liveview_request_;
-	boost::asio::streambuf liveview_response_;
-	boost::asio::streambuf contentbuf_;
-	//std::stringstream content_;
+	std::string liveViewUrl_;
 
-	void handleWriteRequest(const boost::system::error_code& err);
-	void handleReadStatusLine(const boost::system::error_code& err, const size_t bytes_transferred);
-	void CameraController::getLiveImage();
-	void handleGetLiveImageResponse(const boost::system::error_code& err);
-	void handleGetLiveImageStatusCode(const boost::system::error_code& error, const size_t bytes_transferred);
-	void handleGetLiveImageHeader(const boost::system::error_code& error);
-	void handleGetLiveViewContent(const boost::system::error_code& error);
-
-	void Cleanup();
-	void Dump();
+	void StartStreamingInternal();
+	/**
+		@param server 10.0.0.1 for HDR-AS15
+		@param port 10000
+		@param path /sony/camera
+	 */
+	int postRequest(const std::string& server, const std::string port, const std::string path);
+	/**
+		@param server 10.0.0.1 for HDR - AS15
+		@param port 60152
+		@param path /liveview.JPG?%211234%21http%2dget%3a%2a%3aimage%2fjpeg%3a%2a%21%21%21%21%21
+	 */
+	int getRequest(const std::string& server, const std::string port, const std::string path);
+	void Dump(boost::asio::streambuf& bu);
 };
 

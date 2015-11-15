@@ -30,7 +30,8 @@ bool DeviceDescription::ParseXml(std::string xml)
 	for (ptree::value_type &v : pt.get_child("root.device.av:X_ScalarWebAPI_DeviceInfo.av:X_ScalarWebAPI_ServiceList")){
 		string service = v.second.get<string>("av:X_ScalarWebAPI_ServiceType");
 		if (service == "camera")
-			_cameraServiceUrl = v.second.get<string>("av:X_ScalarWebAPI_ActionList_URL");
+			_cameraServiceUrl = v.second.get<string>("av:X_ScalarWebAPI_ActionList_URL")
+								+ "/" + service;
 	}
 	return !_liveViewUrl.empty();
 }
