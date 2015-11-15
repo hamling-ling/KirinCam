@@ -17,13 +17,13 @@ using namespace boost;
 
 #define UNDEFINED_SIZE	0xFFFFFFFF
 
-enum PayloadType
+enum PayloadType : uint8_t
 {
 	kPayloadTypeLiveViewImages = 0x01,
 	kPayloadTypeLiveViewFrameInformation = 0x02,
 };
 
-enum FrameCategory {
+enum FrameCategory : uint8_t {
 	kFrameCategoryInvalid = 0x00,
 	kFrameCategoryContrastAF = 0x01,
 	kFrameCategoryPhaseDetectioniAF = 0x02,
@@ -32,7 +32,7 @@ enum FrameCategory {
 	kFrameCategoryTracking = 0x05,
 };
 
-enum FrameStatus {
+enum FrameStatus : uint8_t {
 	kFrameStatusInvalid = 0x00,
 	kFrameStatusNormal = 0x01,
 	kFrameStatusMain = 0x02,
@@ -53,7 +53,6 @@ std::vector<PayloadType> kPayloadTypes =
 {
 	kPayloadTypeLiveViewImages,
 	kPayloadTypeLiveViewFrameInformation,
-
 };
 
 std::vector<FrameCategory> kFrameCategories = {
@@ -844,17 +843,30 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	Packet packet0;
-	packet0.Fill(buf);
+	if (!packet0.Fill(buf)) {
+		cout << "packet0 parse error" << endl;
+		return 1;
+	}
 
 	{
-		ofstream ofs("test.jpg");
+		ofstream ofs("test.jpg", ios::binary | ios::trunc);
 		const VariableSizeData* img = packet0.GetImage();
 		cout << "image size:" << img->Size() << endl;
 		ofs.write((const char*)img->Data(), img->Size());
 	}
 
 	Packet packet1;
-	packet1.Fill(buf);
+	if (!packet1.Fill(buf)) {
+		cout << "packet1 parse error" << endl;
+		return 1;
+	}
+
+	{
+		ofstream ofs("test1.jpg", ios::binary | ios::trunc);
+		const VariableSizeData* img = packet0.GetImage();
+		cout << "image size:" << img->Size() << endl;
+		ofs.write((const char*)img->Data(), img->Size());
+	}
 
 	return 0;
 }
