@@ -85,15 +85,42 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseElement.h" />
+    <ClInclude Include="BaseField.h" />
+    <ClInclude Include="CameraStreamCommon.h" />
+    <ClInclude Include="CommonHeader.h" />
+    <ClInclude Include="ConstByte.h" />
+    <ClInclude Include="EmptyData.h" />
+    <ClInclude Include="FixedSizeData.h" />
+    <ClInclude Include="FixedSizeEmptyData.h" />
+    <ClInclude Include="IIncrementalFill.h" />
+    <ClInclude Include="LiveViewPacket.h" />
+    <ClInclude Include="LiveViewStreamDefs.h" />
+    <ClInclude Include="NByteNumber.h" />
+    <ClInclude Include="Payloads.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VariableSizeData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseElement.cpp" />
+    <ClCompile Include="BaseField.cpp" />
+    <ClCompile Include="CameraStreamCommon.cpp" />
+    <ClCompile Include="CommonHeader.cpp" />
+    <ClCompile Include="ConstByte.cpp" />
+    <ClCompile Include="EmptyData.cpp" />
+    <ClCompile Include="FixedSizeData.cpp" />
+    <ClCompile Include="FixedSizeEmptyData.cpp" />
+    <ClCompile Include="IIncrementalFill.cpp" />
+    <ClCompile Include="LiveViewPacket.cpp" />
     <ClCompile Include="LiveViewStreamParser.cpp" />
+    <ClCompile Include="NByteNumber.cpp" />
+    <ClCompile Include="Payloads.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="VariableSizeData.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
