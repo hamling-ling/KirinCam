@@ -7,15 +7,11 @@
 class SingleByteNumber : public FixedSizeData<1>
 {
 public:
-	SingleByteNumber() : _value(0) {}
-	~SingleByteNumber(){}
-	uint8_t Value() { return _value; }
+	SingleByteNumber();
+	~SingleByteNumber();
+	uint8_t Value();
 protected:
-	void Filled()
-	{
-		const uint8_t *data = Data();
-		_value = *(data + 0);
-	}
+	void Filled();
 private:
 	uint8_t _value;
 };
@@ -23,18 +19,11 @@ private:
 class WByteNumber : public FixedSizeData<2>
 {
 public:
-	WByteNumber() : _value(0) {}
-	~WByteNumber(){}
-	uint16_t Value() { return _value; }
+	WByteNumber();
+	~WByteNumber();
+	uint16_t Value();
 protected:
-	void Filled()
-	{
-		const uint8_t *data = Data();
-		const uint8_t val0 = *(data + 0);
-		const uint8_t val1 = *(data + 1);
-
-		_value = val0 << 8 | val1;
-	}
+	void Filled();
 private:
 	uint16_t _value;
 };

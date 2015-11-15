@@ -14,16 +14,16 @@ static const std::vector<PayloadType> kPayloadTypes =
 class StartByte : public ConstByte
 {
 public:
-	StartByte() : ConstByte(0xFF) {}
-	~StartByte() {}
+	StartByte();
+	~StartByte();
 };
 
 
 class PayloadTypeByte : public ByteEnum<PayloadType>
 {
 public:
-	PayloadTypeByte(){}
-	~PayloadTypeByte(){}
+	PayloadTypeByte();
+	~PayloadTypeByte();
 protected:
 	const std::vector<PayloadType>& AllKinds() { return kPayloadTypes; }
 };
@@ -32,34 +32,23 @@ protected:
 class SequenceNumber : public WByteNumber
 {
 public:
-	SequenceNumber(){}
-	~SequenceNumber(){}
+	SequenceNumber();
+	~SequenceNumber();
 };
 
 class TimeStamp : public QuadByteNumber
 {
 public:
-	TimeStamp() {}
-	~TimeStamp(){}
+	TimeStamp();
+	~TimeStamp();
 };
 
 class CommonHeader : public BaseField
 {
 public:
-	CommonHeader()
-	{
-		_elements.push_back(&_startByte);
-		_elements.push_back(&_payloadType);
-		_elements.push_back(&_sequenceNumber);
-		_elements.push_back(&_timeStamp);
-
-		CalcSize();
-	}
-
-	~CommonHeader(){}
-	PayloadType PayloadType() {
-		return _payloadType.Value();
-	}
+	CommonHeader();
+	~CommonHeader();
+	PayloadType PayloadType();
 private:
 
 	StartByte _startByte;

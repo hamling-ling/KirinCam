@@ -2,11 +2,3 @@
 #include "CameraStreamCommon.h"
 
 
-CameraStreamCommon::CameraStreamCommon()
-{
-}
-
-
-CameraStreamCommon::~CameraStreamCommon()
-{
-}
