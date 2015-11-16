@@ -1,19 +1,8 @@
-// LiveViewStreamParser.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
-//
-
-#include "stdafx.h"
-
-#include <iostream>
-#include <memory>
-#include <fstream>
-#include <boost/asio.hpp>
-
-#include "LiveViewPacket.h"
-
-using namespace std;
-using namespace boost;
+#include "../src/LiveViewPacket.h"
 
 
+// to do following will move to unit test
+/*
 int _tmain(int argc, _TCHAR* argv[])
 {
 	asio::streambuf buf;
@@ -60,3 +49,4 @@ int _tmain(int argc, _TCHAR* argv[])
 	return 0;
 }
 
+*/

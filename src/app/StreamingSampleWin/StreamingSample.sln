@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamingSample", "StreamingSample.vcxproj", "{7D676E31-45FE-48F7-86A7-1669E200210B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA} = {80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}
+		{FF7CC9AC-95BB-495D-BD25-1F92E919E395} = {FF7CC9AC-95BB-495D-BD25-1F92E919E395}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiveViewStreamingParser", "..\LiveViewStreamingParser\vc\LiveViewStreamingParser.vcxproj", "{FF7CC9AC-95BB-495D-BD25-1F92E919E395}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiveViewStreamingParserTest", "..\LiveViewStreamingParserTest\LiveViewStreamingParserTest.vcxproj", "{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraRemoteController", "..\CameraRemoteController\vc\CameraRemoteController.vcxproj", "{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D676E31-45FE-48F7-86A7-1669E200210B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D676E31-45FE-48F7-86A7-1669E200210B}.Debug|Win32.Build.0 = Debug|Win32
+		{7D676E31-45FE-48F7-86A7-1669E200210B}.Release|Win32.ActiveCfg = Release|Win32
+		{7D676E31-45FE-48F7-86A7-1669E200210B}.Release|Win32.Build.0 = Release|Win32
+		{FF7CC9AC-95BB-495D-BD25-1F92E919E395}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FF7CC9AC-95BB-495D-BD25-1F92E919E395}.Debug|Win32.Build.0 = Debug|Win32
+		{FF7CC9AC-95BB-495D-BD25-1F92E919E395}.Release|Win32.ActiveCfg = Release|Win32
+		{FF7CC9AC-95BB-495D-BD25-1F92E919E395}.Release|Win32.Build.0 = Release|Win32
+		{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}.Debug|Win32.Build.0 = Debug|Win32
+		{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}.Release|Win32.ActiveCfg = Release|Win32
+		{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}.Release|Win32.Build.0 = Release|Win32
+		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}.Debug|Win32.Build.0 = Debug|Win32
+		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}.Release|Win32.ActiveCfg = Release|Win32
+		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
