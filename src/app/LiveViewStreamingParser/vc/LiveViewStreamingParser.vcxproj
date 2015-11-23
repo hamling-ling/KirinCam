@@ -81,9 +81,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\src\BaseElement.cpp" />
     <ClCompile Include="..\src\BaseField.cpp" />
     <ClCompile Include="..\src\CameraStreamCommon.cpp" />

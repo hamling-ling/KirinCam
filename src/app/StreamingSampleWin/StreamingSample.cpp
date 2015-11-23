@@ -31,6 +31,9 @@ int main()
 				cp = make_shared<CameraController>(finder.GetDeviceDescription());
 				cp->StartStreaming();
 			}
+			else if ("p") {
+
+			}
 		}
 	}
 	catch (std::exception& e) {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamingSample", "StreamingSample.vcxproj", "{7D676E31-45FE-48F7-86A7-1669E200210B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -14,6 +14,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiveViewStreamingParserTest", "..\LiveViewStreamingParserTest\LiveViewStreamingParserTest.vcxproj", "{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraRemoteController", "..\CameraRemoteController\vc\CameraRemoteController.vcxproj", "{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageSource", "..\ImageSource\vc\ImageSource.vcxproj", "{0CEC495C-47A6-4457-AF9A-A9C2C535C097}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}.Debug|Win32.Build.0 = Debug|Win32
 		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}.Release|Win32.ActiveCfg = Release|Win32
 		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}.Release|Win32.Build.0 = Release|Win32
+		{0CEC495C-47A6-4457-AF9A-A9C2C535C097}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0CEC495C-47A6-4457-AF9A-A9C2C535C097}.Debug|Win32.Build.0 = Debug|Win32
+		{0CEC495C-47A6-4457-AF9A-A9C2C535C097}.Release|Win32.ActiveCfg = Release|Win32
+		{0CEC495C-47A6-4457-AF9A-A9C2C535C097}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
