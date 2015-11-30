@@ -6,16 +6,31 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamingSample", "StreamingSample.vcxproj", "{7D676E31-45FE-48F7-86A7-1669E200210B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA} = {80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}
+		{0CEC495C-47A6-4457-AF9A-A9C2C535C097} = {0CEC495C-47A6-4457-AF9A-A9C2C535C097}
 		{FF7CC9AC-95BB-495D-BD25-1F92E919E395} = {FF7CC9AC-95BB-495D-BD25-1F92E919E395}
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF} = {C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiveViewStreamingParser", "..\LiveViewStreamingParser\vc\LiveViewStreamingParser.vcxproj", "{FF7CC9AC-95BB-495D-BD25-1F92E919E395}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF} = {C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiveViewStreamingParserTest", "..\LiveViewStreamingParserTest\LiveViewStreamingParserTest.vcxproj", "{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraRemoteController", "..\CameraRemoteController\vc\CameraRemoteController.vcxproj", "{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0CEC495C-47A6-4457-AF9A-A9C2C535C097} = {0CEC495C-47A6-4457-AF9A-A9C2C535C097}
+		{FF7CC9AC-95BB-495D-BD25-1F92E919E395} = {FF7CC9AC-95BB-495D-BD25-1F92E919E395}
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF} = {C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageSource", "..\ImageSource\vc\ImageSource.vcxproj", "{0CEC495C-47A6-4457-AF9A-A9C2C535C097}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF} = {C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\Common\vc\Common.vcxproj", "{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +58,10 @@ Global
 		{0CEC495C-47A6-4457-AF9A-A9C2C535C097}.Debug|Win32.Build.0 = Debug|Win32
 		{0CEC495C-47A6-4457-AF9A-A9C2C535C097}.Release|Win32.ActiveCfg = Release|Win32
 		{0CEC495C-47A6-4457-AF9A-A9C2C535C097}.Release|Win32.Build.0 = Release|Win32
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}.Debug|Win32.Build.0 = Debug|Win32
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}.Release|Win32.ActiveCfg = Release|Win32
+		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

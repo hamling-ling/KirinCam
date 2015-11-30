@@ -18,7 +18,6 @@ public:
 protected:
 	virtual void Run();
 	bool IsStopping();
-private:
 	std::shared_ptr<StreamFlow> _downStream;
 	std::shared_ptr<std::thread> _thread;
 	std::recursive_mutex _mutex;

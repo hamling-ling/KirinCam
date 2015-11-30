@@ -9,7 +9,6 @@ _isStopping(false)
 {
 }
 
-
 StreamFlow::~StreamFlow()
 {
 	Stop();

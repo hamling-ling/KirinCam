@@ -10,26 +10,10 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\AsyncTask.cpp" />
-    <ClCompile Include="..\src\CameraController.cpp" />
-    <ClCompile Include="..\src\DeviceDescription.cpp" />
-    <ClCompile Include="..\src\DeviceFinder.cpp" />
-    <ClCompile Include="..\src\stdafx.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\include\CameraRemoteController.h" />
-    <ClInclude Include="..\src\AsyncTask.h" />
-    <ClInclude Include="..\src\CameraController.h" />
-    <ClInclude Include="..\src\DeviceDescription.h" />
-    <ClInclude Include="..\src\DeviceFinder.h" />
-    <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}</ProjectGuid>
+    <ProjectGuid>{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CameraRemoteController</RootNamespace>
+    <RootNamespace>Common</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -63,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -71,21 +55,20 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\usr\local\boost_1_59_0\stage\x86\vc12\static\mt\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -94,11 +77,21 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\usr\local\boost_1_59_0\stage\x86\vc12\static\mt\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Common.cpp" />
+    <ClCompile Include="..\src\stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Common.h" />
+    <ClInclude Include="..\src\stdafx.h" />
+    <ClInclude Include="..\src\targetver.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
