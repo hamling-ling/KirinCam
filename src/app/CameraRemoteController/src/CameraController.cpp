@@ -9,6 +9,7 @@
 #include <boost/foreach.hpp>
 
 #include "Common.h"
+#include "ImageSource.h"
 
 using namespace std;
 using boost::asio::ip::tcp;
@@ -39,188 +40,26 @@ void CameraController::StartStreamingInternal()
 		std::string path;
 
 		splitUrl(deviceDescription_.CameraServiceUrl(), server, port, path);
-		postRequest(server, port, path);
+		startLiveView(server, port, path);
 	}
 
-	{
-		std::string server;
-		std::string port;
-		std::string path;
-
-		splitUrl(liveViewUrl_, server, port, path);
-		getRequest(server, port, path);
-	}
+	imageSource_ = std::shared_ptr<ImageSource>();
+	imageSource_->SetSource(liveViewUrl_);
 }
 
-int CameraController::postRequest(const std::string& server, const std::string port, const std::string path)
+int CameraController::startLiveView(const std::string& server, const std::string port, const std::string path)
 {
-	try
-	{
-		boost::system::error_code error = boost::asio::error::host_not_found;
-		boost::asio::io_service io_service;
-		tcp::socket socket(io_service);
-		connectSocket(io_service, socket, server, port);
+	// prepare request command
+	string json_request("{\"method\": \"startLiveview\",\"params\" : [],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
+	ptree pt;
 
-		// prepare request command
-		string json_request("{\"method\": \"startLiveview\",\"params\" : [],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
-
-		boost::asio::streambuf request;
-		std::ostream request_stream(&request);
-		request_stream << "POST " << path << " HTTP/1.1\r\n";
-		request_stream << "Host: " << "http://" << server << "\r\n";
-		request_stream << "Accept: application/json-rpc\r\n";
-		request_stream << "Content-Type: application/json-rpc; char-set=utf-8\r\n";
-		request_stream << "Content-Length: " << json_request.length() << "\r\n";
-		request_stream << "Connection: close\r\n\r\n";
-		request_stream << json_request;
-
-		// Send the request.
-		boost::asio::write(socket, request);
-
-		// Read the response status line. The response streambuf will automatically
-		// grow to accommodate the entire line. The growth may be limited by passing
-		// a maximum size to the streambuf constructor.
-		boost::asio::streambuf response;
-
-		boost::asio::read_until(socket, response, "\r\n");
-
-		// Check that response is OK.
-		std::istream response_stream(&response);
-		std::string http_version;
-		response_stream >> http_version;
-		unsigned int status_code;
-		response_stream >> status_code;
-		std::string status_message;
-		std::getline(response_stream, status_message);
-		if (!response_stream || http_version.substr(0, 5) != "HTTP/")
-		{
-			std::cout << "Invalid response\n";
-			return 1;
-		}
-		if (status_code != 200)
-		{
-			std::cout << "Response returned with status code " << status_code << "\n";
-			return 1;
-		}
-
-		// Read the response headers, which are terminated by a blank line.
-		boost::asio::read_until(socket, response, "\r\n\r\n");
-
-		// Process the response headers.
-		std::string header;
-		while (std::getline(response_stream, header) && header != "\r")
-			std::cout << header << "\n";
-		std::cout << "\n";
-
-		// Write whatever content we already have to output.
-		stringstream json_response;
-		if (response.size() > 0) {
-			json_response << &response;
-		}
-
-		// Read until EOF, writing data to output as we go.
-		while (boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)) {
-			json_response << &response;
-		}
-
-		ptree pt;
-		read_json(json_response, pt);
-		BOOST_FOREACH(const ptree::value_type& child, pt.get_child("result")) {
-			liveViewUrl_ = child.second.get_value<std::string>();
-		}
+	if (InvokeCommand(server, port, path, json_request, pt) != 0) {
+		return 1;
 	}
-	catch (std::exception& e)
-	{
-		std::cout << "Exception: " << e.what() << "\n";
+
+	BOOST_FOREACH(const ptree::value_type& child, pt.get_child("result")) {
+		liveViewUrl_ = child.second.get_value<std::string>();
 	}
+
 	return 0;
-}
-
-
-int CameraController::getRequest(const std::string& server, const std::string port, const std::string path)
-{
-	try
-	{
-		boost::system::error_code error = boost::asio::error::host_not_found;
-		boost::asio::io_service io_service;
-		tcp::socket socket(io_service);
-		connectSocket(io_service, socket, server, port);
-
-		boost::asio::streambuf request;
-		std::ostream request_stream(&request);
-		request_stream << "GET " << path << " HTTP/1.0\r\n";
-		request_stream << "Host: " << server << "\r\n";
-		request_stream << "Accept: */*\r\n";
-		request_stream << "Connection: close\r\n\r\n";
-
-		// Send the request.
-		boost::asio::write(socket, request);
-
-		boost::asio::streambuf response;
-		boost::asio::read_until(socket, response, "\r\n");
-
-		// Check that response is OK.
-		std::istream response_stream(&response);
-		std::string http_version;
-		response_stream >> http_version;
-		unsigned int status_code;
-		response_stream >> status_code;
-		std::string status_message;
-		std::getline(response_stream, status_message);
-		if (!response_stream || http_version.substr(0, 5) != "HTTP/")
-		{
-			std::cout << "Invalid response\n";
-			return 1;
-		}
-		if (status_code != 200)
-		{
-			std::cout << "Response returned with status code " << status_code << "\n";
-			return 1;
-		}
-
-		// Read the response headers, which are terminated by a blank line.
-		boost::asio::read_until(socket, response, "\r\n\r\n");
-
-		// Process the response headers.
-		std::string header;
-		while (std::getline(response_stream, header) && header != "\r")
-			std::cout << header << "\n";
-		std::cout << "\n";
-
-		// Write whatever content we already have to output.
-		if (response.size() > 0)
-			std::cout << &response;
-
-		boost::asio::streambuf contentbuf;// total buffer
-		std::ostream os(&contentbuf, ios::binary);
-
-		while (boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)) {
-			const char* cp = boost::asio::buffer_cast<const char*>(response.data());
-			os.write(cp, response.size());
-			response.consume(response.size());
-
-			if (contentbuf.size() > 1024 * 64) {
-				Dump(contentbuf);
-				break;
-			}
-		}
-		socket.close();
-	}
-	catch (std::exception& e)
-	{
-		std::cout << "Exception: " << e.what() << "\n";
-	}
-	return 0;
-}
-
-void CameraController::Dump(boost::asio::streambuf& buf)
-{
-	std::ofstream ofs("out.dat", std::ios::binary | std::ios::trunc);
-	if (!ofs) {
-		cout << "dump failed" << endl;
-		return;
-	}
-
-	cout << "content size:" << buf.size() << endl;
-	ofs << &buf;
 }

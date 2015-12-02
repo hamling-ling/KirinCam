@@ -13,6 +13,7 @@ public:
 	virtual ~StreamFlow();
 	virtual void Connect(std::shared_ptr<StreamFlow> flow);
 	virtual void Push(boost::asio::streambuf& stream);
+	virtual void Push(std::shared_ptr<LiveViewPacket> packet);
 	virtual void Start();
 	virtual void Stop();
 protected:

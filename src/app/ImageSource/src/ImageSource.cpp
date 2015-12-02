@@ -1,4 +1,5 @@
-#include "ImageSource.h"
+#include "stdafx.h"
+#include "../include/ImageSource.h"
 #include "StreamSource.h"
 #include "StreamDemuxer.h"
 #include "StreamPresenter.h"
@@ -30,4 +31,6 @@ uint32_t ImageSource::SetSource(std::string& url)
 	_presenter->Start();
 	_demuxer->Start();
 	_source->Start();
+
+	return 0;
 }

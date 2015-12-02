@@ -21,13 +21,19 @@ void StreamFlow::Connect(shared_ptr<StreamFlow> flow)
 
 void StreamFlow::Push(boost::asio::streambuf& stream)
 {
-	lock_guard<recursive_mutex> lock(_mutex);
-	_downStream->Push(stream);
+}
+
+void StreamFlow::Push(std::shared_ptr<LiveViewPacket> packet)
+{
 }
 
 void StreamFlow::Start()
 {
 	lock_guard<recursive_mutex> lock(_mutex);
+	if (_isRunning) {
+		return;
+	}
+	_isRunning = true;
 	_thread = std::make_shared<std::thread>(&StreamFlow::Run, this);
 }
 
@@ -49,7 +55,6 @@ void StreamFlow::Stop()
 
 void StreamFlow::Run()
 {
-	_isRunning = true;
 	while (!_isStopping) {
 		// do something
 	}

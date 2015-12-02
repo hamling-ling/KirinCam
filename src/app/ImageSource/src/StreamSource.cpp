@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "StreamSource.h"
 #include <sstream>
 #include <iostream>//debug
@@ -10,7 +11,6 @@ StreamSource::StreamSource(const std::string& url)
 	: _url(url)
 {
 }
-
 
 StreamSource::~StreamSource()
 {
@@ -28,9 +28,8 @@ void StreamSource::Stop()
 
 void StreamSource::Run()
 {
-	_isRunning = true;
 	try {
-
+		downloadStream();
 	}
 	catch (std::exception& e)
 	{

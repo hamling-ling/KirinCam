@@ -46,7 +46,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -68,7 +68,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\usr\local\boost_1_59_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -91,7 +91,7 @@
     <ClCompile Include="..\src\StreamSource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ImageSource.h" />
+    <ClInclude Include="..\include\ImageSource.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\StreamDemuxer.h" />
     <ClInclude Include="..\src\StreamFlow.h" />
