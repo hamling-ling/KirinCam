@@ -12,7 +12,7 @@ void connectSocket(
 	const std::string& server, const std::string &port);
 void Dump(boost::asio::streambuf& buf);
 int InvokeCommand(	const std::string& server,
-					const std::string port,
-					const std::string path,
-					const std::string json_command,
+					const std::string& port,
+					const std::string& path,
+					const std::string& json_command,
 					boost::property_tree::ptree& result);

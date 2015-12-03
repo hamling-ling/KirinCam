@@ -32,7 +32,9 @@ int main()
 				cp->StartStreaming();
 			}
 			else if ("p") {
-
+				if (cp) {
+					cp->Stop();
+				}
 			}
 		}
 	}

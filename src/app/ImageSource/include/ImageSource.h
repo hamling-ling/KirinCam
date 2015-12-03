@@ -12,7 +12,7 @@ class ImageSource
 public:
 	ImageSource();
 	~ImageSource();
-	uint32_t SetSource(std::string& url);
+	uint32_t SetSource(const std::string& url);
 private:
 	std::shared_ptr<StreamSource> _source;
 	std::shared_ptr<StreamDemuxer> _demuxer;

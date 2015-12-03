@@ -17,6 +17,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiveViewStreamingParser", "
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LiveViewStreamingParserTest", "..\LiveViewStreamingParserTest\LiveViewStreamingParserTest.vcxproj", "{44C3D58C-2A89-4BBD-8122-EC7E4CA02D9B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FF7CC9AC-95BB-495D-BD25-1F92E919E395} = {FF7CC9AC-95BB-495D-BD25-1F92E919E395}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraRemoteController", "..\CameraRemoteController\vc\CameraRemoteController.vcxproj", "{80FBBE58-A5F2-4B75-B1FC-7BADEACD61CA}"
 	ProjectSection(ProjectDependencies) = postProject

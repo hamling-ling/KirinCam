@@ -71,9 +71,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\usr\local\boost_1_59_0\stage\x86\vc12\static\mt\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib;ImageSource.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\usr\local\boost_1_59_0\stage\x86\vc12\static\mt\lib;$(OutDir)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,9 +93,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\usr\local\boost_1_59_0\stage\x86\vc12\static\mt\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib;ImageSource.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\usr\local\boost_1_59_0\stage\x86\vc12\static\mt\lib;$(OutDir)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

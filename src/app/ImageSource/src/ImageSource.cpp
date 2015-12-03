@@ -8,8 +8,8 @@ using namespace std;
 
 ImageSource::ImageSource()
 {
+	_source = nullptr;
 }
-
 
 ImageSource::~ImageSource()
 {
@@ -18,7 +18,7 @@ ImageSource::~ImageSource()
 	_presenter->Stop();
 }
 
-uint32_t ImageSource::SetSource(std::string& url)
+uint32_t ImageSource::SetSource(const std::string& url)
 {
 	// TODO: mutex, initialize
 	_source = std::make_shared<StreamSource>(url);

@@ -13,7 +13,7 @@ public:
 	CameraController(DeviceDescription& deviceDescription);
 	virtual ~CameraController();
 	bool StartStreaming();
-
+	void StopStreaming();
 private:
 	DeviceDescription deviceDescription_;
 	// http://10.0.0.1:60152/liveview.JPG?%211234%21http%2dget%3a%2a%3aimage%2fjpeg%3a%2a%21%21%21%21%21
@@ -21,6 +21,7 @@ private:
 	std::shared_ptr<ImageSource> imageSource_;
 
 	void StartStreamingInternal();
+
 	/**
 		@param server 10.0.0.1 for HDR-AS15
 		@param port 10000

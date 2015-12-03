@@ -22,14 +22,29 @@ CameraController::CameraController(DeviceDescription& deviceDescription)
 
 CameraController::~CameraController()
 {
+	StopStreaming();
 }
 
 bool CameraController::StartStreaming()
 {
+	if (IsStarted()) {
+		return true;
+	}
+
 	IoService().post(boost::bind(&CameraController::StartStreamingInternal, this));
 	Start(NULL);
 
 	return true;
+}
+
+void CameraController::StopStreaming()
+{
+	if (!IsStarted()) {
+		return;
+	}
+
+	Stop();
+
 }
 
 void CameraController::StartStreamingInternal()
