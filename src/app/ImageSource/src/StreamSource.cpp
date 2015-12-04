@@ -7,6 +7,8 @@
 using namespace std;
 using boost::asio::ip::tcp;
 
+//#define DUMPSTREAM
+
 StreamSource::StreamSource(const std::string& url)
 	: _url(url)
 {
@@ -91,7 +93,7 @@ void StreamSource::downloadStream() throw(std::exception)
 	boost::asio::streambuf contentbuf;// total buffer
 	std::ostream os(&contentbuf, ios::binary);
 
-	while ( 
+	while (
 		!_isStopping &&
 		boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)
 		) {
@@ -99,9 +101,16 @@ void StreamSource::downloadStream() throw(std::exception)
 		os.write(cp, response.size());
 		response.consume(response.size());
 
+#ifdef DUMPSTREAM
+		if (contentbuf.size() > 1024 * 1024 * 16) {
+			Dump(contentbuf);
+			break;
+		}
+#else
 		if (contentbuf.size() > 1024) {
 			_downStream->Push(contentbuf);
 		}
+#endif
 	}
 	socket.close();
 }

@@ -17,8 +17,6 @@ using boost::property_tree::ptree;
 
 CameraController::CameraController(DeviceDescription& deviceDescription)
 {
-	ImageSource is;
-	
 	deviceDescription_ = deviceDescription;
 }
 
