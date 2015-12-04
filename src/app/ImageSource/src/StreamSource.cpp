@@ -10,6 +10,7 @@ using boost::asio::ip::tcp;
 StreamSource::StreamSource(const std::string& url)
 	: _url(url)
 {
+	splitUrl(url, _server, _port, _path);
 }
 
 StreamSource::~StreamSource()

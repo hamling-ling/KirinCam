@@ -17,6 +17,8 @@ using boost::property_tree::ptree;
 
 CameraController::CameraController(DeviceDescription& deviceDescription)
 {
+	ImageSource is;
+	
 	deviceDescription_ = deviceDescription;
 }
 
@@ -49,6 +51,7 @@ void CameraController::StopStreaming()
 
 void CameraController::StartStreamingInternal()
 {
+	
 	{
 		std::string server;
 		std::string port;
@@ -58,8 +61,8 @@ void CameraController::StartStreamingInternal()
 		startLiveView(server, port, path);
 	}
 
-	imageSource_ = std::shared_ptr<ImageSource>();
-	imageSource_->SetSource(liveViewUrl_);
+	imageSource_ = std::make_shared<ImageSource>(liveViewUrl_);
+	imageSource_->Start();
 }
 
 int CameraController::startLiveView(const std::string& server, const std::string port, const std::string path)

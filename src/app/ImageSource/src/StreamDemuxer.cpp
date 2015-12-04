@@ -19,3 +19,8 @@ void StreamDemuxer::Push(boost::asio::streambuf& stream)
 		}
 	}
 }
+
+void StreamDemuxer::Run()
+{
+	// do nothing
+}
