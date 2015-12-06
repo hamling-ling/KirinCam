@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
 
@@ -11,6 +12,7 @@ void connectSocket(
 	boost::asio::ip::tcp::socket& socket,
 	const std::string& server, const std::string &port);
 void Dump(boost::asio::streambuf& buf);
+void Dump(const std::vector<uint8_t>& buf, const std::string& filename);
 int InvokeCommand(	const std::string& server,
 					const std::string& port,
 					const std::string& path,

@@ -18,6 +18,8 @@ ImageSource::ImageSource(const std::string& url)
 
 ImageSource::~ImageSource()
 {
+	lock_guard<recursive_mutex> lock(_mutex);
+
 	if (_source) {
 		_source->Stop();
 	}
@@ -31,9 +33,24 @@ ImageSource::~ImageSource()
 
 uint32_t ImageSource::Start()
 {
+	lock_guard<recursive_mutex> lock(_mutex);
+	// TODO:avoid multiple call
+	// TODO:error event
 	_presenter->Start();
 	_demuxer->Start();
 	_source->Start();
 
 	return 0;
+}
+
+void ImageSource::GetImage(vector<uint8_t>& buf)
+{
+	lock_guard<recursive_mutex> lock(_mutex);
+
+	buf.clear();
+	if (!_presenter) {
+		return;
+	}
+
+	_presenter->GetImage(buf);
 }

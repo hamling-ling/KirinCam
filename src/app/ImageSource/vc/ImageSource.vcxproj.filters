@@ -53,10 +53,10 @@
     <ClInclude Include="..\src\StreamSource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ImageSource.h">
+    <ClInclude Include="..\include\ImageSourceApi.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ImageSourceApi.h">
+    <ClInclude Include="..\src\ImageSource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

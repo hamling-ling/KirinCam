@@ -65,6 +65,18 @@ void Dump(boost::asio::streambuf& buf)
 	ofs << &buf;
 }
 
+void Dump(const vector<uint8_t>& buf, const string& filename)
+{
+	std::ofstream ofs(filename, std::ios::binary | std::ios::trunc);
+	if (!ofs) {
+		cout << "dump failed" << endl;
+		return;
+	}
+
+	const char* ptr = (const char*)&buf[0];
+	ofs.write(ptr, buf.size());
+}
+
 int InvokeCommand(	const std::string& server,
 					const std::string& port,
 					const std::string& path,

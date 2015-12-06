@@ -47,9 +47,19 @@ void CameraController::StopStreaming()
 
 }
 
+void CameraController::GetImage(vector<uint8_t>& buf)
+{
+	lock_guard<recursive_mutex> lock(imageSourceMutex_);
+
+	if (!imageSource_) {
+		buf.clear();
+	}
+
+	imageSource_->GetImage(buf);
+}
+
 void CameraController::StartStreamingInternal()
 {
-	
 	{
 		std::string server;
 		std::string port;
@@ -59,6 +69,7 @@ void CameraController::StartStreamingInternal()
 		startLiveView(server, port, path);
 	}
 
+	lock_guard<recursive_mutex> lock(imageSourceMutex_);
 	imageSource_ = std::make_shared<ImageSource>(liveViewUrl_);
 	imageSource_->Start();
 }
