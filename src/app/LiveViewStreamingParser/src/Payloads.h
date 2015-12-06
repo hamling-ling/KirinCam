@@ -160,6 +160,14 @@ public:
 	}
 	~ImagePayloadHeader(){}
 
+	// debug
+	virtual bool Fill(boost::asio::streambuf& buf)
+	{
+		bool ret = PayloadHeader::Fill(buf);
+		bool isFull = IsFull();
+		return ret;
+	}
+
 private:
 	FixedSizeEmptyData<4> _reserved;
 	FixedSizeEmptyData<1> _flag;
@@ -224,6 +232,7 @@ public:
 	void SetSize(size_t sz_jpg, size_t sz_pad) {
 		_jpeg.SetSize(sz_jpg);
 		_padding.SetSize(sz_pad);
+		CalcSize();
 	}
 	const VariableSizeData* GetImage() const { return &_jpeg; }
 private:

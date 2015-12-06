@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImageSource.h" />
+    <ClInclude Include="..\include\ImageSourceApi.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\StreamDemuxer.h" />
     <ClInclude Include="..\src\StreamFlow.h" />

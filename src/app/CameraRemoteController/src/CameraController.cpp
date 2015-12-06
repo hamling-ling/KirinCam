@@ -9,7 +9,7 @@
 #include <boost/foreach.hpp>
 
 #include "Common.h"
-#include "ImageSource.h"
+#include "ImageSourceApi.h"
 
 using namespace std;
 using boost::asio::ip::tcp;

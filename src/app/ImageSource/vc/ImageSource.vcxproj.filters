@@ -56,5 +56,8 @@
     <ClInclude Include="..\include\ImageSource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\ImageSourceApi.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

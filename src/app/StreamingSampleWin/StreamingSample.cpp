@@ -8,7 +8,7 @@
 #include "CameraRemoteController.h"
 #include "LiveViewStreamParser.h"
 #include "Common.h"
-#include "ImageSource.h"
+#include "ImageSourceApi.h"
 
 using namespace std;
 using namespace boost;

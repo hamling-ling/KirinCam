@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "../include/ImageSource.h"
+#include "ImageSource.h"
 #include "StreamSource.h"
 #include "StreamDemuxer.h"
 #include "StreamPresenter.h"
