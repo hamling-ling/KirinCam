@@ -21,6 +21,7 @@ bool LiveViewPacket::Fill(boost::asio::streambuf& buf)
 		if (!commonHeader_->Fill(buf)) {
 			return false;
 		}
+		CalcPos();
 	}
 
 	if (commonHeader_->IsFull()) {
@@ -35,7 +36,14 @@ bool LiveViewPacket::Fill(boost::asio::streambuf& buf)
 			}
 			_elements.push_back(payload_.get());
 		}
-		return payload_->Fill(buf);
+
+		bool fillResult = payload_->Fill(buf);
+		CalcPos();
+		if (payload_->IsFull()) {
+			CalcSize();
+		}
+
+		return fillResult;
 	}
 	return true;
 }

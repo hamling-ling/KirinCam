@@ -9,7 +9,7 @@
 #include <boost/foreach.hpp>
 
 #include "Common.h"
-#include "ImageSource.h"
+#include "ImageSourceApi.h"
 
 using namespace std;
 using boost::asio::ip::tcp;
@@ -49,6 +49,7 @@ void CameraController::StopStreaming()
 
 void CameraController::StartStreamingInternal()
 {
+	
 	{
 		std::string server;
 		std::string port;
@@ -58,8 +59,8 @@ void CameraController::StartStreamingInternal()
 		startLiveView(server, port, path);
 	}
 
-	imageSource_ = std::shared_ptr<ImageSource>();
-	imageSource_->SetSource(liveViewUrl_);
+	imageSource_ = std::make_shared<ImageSource>(liveViewUrl_);
+	imageSource_->Start();
 }
 
 int CameraController::startLiveView(const std::string& server, const std::string port, const std::string path)

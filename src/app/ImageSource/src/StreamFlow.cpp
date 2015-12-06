@@ -57,6 +57,7 @@ void StreamFlow::Run()
 {
 	while (!_isStopping) {
 		// do something
+		break;
 	}
 	_isRunning = false;
 }

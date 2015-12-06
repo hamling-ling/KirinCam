@@ -7,12 +7,13 @@ class StreamSource;
 class StreamDemuxer;
 class StreamPresenter;
 
+
 class ImageSource
 {
 public:
-	ImageSource();
+	ImageSource(const std::string& url);
 	~ImageSource();
-	uint32_t SetSource(const std::string& url);
+	uint32_t Start();
 private:
 	std::shared_ptr<StreamSource> _source;
 	std::shared_ptr<StreamDemuxer> _demuxer;

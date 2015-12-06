@@ -16,3 +16,8 @@ void StreamPresenter::Push(std::shared_ptr<LiveViewPacket> packet)
 	lock_guard<recursive_mutex> lock(_mutex);
 	_queue.push(packet);
 }
+
+void StreamPresenter::Run()
+{
+	// do nothing
+}
