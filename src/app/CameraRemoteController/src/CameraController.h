@@ -8,6 +8,7 @@
 #include "DeviceDescription.h"
 
 class ImageSource;
+class EventObserver;
 
 class CameraController : public AsyncTask
 {
@@ -24,6 +25,7 @@ private:
 	// http://10.0.0.1:60152/liveview.JPG?%211234%21http%2dget%3a%2a%3aimage%2fjpeg%3a%2a%21%21%21%21%21
 	std::string liveViewUrl_;
 	std::shared_ptr<ImageSource> imageSource_;
+	std::shared_ptr<EventObserver> eventObserver_;
 
 	void StartStreamingInternal();
 

@@ -25,7 +25,6 @@ namespace LiveViewStreamingParserTest
 			if (!ifs) {
 				Assert::Fail(L"failed to load out.dat");
 			}
-			
 		}
 
 		TEST_METHOD(TestParsePacketAtATime) {

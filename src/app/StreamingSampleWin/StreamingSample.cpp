@@ -71,9 +71,16 @@ int main()
 				}
 				break;
 			}
+			else if ("c" == input) {
+				if (!cp) {
+					cp = make_shared<CameraController>(finder.GetDeviceDescription());
+				}
+			}
 			else if ("g" == input) {
 				g_stop = false;
-				cp = make_shared<CameraController>(finder.GetDeviceDescription());
+				if (!cp) {
+					make_shared<CameraController>(finder.GetDeviceDescription());
+				}
 				cp->StartStreaming();
 			}
 			else if ("s" == input) {

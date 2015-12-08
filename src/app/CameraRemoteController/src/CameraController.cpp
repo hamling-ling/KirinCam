@@ -10,6 +10,7 @@
 
 #include "Common.h"
 #include "ImageSourceApi.h"
+#include "EventObserver.h"
 
 using namespace std;
 using boost::asio::ip::tcp;
@@ -18,6 +19,8 @@ using boost::property_tree::ptree;
 CameraController::CameraController(DeviceDescription& deviceDescription)
 {
 	deviceDescription_ = deviceDescription;
+	eventObserver_ = std::make_shared<EventObserver>();
+	eventObserver_->Subscribe(deviceDescription_.CameraServiceUrl());
 }
 
 CameraController::~CameraController()
