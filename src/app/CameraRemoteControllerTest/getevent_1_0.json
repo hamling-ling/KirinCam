@@ -1,0 +1,131 @@
+{
+    "id": "1",
+    "result": [
+        {
+            "names": [
+                "getMethodTypes",
+                "getAvailableApiList",
+                "setShootMode",
+                "getShootMode",
+                "getSupportedShootMode",
+                "getAvailableShootMode",
+                "setSteadyMode",
+                "getSteadyMode",
+                "getSupportedSteadyMode",
+                "getAvailableSteadyMode",
+                "setViewAngle",
+                "getViewAngle",
+                "getSupportedViewAngle",
+                "getAvailableViewAngle",
+                "setMovieQuality",
+                "getMovieQuality",
+                "getSupportedMovieQuality",
+                "getAvailableMovieQuality",
+                "startLiveview",
+                "stopLiveview",
+                "startMovieRec",
+                "stopMovieRec",
+                "startIntervalStillRec",
+                "stopIntervalStillRec",
+                "setCameraFunction",
+                "getCameraFunction",
+                "getSupportedCameraFunction",
+                "getAvailableCameraFunction",
+                "getStorageInformation",
+                "getApplicationInfo",
+                "getVersions",
+                "getEvent"
+            ],
+            "type": "availableApiList"
+        },
+        {
+            "cameraStatus": "IDLE",
+            "type": "cameraStatus"
+        },
+        "null",
+        {
+            "liveviewStatus": "true",
+            "type": "liveviewStatus"
+        },
+        "null",
+        "",
+        "",
+        "null",
+        "null",
+        "null",
+        [
+            {
+                "numberOfRecordableImages": "-1",
+                "recordTarget": "true",
+                "recordableTime": "-1",
+                "storageDescription": "Storage Media",
+                "storageID": "Memory Card 1",
+                "type": "storageInformation"
+            }
+        ],
+        "null",
+        {
+            "cameraFunctionCandidates": [
+                "Remote Shooting",
+                "Contents Transfer"
+            ],
+            "currentCameraFunction": "Remote Shooting",
+            "type": "cameraFunction"
+        },
+        {
+            "currentMovieQuality": "HQ",
+            "movieQualityCandidates": [
+                "PS",
+                "HQ",
+                "STD",
+                "SLOW",
+                "SSLOW",
+                "VGA"
+            ],
+            "type": "movieQuality"
+        },
+        "null",
+        "null",
+        {
+            "currentSteadyMode": "on",
+            "steadyModeCandidates": [
+                "off",
+                "on"
+            ],
+            "type": "steadyMode"
+        },
+        {
+            "currentViewAngle": "120",
+            "type": "viewAngle",
+            "viewAngleCandidates": [
+                "120",
+                "170"
+            ]
+        },
+        "null",
+        "null",
+        "null",
+        {
+            "currentShootMode": "movie",
+            "shootModeCandidates": [
+                "movie",
+                "intervalstill"
+            ],
+            "type": "shootMode"
+        },
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null",
+        "null"
+    ]
+}
+

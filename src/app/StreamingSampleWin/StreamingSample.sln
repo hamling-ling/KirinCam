@@ -36,6 +36,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageSource", "..\ImageSour
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "..\Common\vc\Common.vcxproj", "{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CameraRemoteControllerTest", "..\CameraRemoteControllerTest\CameraRemoteControllerTest.vcxproj", "{959E0C3F-F940-4ACD-BF82-F4671F457326}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -66,6 +68,10 @@ Global
 		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}.Debug|Win32.Build.0 = Debug|Win32
 		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}.Release|Win32.ActiveCfg = Release|Win32
 		{C9DC65CC-FB6A-4919-B068-F3B35A4BB7BF}.Release|Win32.Build.0 = Release|Win32
+		{959E0C3F-F940-4ACD-BF82-F4671F457326}.Debug|Win32.ActiveCfg = Debug|Win32
+		{959E0C3F-F940-4ACD-BF82-F4671F457326}.Debug|Win32.Build.0 = Debug|Win32
+		{959E0C3F-F940-4ACD-BF82-F4671F457326}.Release|Win32.ActiveCfg = Release|Win32
+		{959E0C3F-F940-4ACD-BF82-F4671F457326}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
