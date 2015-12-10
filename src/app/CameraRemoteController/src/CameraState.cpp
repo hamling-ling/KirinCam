@@ -15,6 +15,7 @@ CameraState::CameraState(const CameraState& state)
 	_storageInformation = state.GetStorationInformation();
 	_cameraFunction = state.GetCameraFunction();
 	_movieQuality = state.GetMoviewQuality();
+	_steadyMode = state.GetSteadyMode();
 	_viewAngle = state.GetViewAngle();
 	_shootMode = state.GetShootMode();
 }
@@ -31,8 +32,10 @@ CameraState& CameraState::operator=(const CameraState& state)
 	_storageInformation = state.GetStorationInformation();
 	_cameraFunction = state.GetCameraFunction();
 	_movieQuality = state.GetMoviewQuality();
+	_steadyMode = state.GetSteadyMode();
 	_viewAngle = state.GetViewAngle();
 	_shootMode = state.GetShootMode();
+	return *this;
 }
 
 bool CameraState::UpdateAvailableList(const vector<string>& apiList)
@@ -95,6 +98,16 @@ bool CameraState::UpdateMovieQuality(const string& quality)
 	return true;
 }
 
+bool CameraState::UpdateSteadyMode(const string& steadyMode)
+{
+	lock_guard<recursive_mutex> lock(_mutex);
+	if (_steadyMode.compare(steadyMode) == 0) {
+		return false;
+	}
+	_steadyMode = steadyMode;
+	return true;
+
+}
 bool CameraState::UpdateViewAngle(const string& viewAngle)
 {
 	lock_guard<recursive_mutex> lock(_mutex);
@@ -149,6 +162,12 @@ std::string CameraState::GetMoviewQuality() const
 {
 	lock_guard<recursive_mutex> lock(_mutex);
 	return _movieQuality;
+}
+
+std::string CameraState::GetSteadyMode() const
+{
+	lock_guard<recursive_mutex> lock(_mutex);
+	return _steadyMode;
 }
 
 std::string CameraState::GetViewAngle() const

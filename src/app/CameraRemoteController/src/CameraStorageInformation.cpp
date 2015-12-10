@@ -26,9 +26,10 @@ CameraStorageInformation& CameraStorageInformation::operator = (const CameraStor
 	numberOfRecordableImages = state.numberOfRecordableImages;
 	recordableTime = state.recordableTime;
 	storageDescription = state.storageDescription;
+	return *this;
 }
 
-bool CameraStorageInformation::operator == (const CameraStorageInformation& info) {
+bool CameraStorageInformation::operator == (const CameraStorageInformation& info) const {
 	if (storageID.compare(info.storageID) != 0) {
 		return false;
 	}
@@ -44,4 +45,5 @@ bool CameraStorageInformation::operator == (const CameraStorageInformation& info
 	if (storageDescription.compare(info.storageDescription) != 0) {
 		return false;
 	}
-
+	return true;
+}

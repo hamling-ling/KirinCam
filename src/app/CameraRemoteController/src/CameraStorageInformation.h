@@ -15,5 +15,5 @@ public:
 	std::string recordableTime;
 	std::string storageDescription;
 
-	bool operator == (const CameraStorageInformation& info);
+	bool operator == (const CameraStorageInformation& info) const;
 };
