@@ -18,6 +18,11 @@ CameraState::CameraState(const CameraState& state)
 	_steadyMode = state.GetSteadyMode();
 	_viewAngle = state.GetViewAngle();
 	_shootMode = state.GetShootMode();
+	_cameraFunctionCandidates = state.CameraFunctionCandidate();
+	_moviewQualityCandidates = state.MoviewQualityCandidates();
+	_steadyModeCandidates = state.SteadyModeCandidates();
+	_viewAngleCandidates = state.ViewAngleCandidates();
+	_shootModeCandidates = state.ShootModeCandidates();
 }
 
 CameraState::~CameraState()
@@ -26,6 +31,8 @@ CameraState::~CameraState()
 
 CameraState& CameraState::operator=(const CameraState& state)
 {
+	lock_guard<recursive_mutex> lock(_mutex);
+
 	_apiList = state.GetAvailableApiList();
 	_cameraStatus = state.GetCameraStatus();
 	_liveviewStatus = state.GetLiveviewStatus();
@@ -35,6 +42,11 @@ CameraState& CameraState::operator=(const CameraState& state)
 	_steadyMode = state.GetSteadyMode();
 	_viewAngle = state.GetViewAngle();
 	_shootMode = state.GetShootMode();
+	_cameraFunctionCandidates = state.CameraFunctionCandidate();
+	_moviewQualityCandidates = state.MoviewQualityCandidates();
+	_steadyModeCandidates = state.SteadyModeCandidates();
+	_viewAngleCandidates = state.ViewAngleCandidates();
+	_shootModeCandidates = state.ShootModeCandidates();
 	return *this;
 }
 
@@ -180,5 +192,85 @@ std::string CameraState::GetShootMode() const
 {
 	lock_guard<recursive_mutex> lock(_mutex);
 	return _shootMode;
+}
+
+set<string> CameraState::CameraFunctionCandidate() const
+{
+	return _cameraFunctionCandidates;
+}
+
+set<string> CameraState::MoviewQualityCandidates() const
+{
+	return _moviewQualityCandidates;
+}
+
+set<string> CameraState::SteadyModeCandidates() const
+{
+	return _steadyModeCandidates;
+}
+
+set<string> CameraState::ViewAngleCandidates() const
+{
+	return _viewAngleCandidates;
+}
+
+set<string> CameraState::ShootModeCandidates() const
+{
+	return _shootModeCandidates;
+}
+
+bool CameraState::HasCameraFunctionCandidate() const
+{
+	return (!_cameraFunctionCandidates.empty());
+}
+
+bool CameraState::HasMoviewQualityCandidates() const
+{
+	return (!_moviewQualityCandidates.empty());
+}
+
+bool CameraState::HasSteadyModeCandidates() const
+{
+	return (!_steadyModeCandidates.empty());
+}
+
+bool CameraState::HasViewAngleCandidates() const
+{
+	return (!_viewAngleCandidates.empty());
+}
+
+bool CameraState::HasShootModeCandidates() const
+{
+	return (!_shootModeCandidates.empty());
+}
+
+void CameraState::SetCameraFunctionCandidate(const std::set<std::string>& candidates)
+{
+	_cameraFunctionCandidates.clear();
+	_cameraFunctionCandidates.insert(candidates.begin(), candidates.end());
+}
+
+void CameraState::SetMoviewQualityCandidates(const std::set<std::string>& candidates)
+{
+	_moviewQualityCandidates.clear();
+	_moviewQualityCandidates.insert(candidates.begin(), candidates.end());
+}
+
+void CameraState::SetSteadyModeCandidates(const std::set<std::string>& candidates)
+{
+	_steadyModeCandidates.clear();
+	_steadyModeCandidates.insert(candidates.begin(), candidates.end());
+}
+
+void CameraState::SetViewAngleCandidates(const std::set<std::string>& candidates)
+{
+	_viewAngleCandidates.clear();
+	_viewAngleCandidates.insert(candidates.begin(), candidates.end());
+}
+
+void CameraState::SetShootModeCandidates(const std::set<std::string>& candidates)
+{
+	_shootModeCandidates.clear();
+	_shootModeCandidates.insert(candidates.begin(), candidates.end());
 }
 

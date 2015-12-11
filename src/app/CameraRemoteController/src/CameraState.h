@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <set>
 #include <string>
 #include <mutex>
 #include "CameraStorageInformation.h"
@@ -26,6 +27,7 @@ bool isContentsEqual(const std::vector<T>& a, const std::vector<T>& b) {
 class CameraState
 {
 public:
+
 	CameraState();
 	CameraState(const CameraState& state);
 	virtual ~CameraState();
@@ -50,6 +52,25 @@ public:
 	std::string GetSteadyMode() const;
 	std::string GetViewAngle() const;
 	std::string GetShootMode() const;
+
+	std::set<std::string> CameraFunctionCandidate() const;
+	std::set<std::string> MoviewQualityCandidates() const;
+	std::set<std::string> SteadyModeCandidates() const;
+	std::set<std::string> ViewAngleCandidates() const;
+	std::set<std::string> ShootModeCandidates() const;
+
+	bool HasCameraFunctionCandidate() const;
+	bool HasMoviewQualityCandidates() const;
+	bool HasSteadyModeCandidates() const;
+	bool HasViewAngleCandidates() const;
+	bool HasShootModeCandidates() const;
+
+	void SetCameraFunctionCandidate(const std::set<std::string>& candidates);
+	void SetMoviewQualityCandidates(const std::set<std::string>& candidates);
+	void SetSteadyModeCandidates(const std::set<std::string>& candidates);
+	void SetViewAngleCandidates(const std::set<std::string>& candidates);
+	void SetShootModeCandidates(const std::set<std::string>& candidates);
+
 private:
 	mutable std::recursive_mutex _mutex;
 	std::vector<std::string> _apiList;
@@ -61,5 +82,10 @@ private:
 	std::string _steadyMode;
 	std::string _viewAngle;
 	std::string _shootMode;
+	std::set<std::string> _cameraFunctionCandidates;
+	std::set<std::string> _moviewQualityCandidates;
+	std::set<std::string> _steadyModeCandidates;
+	std::set<std::string> _viewAngleCandidates;
+	std::set<std::string> _shootModeCandidates;
 };
 
