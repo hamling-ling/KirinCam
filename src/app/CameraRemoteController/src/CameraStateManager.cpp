@@ -54,7 +54,7 @@ CameraStateManager::~CameraStateManager()
 {
 }
 
-void CameraStateManager::UpdateState(const std::string& json, std::set<string>& updatedObjectNames)
+void CameraStateManager::UpdateState(const string& json, set<string>& updatedObjectNames)
 {
 	ptree pt;
 	stringstream ss(json);
@@ -101,16 +101,6 @@ bool CameraStateManager::parseCameraStatust(ptree& pt, set<string>& updatedObjec
 		kCameraStatus,
 		&CameraState::UpdateCameraStatus
 		);
-	/*//ptree& status = pt.get_child("cameraStatus");
-	boost::optional<string> op = pt.get_optional<string>(kCameraStatus);
-	if (!op) {
-		return false;
-	}
-
-	if (_cameraState.UpdateCameraStatus(op.get())) {
-		updatedObjects.insert(kCameraStatus);
-	}
-	return true;*/
 }
 
 bool CameraStateManager::parseLiveviewStatust(ptree& pt, set<string>& updatedObjects)
@@ -121,15 +111,6 @@ bool CameraStateManager::parseLiveviewStatust(ptree& pt, set<string>& updatedObj
 		kLiveviewStatus,
 		&CameraState::UpdateLiveviewStatus
 		);
-	/*boost::optional<string> op = pt.get_optional<string>(kLiveviewStatus);
-	if (!op) {
-		return false;
-	}
-
-	if (_cameraState.UpdateLiveviewStatus(op.get())) {
-		updatedObjects.insert(kLiveviewStatus);
-	}
-	return true;*/
 }
 
 bool CameraStateManager::parse10th(ptree& pt, set<string>& updatedObjects)
