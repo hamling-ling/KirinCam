@@ -18,6 +18,7 @@
     <ClCompile Include="..\src\CameraStorageInformation.cpp" />
     <ClCompile Include="..\src\DeviceDescription.cpp" />
     <ClCompile Include="..\src\DeviceFinder.cpp" />
+    <ClCompile Include="..\src\ErrorStatus.cpp" />
     <ClCompile Include="..\src\EventObserver.cpp" />
     <ClCompile Include="..\src\stdafx.cpp" />
   </ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="..\src\CameraStorageInformation.h" />
     <ClInclude Include="..\src\DeviceDescription.h" />
     <ClInclude Include="..\src\DeviceFinder.h" />
+    <ClInclude Include="..\src\ErrorStatus.h" />
     <ClInclude Include="..\src\EventObserver.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\targetver.h" />

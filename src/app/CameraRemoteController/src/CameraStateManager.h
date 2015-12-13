@@ -36,6 +36,7 @@ public:
 	CameraStateManager();
 	virtual ~CameraStateManager();
 	void UpdateState(const std::string& json, std::set<std::string>& updatedObjectNames);
+	void UpdateState(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjectNames);
 
 private:
 	typedef bool (CameraStateManager::*parserFunc_t)(boost::property_tree::ptree&, std::set<std::string>&);

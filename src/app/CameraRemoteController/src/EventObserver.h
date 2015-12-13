@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AsyncTask.h"
+#include "CameraStateManager.h"
 
 #define kGetEventRetryMax	5
 
@@ -16,5 +17,7 @@ private:
 	std::string _server;
 	std::string _port;
 	std::string _path;
+
+	CameraStateManager _stateManager;
 };
 

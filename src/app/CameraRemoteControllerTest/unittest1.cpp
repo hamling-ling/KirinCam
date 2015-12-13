@@ -1,10 +1,15 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "../CameraRemoteController/src/CameraStateManager.h"
+#include "../CameraRemoteController/src/ErrorStatus.h"
 #include <fstream>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
+using boost::property_tree::ptree;
 
 namespace CameraRemoteControllerTest
 {		
@@ -30,6 +35,24 @@ namespace CameraRemoteControllerTest
 			CameraStateManager csm;
 			set<string> updatedObjNames;
 			csm.UpdateState(strjson, updatedObjNames);
+		}
+
+		TEST_METHOD(TestErrorStatusJesonParser)
+		{
+			ptree pt;
+			read_json("errorstatus.json", pt);
+
+			ErrorStatus es;
+			Assert::IsTrue(es.SetStatus(pt));
+		}
+
+		TEST_METHOD(TestErrorStatusJesonParserFailure)
+		{
+			ptree pt;
+			read_json("getevent_1_0.json", pt);
+
+			ErrorStatus es;
+			Assert::IsFalse(es.SetStatus(pt));
 		}
 	};
 }

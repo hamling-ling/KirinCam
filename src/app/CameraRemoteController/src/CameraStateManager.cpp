@@ -60,6 +60,11 @@ void CameraStateManager::UpdateState(const string& json, set<string>& updatedObj
 	stringstream ss(json);
 	read_json(ss, pt);
 
+	return UpdateState(pt, updatedObjectNames);
+}
+ 
+void CameraStateManager::UpdateState(ptree& pt, set<string>& updatedObjectNames)
+{
 	ptree& result = pt.get_child(kResult);
 	unsigned int count = 0;
 
@@ -77,7 +82,7 @@ void CameraStateManager::UpdateState(const string& json, set<string>& updatedObj
 		}
 	}
 }
- 
+
 bool CameraStateManager::parseAvailableApiList(ptree& pt, set<string>& updatedObjects)
 {
 	ptree& names = pt.get_child(kNames);

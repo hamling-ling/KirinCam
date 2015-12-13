@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "EventObserver.h"
 #include "Common.h"
+#include "ErrorStatus.h"
 
 #include <sstream>// debug
 #include <iostream>// debug
@@ -60,6 +61,22 @@ void EventObserver::EventReceiveProc()
 			retryCount++;
 			continue;
 		}
+
+		ErrorStatus status;
+		if (status.SetStatus(pt2nd)) {
+			if (status.StatusCode() == ErrorStatusCodeTimeout) {
+				continue;
+			}
+			if (kGetEventRetryMax <= retryCount) {
+				// todo Raise event here
+				return;
+			}
+			retryCount++;
+			continue;
+		}
+
+		set<string> updatedObjNames;
+		_stateManager.UpdateState(pt2nd, updatedObjNames);
 
 		retryCount = 0;
 		// debug
