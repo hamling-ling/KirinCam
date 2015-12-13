@@ -34,15 +34,37 @@ void EventObserver::Subscribe(const std::string& url)
 
 void EventObserver::EventReceiveProc()
 {
-	string json_request("{\"method\": \"getEvent\",\"params\" : [false],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
-	ptree pt;
+	cout << __FUNCTION__ << " ENT" << endl;
 
-	if (InvokeCommand(_server, _port, _path, json_request, pt) != 0) {
-		return;
+	{
+		string json_request("{\"method\": \"getEvent\",\"params\" : [false],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
+		ptree pt1st;
+
+		if (InvokeCommand(_server, _port, _path, json_request, pt1st) != 0) {
+			cout << "EventSubscription Failed" << endl;
+			// todo:Raise event here
+			return;
+		}
 	}
 
-	// debug
-	stringstream ss;
-	write_json(ss, pt);
-	cout << ss.str() << endl;
+	string json_request("{\"method\": \"getEvent\",\"params\" : [true],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
+	ptree pt2nd;
+	bool retryCount = 0;
+	while (!IsStopping()) {
+		if (InvokeCommand(_server, _port, _path, json_request, pt2nd) != 0) {
+			boost::this_thread::sleep(boost::posix_time::millisec(100));
+			if (5 < retryCount) {
+				// todo Raise event here
+			}
+			retryCount++;
+			continue;
+		}
+
+		retryCount = 0;
+		// debug
+		stringstream ss;
+		write_json(ss, pt2nd);
+		cout << ss.str() << endl;
+	}
+	cout << __FUNCTION__ << " EXIT" << endl;
 }

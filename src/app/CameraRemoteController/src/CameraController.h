@@ -15,6 +15,7 @@ class CameraController : public AsyncTask
 public:
 	CameraController(DeviceDescription& deviceDescription);
 	virtual ~CameraController();
+	bool SubscribeEvent();
 	bool StartStreaming();
 	void StopStreaming();
 	void GetImage(std::vector<uint8_t> &buf);

@@ -90,6 +90,12 @@ int main()
 					playThread = std::thread(playImages, cp);
 				}
 			}
+			else if ("e" == input) {
+				if (!cp) {
+					cp = make_shared<CameraController>(finder.GetDeviceDescription());
+				}
+				cp->SubscribeEvent();
+			}
 		}
 	}
 	catch (std::exception& e) {

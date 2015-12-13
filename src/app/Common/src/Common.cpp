@@ -81,8 +81,9 @@ int InvokeCommand(	const std::string& server,
 					const std::string& port,
 					const std::string& path,
 					const std::string& json_command,
-					boost::property_tree::ptree& result)
+					boost::property_tree::ptree& resultJson)
 {
+	int retCode = 0;
 	try
 	{
 		boost::system::error_code error = boost::asio::error::host_not_found;
@@ -121,12 +122,13 @@ int InvokeCommand(	const std::string& server,
 		if (!response_stream || http_version.substr(0, 5) != "HTTP/")
 		{
 			std::cout << "Invalid response\n";
-			return 1;
+			retCode = -1;
 		}
 		if (status_code != 200)
 		{
 			std::cout << "Response returned with status code " << status_code << "\n";
-			return 1;
+			retCode = status_code;
+			return retCode;
 		}
 
 		// Read the response headers, which are terminated by a blank line.
@@ -149,12 +151,13 @@ int InvokeCommand(	const std::string& server,
 			json_response << &response;
 		}
 
-		read_json(json_response, result);
+		read_json(json_response, resultJson);
 	}
 	catch (std::exception& e)
 	{
 		std::cout << "Exception: " << e.what() << "\n";
+		retCode = -1;
 	}
-	return 0;
+	return retCode;
 }
 

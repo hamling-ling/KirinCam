@@ -18,6 +18,7 @@ public:
 	virtual void Start(asyncTaskCallback_t callback);
 	virtual void Stop();
 	bool IsStarted();
+	bool IsStopping();
 
 protected:
 	boost::asio::io_service& IoService();

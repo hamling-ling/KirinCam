@@ -63,6 +63,11 @@ bool AsyncTask::IsStarted()
 	return _isRunning;
 }
 
+bool AsyncTask::IsStopping()
+{
+	return _isStopping;
+}
+
 void AsyncTask::RaiseEvent(const boost::system::error_code &e) {
 	if (e == boost::asio::error::operation_aborted) {
 		return;
