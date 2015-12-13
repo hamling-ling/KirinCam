@@ -53,8 +53,9 @@ void EventObserver::EventReceiveProc()
 	while (!IsStopping()) {
 		if (InvokeCommand(_server, _port, _path, json_request, pt2nd) != 0) {
 			boost::this_thread::sleep(boost::posix_time::millisec(100));
-			if (5 < retryCount) {
+			if (kGetEventRetryMax <= retryCount) {
 				// todo Raise event here
+				return;
 			}
 			retryCount++;
 			continue;

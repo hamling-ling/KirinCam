@@ -1,5 +1,9 @@
 #pragma once
-#include "C:\Users\nobu\Documents\GitHub\KirinCam\src\app\CameraRemoteController\src\AsyncTask.h"
+
+#include "AsyncTask.h"
+
+#define kGetEventRetryMax	5
+
 class EventObserver :
 	public AsyncTask
 {
