@@ -2,9 +2,8 @@
 
 #include "AsyncTask.h"
 #include "CameraStateManager.h"
-#pragma warning(disable:4996)
-#define _SCL_SECURE_NO_WARNINGS
-//#include <boost/signals2.hpp>
+#include <string>
+#include <boost/signals2.hpp>
 #include <boost/bind.hpp>
 #include <boost/property_tree/ptree.hpp>
 #define kGetEventRetryMax	5
@@ -13,7 +12,15 @@ class EventObserver :
 	public AsyncTask
 {
 public:
-	//boost::signals2::signal<void(const EventObserver&)> getAvailableApiListChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> GetAvailableApiListChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> CameraStatusChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> LiveviewStatusChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> StorageInfoChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> CameraFunctionChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> MovieQualityChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> SteadyModeChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> ViewAngleChanged;
+	boost::signals2::signal<void(const EventObserver&, const std::string&)> ShootModeChanged;
 
 	EventObserver();
 	virtual ~EventObserver();
@@ -30,5 +37,7 @@ private:
 
 	bool connect();
 	bool updateState(boost::property_tree::ptree& pt);
+	void raiseEvents(updatedObjects_t updatedIndexes);
+	void raiseSingleEvent(int index);
 };
 

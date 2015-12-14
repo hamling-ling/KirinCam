@@ -122,8 +122,51 @@ bool EventObserver::updateState(boost::property_tree::ptree& pt)
 		return false;
 	}
 
-	set<string> updatedObjNames;
-	_stateManager.UpdateState(pt, updatedObjNames);
+	updatedObjects_t updatedObjIndexes;
+	_stateManager.UpdateState(pt, updatedObjIndexes);
 
 	return true;
+}
+
+void EventObserver::raiseEvents(updatedObjects_t updatedIndexes)
+{
+	for (int i = 0; i < updatedIndexes.size(); i++) {
+		if (updatedIndexes[i]) {
+
+		}
+	}
+}
+
+void EventObserver::raiseSingleEvent(int index) {
+	switch (index) {
+	case 0:
+		GetAvailableApiListChanged(*this, kAvailableApiList);
+		break;
+	case 1:
+		CameraStatusChanged(*this, kCameraStatus);
+		break;
+	case 3:
+		LiveviewStatusChanged(*this, kLiveviewStatus);
+		break;
+	case 10:
+		StorageInfoChanged(*this, kStorageInformation);
+		break;
+	case 12:
+		CameraFunctionChanged(*this, kCurrentCameraFunction);
+		break;
+	case 13:
+		MovieQualityChanged(*this, kCurrentMoviewQuality);
+		break;
+	case 16:
+		SteadyModeChanged(*this, kCurrentSteadyMode);
+		break;
+	case 17:
+		ViewAngleChanged(*this, kCurrentViewAngle);
+		break;
+	case 21:
+		ShootModeChanged(*this, kCurrentShootMode);
+		break;
+	default:
+		break;
+	}
 }

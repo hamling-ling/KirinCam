@@ -2,7 +2,6 @@
 
 #include <string>
 #include <array>
-#include <set>
 #include <mutex>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/function.hpp>
@@ -30,51 +29,56 @@ static const char* kViewAngleCandidates = "viewAngleCandidates";
 static const char* kCurrentShootMode = "currentShootMode";
 static const char* kShootModeCandidates = "shootModeCandidates";
 
+#define EVENT_IDX_MAX	35
+typedef std::array < bool, EVENT_IDX_MAX > updatedObjects_t;
+
 class CameraStateManager
 {
 public:
 	CameraStateManager();
 	virtual ~CameraStateManager();
-	void UpdateState(const std::string& json, std::set<std::string>& updatedObjectNames);
-	void UpdateState(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjectNames);
+	void UpdateState(const std::string& json, updatedObjects_t& updates);
+	void UpdateState(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 
 private:
-	typedef bool (CameraStateManager::*parserFunc_t)(boost::property_tree::ptree&, std::set<std::string>&);
+	typedef bool (CameraStateManager::*parserFunc_t)(boost::property_tree::ptree&, updatedObjects_t& updates);
 	const std::array<parserFunc_t,35> _funcs;
 	CameraState _cameraState;
 	std::recursive_mutex _mutex;
 
 	/** 0 */
-	bool parseAvailableApiList(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseAvailableApiList(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 1 */
-	bool parseCameraStatust(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseCameraStatust(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 3 */
-	bool parseLiveviewStatust(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseLiveviewStatust(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 10 */
-	bool parse10th(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parse10th(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 12 */
-	bool parseCameraFunction(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseCameraFunction(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 13 */
-	bool parseMovieQuality(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseMovieQuality(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 16 */
-	bool parseSteadyMode(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseSteadyMode(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 17 */
-	bool parseViewAngle(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseViewAngle(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** 21 */
-	bool parseShootMode(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseShootMode(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 	/** others */
-	bool parseNothing(boost::property_tree::ptree& pt, std::set<std::string>& updatedObjects);
+	bool parseNothing(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 
 	bool parseSimpleProperty(
 		boost::property_tree::ptree& pt,
-		std::set<std::string>& updatedObjects,
+		int idx,
+		updatedObjects_t& updates,
 		const char* propName,
 		bool (CameraState::*updator)(const std::string&)
 		);
 
 	bool parsePropWithCandidates(
 		boost::property_tree::ptree& pt,
-		std::set<std::string>& updatedObjects,
+		int idx,
+		updatedObjects_t& updates,
 		const char* propName,
 		const char* candName,
 		bool (CameraState::*updator)(const std::string&),

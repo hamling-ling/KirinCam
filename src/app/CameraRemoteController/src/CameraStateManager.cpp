@@ -54,16 +54,16 @@ CameraStateManager::~CameraStateManager()
 {
 }
 
-void CameraStateManager::UpdateState(const string& json, set<string>& updatedObjectNames)
+void CameraStateManager::UpdateState(const string& json, updatedObjects_t& updates)
 {
 	ptree pt;
 	stringstream ss(json);
 	read_json(ss, pt);
 
-	return UpdateState(pt, updatedObjectNames);
+	return UpdateState(pt, updates);
 }
  
-void CameraStateManager::UpdateState(ptree& pt, set<string>& updatedObjectNames)
+void CameraStateManager::UpdateState(ptree& pt, updatedObjects_t& updates)
 {
 	ptree& result = pt.get_child(kResult);
 	unsigned int count = 0;
@@ -74,7 +74,7 @@ void CameraStateManager::UpdateState(ptree& pt, set<string>& updatedObjectNames)
 	{
 		ptree child = e.second;
 		parserFunc_t parser = _funcs[count];
-		(this->*parser)(child, updatedObjectNames);
+		(this->*parser)(child, updates);
 
 		count++;
 		if (_funcs.size() <= count) {
@@ -83,7 +83,7 @@ void CameraStateManager::UpdateState(ptree& pt, set<string>& updatedObjectNames)
 	}
 }
 
-bool CameraStateManager::parseAvailableApiList(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseAvailableApiList(ptree& pt, updatedObjects_t& updates)
 {
 	ptree& names = pt.get_child(kNames);
 	vector<string> list;
@@ -93,32 +93,35 @@ bool CameraStateManager::parseAvailableApiList(ptree& pt, set<string>& updatedOb
 	}
 
 	if (_cameraState.UpdateAvailableList(list)) {
-		updatedObjects.insert(kAvailableApiList);
+		updates[0] = true;
 	}
+
 	return true;
 }
 
-bool CameraStateManager::parseCameraStatust(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseCameraStatust(ptree& pt, updatedObjects_t& updates)
 {
 	return parseSimpleProperty(
 		pt,
-		updatedObjects,
+		1,
+		updates,
 		kCameraStatus,
 		&CameraState::UpdateCameraStatus
 		);
 }
 
-bool CameraStateManager::parseLiveviewStatust(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseLiveviewStatust(ptree& pt, updatedObjects_t& updates)
 {
 	return parseSimpleProperty(
 		pt,
-		updatedObjects,
+		3,
+		updates,
 		kLiveviewStatus,
 		&CameraState::UpdateLiveviewStatus
 		);
 }
 
-bool CameraStateManager::parse10th(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parse10th(ptree& pt, updatedObjects_t& updates)
 {
 	ptree& child = pt.get_child(".");
 
@@ -147,16 +150,17 @@ bool CameraStateManager::parse10th(ptree& pt, set<string>& updatedObjects)
 		storageInfo.push_back(info);
 	}
 	if (_cameraState.UpdateStorageInformation(storageInfo)) {
-		updatedObjects.insert(kStorageInformation);
+		updates[10] = true;
 	}
 	return true;
 }
 
-bool CameraStateManager::parseCameraFunction(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseCameraFunction(ptree& pt, updatedObjects_t& updates)
 {
 	return parsePropWithCandidates(
 		pt,
-		updatedObjects,
+		12,
+		updates,
 		kCurrentCameraFunction,
 		kCurrentCameraFunctionCandidates,
 		&CameraState::UpdateCameraFunction,
@@ -165,11 +169,12 @@ bool CameraStateManager::parseCameraFunction(ptree& pt, set<string>& updatedObje
 		);
 }
 
-bool CameraStateManager::parseMovieQuality(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseMovieQuality(ptree& pt, updatedObjects_t& updates)
 {
 	return parsePropWithCandidates(
 		pt,
-		updatedObjects,
+		13,
+		updates,
 		kCurrentMoviewQuality,
 		kMoviewQualityCandidates,
 		&CameraState::UpdateMovieQuality,
@@ -178,11 +183,12 @@ bool CameraStateManager::parseMovieQuality(ptree& pt, set<string>& updatedObject
 		);
 }
 
-bool CameraStateManager::parseSteadyMode(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseSteadyMode(ptree& pt, updatedObjects_t& updates)
 {
 	return parsePropWithCandidates(
 		pt,
-		updatedObjects,
+		16,
+		updates,
 		kCurrentSteadyMode,
 		kSteadyModeCandidates,
 		&CameraState::UpdateSteadyMode,
@@ -191,11 +197,12 @@ bool CameraStateManager::parseSteadyMode(ptree& pt, set<string>& updatedObjects)
 		);
 }
 
-bool CameraStateManager::parseViewAngle(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseViewAngle(ptree& pt, updatedObjects_t& updates)
 {
 	return parsePropWithCandidates(
 		pt,
-		updatedObjects,
+		17,
+		updates,
 		kCurrentViewAngle,
 		kViewAngleCandidates,
 		&CameraState::UpdateViewAngle,
@@ -204,11 +211,12 @@ bool CameraStateManager::parseViewAngle(ptree& pt, set<string>& updatedObjects)
 		);
 }
 
-bool CameraStateManager::parseShootMode(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseShootMode(ptree& pt, updatedObjects_t& updates)
 {
 	return parsePropWithCandidates(
 		pt,
-		updatedObjects,
+		21,
+		updates,
 		kCurrentShootMode,
 		kShootModeCandidates,
 		&CameraState::UpdateShootMode,
@@ -217,14 +225,15 @@ bool CameraStateManager::parseShootMode(ptree& pt, set<string>& updatedObjects)
 		);
 }
 
-bool CameraStateManager::parseNothing(ptree& pt, set<string>& updatedObjects)
+bool CameraStateManager::parseNothing(ptree& pt, updatedObjects_t& updates)
 {
 	return true;
 }
 
 bool CameraStateManager::parseSimpleProperty(
 	boost::property_tree::ptree& pt,
-	std::set<std::string>& updatedObjects,
+	int idx,
+	updatedObjects_t& updates,
 	const char* propName,
 	bool (CameraState::*updator)(const std::string&)
 	)
@@ -236,7 +245,7 @@ bool CameraStateManager::parseSimpleProperty(
 
 	CameraState* p = &_cameraState;
 	if ((p->*updator)(op.get())) {
-		updatedObjects.insert(propName);
+		updates[idx] = true;
 	}
 
 	return true;
@@ -244,7 +253,8 @@ bool CameraStateManager::parseSimpleProperty(
 
 bool CameraStateManager::parsePropWithCandidates(
 	boost::property_tree::ptree& pt,
-	std::set<std::string>& updatedObjects,
+	int idx,
+	updatedObjects_t& updates,
 	const char* propName,
 	const char* candName,
 	bool (CameraState::*updator)(const string&),
@@ -269,7 +279,7 @@ bool CameraStateManager::parsePropWithCandidates(
 	}
 
 	if ((p->*updator)(val.get())) {
-		updatedObjects.insert(kCurrentShootMode);
+		updates[idx] = true;
 	}
 	return true;
 }

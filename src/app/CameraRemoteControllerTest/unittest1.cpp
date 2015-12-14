@@ -3,6 +3,7 @@
 #include "../CameraRemoteController/src/CameraStateManager.h"
 #include "../CameraRemoteController/src/ErrorStatus.h"
 #include <fstream>
+#include <array>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -33,8 +34,8 @@ namespace CameraRemoteControllerTest
 			string strjson(it, last);
 
 			CameraStateManager csm;
-			set<string> updatedObjNames;
-			csm.UpdateState(strjson, updatedObjNames);
+			array<bool,35> updatedObjIndexes;
+			csm.UpdateState(strjson, updatedObjIndexes);
 		}
 
 		TEST_METHOD(TestErrorStatusJesonParser)
