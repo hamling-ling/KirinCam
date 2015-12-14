@@ -36,6 +36,7 @@ void AsyncTask::Stop()
 	}
 
 	_isStopping = true;
+	_ioService.stop();
 
 	_work = kNullWork;
 	if (_thread.joinable()) {

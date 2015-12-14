@@ -77,20 +77,19 @@ void Dump(const vector<uint8_t>& buf, const string& filename)
 	ofs.write(ptr, buf.size());
 }
 
-int InvokeCommand(	const std::string& server,
-					const std::string& port,
-					const std::string& path,
-					const std::string& json_command,
-					boost::property_tree::ptree& resultJson)
+
+int InvokeCommand(
+	tcp::socket& socket,
+	const std::string& server,
+	const std::string& port,
+	const std::string& path,
+	const std::string& json_command,
+	boost::property_tree::ptree& resultJson)
 {
 	int retCode = 0;
+	boost::system::error_code error = boost::asio::error::host_not_found;
 	try
 	{
-		boost::system::error_code error = boost::asio::error::host_not_found;
-		boost::asio::io_service io_service;
-		tcp::socket socket(io_service);
-		connectSocket(io_service, socket, server, port);
-
 		boost::asio::streambuf request;
 		std::ostream request_stream(&request);
 		request_stream << "POST " << path << " HTTP/1.1\r\n";
@@ -98,7 +97,8 @@ int InvokeCommand(	const std::string& server,
 		request_stream << "Accept: application/json-rpc\r\n";
 		request_stream << "Content-Type: application/json-rpc; char-set=utf-8\r\n";
 		request_stream << "Content-Length: " << json_command.length() << "\r\n";
-		request_stream << "Connection: close\r\n\r\n";
+		//request_stream << "Connection: close\r\n\r\n";
+		request_stream << "\r\n\r\n";
 		request_stream << json_command;
 
 		// Send the request.
@@ -160,4 +160,28 @@ int InvokeCommand(	const std::string& server,
 	}
 	return retCode;
 }
+
+int InvokeCommand(	const std::string& server,
+					const std::string& port,
+					const std::string& path,
+					const std::string& json_command,
+					boost::property_tree::ptree& resultJson)
+{
+	int retCode = 0;
+
+	boost::system::error_code error = boost::asio::error::host_not_found;
+	boost::asio::io_service io_service;
+	tcp::socket socket(io_service);
+	try
+	{
+		connectSocket(io_service, socket, server, port);
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "Exception: " << e.what() << "\n";
+		retCode = -1;
+	}
+	return InvokeCommand(socket, server, port, path, json_command, resultJson);
+}
+
 
