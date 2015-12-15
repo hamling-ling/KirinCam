@@ -15,10 +15,53 @@ using boost::asio::ip::tcp;
 
 static const string kImmediateGetEventRequest("{\"method\": \"getEvent\",\"params\" : [false],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
 static const string kPollingGetEventRequest("{\"method\": \"getEvent\",\"params\" : [true],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
+static const char* kEmptyString = "";
 
-EventObserver::EventObserver() :
-_socket(IoService())
+EventObserver::EventObserver()
+:
+_socket(IoService()),
+_nullEventName(kEmptyString),
+_events({
+	make_pair(kAvailableApiList, &GetAvailableApiListChanged),	// 0
+	make_pair(kCameraStatus, &CameraStatusChanged),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(kLiveviewStatus, &LiveviewStatusChanged),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(kStorageInformation, &StorageInfoChanged),		// 10
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(kCurrentCameraFunction, &CameraFunctionChanged),
+	make_pair(kCurrentMoviewQuality, &MovieQualityChanged),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(kCurrentSteadyMode, &SteadyModeChanged),
+	make_pair(kCurrentViewAngle, &ViewAngleChanged),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),						// 20
+	make_pair(kCurrentShootMode, &ShootModeChanged),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),						// 30
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent),
+	make_pair(_nullEventName, &_nullEvent)
+})
 {
+	nameEventPair_t a = { _nullEventName, &_nullEvent };
+	nameEventPair_t c(_nullEventName, &_nullEvent);
+	std::array<nameEventPair_t, 1>  b = { make_pair(_nullEventName, &_nullEvent) };
 }
 
 EventObserver::~EventObserver()
@@ -118,12 +161,9 @@ bool EventObserver::updateState(boost::property_tree::ptree& pt)
 		if (status.StatusCode() == ErrorStatusCodeTimeout) {
 			return true;
 		}
-		// raise event
-		return false;
+		updatedObjects_t updatedObjIndexes;
+		_stateManager.UpdateState(pt, updatedObjIndexes);
 	}
-
-	updatedObjects_t updatedObjIndexes;
-	_stateManager.UpdateState(pt, updatedObjIndexes);
 
 	return true;
 }
@@ -132,41 +172,13 @@ void EventObserver::raiseEvents(updatedObjects_t updatedIndexes)
 {
 	for (int i = 0; i < updatedIndexes.size(); i++) {
 		if (updatedIndexes[i]) {
-
+			raiseSingleEvent(i);
 		}
 	}
 }
 
 void EventObserver::raiseSingleEvent(int index) {
-	switch (index) {
-	case 0:
-		GetAvailableApiListChanged(*this, kAvailableApiList);
-		break;
-	case 1:
-		CameraStatusChanged(*this, kCameraStatus);
-		break;
-	case 3:
-		LiveviewStatusChanged(*this, kLiveviewStatus);
-		break;
-	case 10:
-		StorageInfoChanged(*this, kStorageInformation);
-		break;
-	case 12:
-		CameraFunctionChanged(*this, kCurrentCameraFunction);
-		break;
-	case 13:
-		MovieQualityChanged(*this, kCurrentMoviewQuality);
-		break;
-	case 16:
-		SteadyModeChanged(*this, kCurrentSteadyMode);
-		break;
-	case 17:
-		ViewAngleChanged(*this, kCurrentViewAngle);
-		break;
-	case 21:
-		ShootModeChanged(*this, kCurrentShootMode);
-		break;
-	default:
-		break;
-	}
+	const char* eventName = _events[index].first;
+	CameraEvent_t* pevt = _events[index].second;
+	(*pevt)(*this, eventName);
 }

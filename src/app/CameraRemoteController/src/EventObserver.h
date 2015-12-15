@@ -8,19 +8,23 @@
 #include <boost/property_tree/ptree.hpp>
 #define kGetEventRetryMax	5
 
+class EventObserver;
+
+typedef boost::signals2::signal<void(const EventObserver&, const std::string&)> CameraEvent_t;
+
 class EventObserver :
 	public AsyncTask
 {
 public:
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> GetAvailableApiListChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> CameraStatusChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> LiveviewStatusChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> StorageInfoChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> CameraFunctionChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> MovieQualityChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> SteadyModeChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> ViewAngleChanged;
-	boost::signals2::signal<void(const EventObserver&, const std::string&)> ShootModeChanged;
+	CameraEvent_t GetAvailableApiListChanged;
+	CameraEvent_t CameraStatusChanged;
+	CameraEvent_t LiveviewStatusChanged;
+	CameraEvent_t StorageInfoChanged;
+	CameraEvent_t CameraFunctionChanged;
+	CameraEvent_t MovieQualityChanged;
+	CameraEvent_t SteadyModeChanged;
+	CameraEvent_t ViewAngleChanged;
+	CameraEvent_t ShootModeChanged;
 
 	EventObserver();
 	virtual ~EventObserver();
@@ -32,7 +36,10 @@ private:
 	std::string _port;
 	std::string _path;
 	boost::asio::ip::tcp::socket _socket;
-
+	CameraEvent_t _nullEvent;
+	const char* _nullEventName;
+	typedef std::pair<const char*, CameraEvent_t*> nameEventPair_t;
+	const std::array<nameEventPair_t, EVENT_IDX_MAX> _events;
 	CameraStateManager _stateManager;
 
 	bool connect();
