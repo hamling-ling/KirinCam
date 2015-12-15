@@ -10,7 +10,7 @@
 
 class EventObserver;
 
-typedef boost::signals2::signal<void(const EventObserver&, const std::string&)> CameraEvent_t;
+typedef boost::signals2::signal<void(const EventObserver&, const char*)> CameraEvent_t;
 
 class EventObserver :
 	public AsyncTask

@@ -19,6 +19,7 @@ using boost::property_tree::ptree;
 CameraController::CameraController(DeviceDescription& deviceDescription)
 {
 	deviceDescription_ = deviceDescription;
+	eventObserver_ = std::make_shared<EventObserver>();
 }
 
 CameraController::~CameraController()
@@ -36,7 +37,6 @@ bool CameraController::SubscribeEvent()
 		return false;
 	}
 
-	eventObserver_ = std::make_shared<EventObserver>();
 	eventObserver_->Subscribe(deviceDescription_.CameraServiceUrl());
 	return true;
 }
@@ -71,6 +71,11 @@ void CameraController::GetImage(vector<uint8_t>& buf)
 	}
 
 	imageSource_->GetImage(buf);
+}
+
+EventObserver& CameraController::GetEventObserver()
+{
+	return *eventObserver_;
 }
 
 void CameraController::StartStreamingInternal()

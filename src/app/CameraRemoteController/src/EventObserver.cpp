@@ -112,14 +112,14 @@ void EventObserver::EventReceiveProc()
 	int retryCount = 0;
 	while (!IsStopping()) {
 		if (!connect()) {
-			// todo:Raise event here
+			// todo:Raise error event here
 			return;
 		}
 
 		if (InvokeCommand(_socket, _server, _port, _path, kPollingGetEventRequest, pt) != 0) {
 			boost::this_thread::sleep(boost::posix_time::millisec(100));
 			if (kGetEventRetryMax <= retryCount) {
-				// todo Raise event here
+				// todo Raise error event here
 				return;
 			}
 			retryCount++;
@@ -161,16 +161,24 @@ bool EventObserver::updateState(boost::property_tree::ptree& pt)
 		if (status.StatusCode() == ErrorStatusCodeTimeout) {
 			return true;
 		}
-		updatedObjects_t updatedObjIndexes;
-		_stateManager.UpdateState(pt, updatedObjIndexes);
+		cerr << status.StatusCode() << ":" << status.StatusMessage() << endl;
+		return false;
 	}
+
+	updatedObjects_t updatedObjIndexes;
+	for (int i = 0; i < updatedObjIndexes.size(); i++) {
+		updatedObjIndexes[i] = false;
+	}
+
+	_stateManager.UpdateState(pt, updatedObjIndexes);
+	raiseEvents(updatedObjIndexes);
 
 	return true;
 }
 
 void EventObserver::raiseEvents(updatedObjects_t updatedIndexes)
 {
-	for (int i = 0; i < updatedIndexes.size(); i++) {
+	for (unsigned int i = 0; i < updatedIndexes.size(); i++) {
 		if (updatedIndexes[i]) {
 			raiseSingleEvent(i);
 		}

@@ -19,6 +19,8 @@ public:
 	bool StartStreaming();
 	void StopStreaming();
 	void GetImage(std::vector<uint8_t> &buf);
+	EventObserver& GetEventObserver();
+
 private:
 	DeviceDescription deviceDescription_;
 	std::recursive_mutex imageSourceMutex_;

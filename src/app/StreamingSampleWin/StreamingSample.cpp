@@ -5,7 +5,8 @@
 #include <chrono>
 #include <conio.h>
 #include <boost/regex.hpp>
-
+#include <boost/bind.hpp>
+#include <boost/signals2/signal.hpp>
 #include "opencvlib.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
@@ -44,6 +45,11 @@ void playImages(std::shared_ptr<CameraController>& cp)
 		}
 	}
 	cv::destroyAllWindows();
+}
+
+void eventHandler(const EventObserver& observer, const char* eventName)
+{
+	cout << "event " << eventName << " received" << endl;
 }
 
 int main()
@@ -95,6 +101,13 @@ int main()
 					cp = make_shared<CameraController>(finder.GetDeviceDescription());
 				}
 				cp->SubscribeEvent();
+			}
+			else if ("b" == input) {
+				if (!cp) {
+					cp = make_shared<CameraController>(finder.GetDeviceDescription());
+				}
+				EventObserver& observer = cp->GetEventObserver();
+				observer.GetAvailableApiListChanged.connect(eventHandler);
 			}
 		}
 	}
