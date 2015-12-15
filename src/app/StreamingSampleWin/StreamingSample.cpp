@@ -85,7 +85,7 @@ int main()
 			else if ("g" == input) {
 				g_stop = false;
 				if (!cp) {
-					make_shared<CameraController>(finder.GetDeviceDescription());
+					cp = make_shared<CameraController>(finder.GetDeviceDescription());
 				}
 				cp->StartStreaming();
 			}
@@ -108,6 +108,14 @@ int main()
 				}
 				EventObserver& observer = cp->GetEventObserver();
 				observer.GetAvailableApiListChanged.connect(eventHandler);
+				observer.CameraStatusChanged.connect(eventHandler);
+				observer.LiveviewStatusChanged.connect(eventHandler);
+				observer.StorageInfoChanged.connect(eventHandler);
+				observer.CameraFunctionChanged.connect(eventHandler);
+				observer.MovieQualityChanged.connect(eventHandler);
+				observer.SteadyModeChanged.connect(eventHandler);
+				observer.ViewAngleChanged.connect(eventHandler);
+				observer.ShootModeChanged.connect(eventHandler);
 			}
 		}
 	}
