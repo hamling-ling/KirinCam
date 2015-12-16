@@ -48,7 +48,9 @@ class CommonHeader : public BaseField
 public:
 	CommonHeader();
 	~CommonHeader();
-	PayloadType PayloadType();
+	PayloadType PayloadType() const;
+	uint16_t GetSequenceNumber() const;
+	uint32_t GetTimeStamp() const;
 private:
 
 	StartByte _startByte;

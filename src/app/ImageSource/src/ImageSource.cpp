@@ -43,14 +43,13 @@ uint32_t ImageSource::Start()
 	return 0;
 }
 
-void ImageSource::GetImage(vector<uint8_t>& buf)
+void ImageSource::GetImage(uint16_t seqNum, CameraFrame& frame)
 {
 	lock_guard<recursive_mutex> lock(_mutex);
 
-	buf.clear();
 	if (!_presenter) {
 		return;
 	}
 
-	_presenter->GetImage(buf);
+	_presenter->GetImage(seqNum, frame);
 }

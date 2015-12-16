@@ -62,15 +62,15 @@ void CameraController::StopStreaming()
 	Stop();
 }
 
-void CameraController::GetImage(vector<uint8_t>& buf)
+void CameraController::GetImage(uint16_t seqNum, CameraFrame& frame)
 {
 	lock_guard<recursive_mutex> lock(imageSourceMutex_);
 
 	if (!imageSource_) {
-		buf.clear();
+		return;
 	}
 
-	imageSource_->GetImage(buf);
+	imageSource_->GetImage(seqNum, frame);
 }
 
 EventObserver& CameraController::GetEventObserver()

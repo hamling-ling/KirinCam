@@ -6,6 +6,7 @@
 #include <boost/asio.hpp>
 #include "AsyncTask.h"
 #include "DeviceDescription.h"
+#include "ImageSourceApi.h"
 
 class ImageSource;
 class EventObserver;
@@ -18,7 +19,7 @@ public:
 	bool SubscribeEvent();
 	bool StartStreaming();
 	void StopStreaming();
-	void GetImage(std::vector<uint8_t> &buf);
+	void GetImage(uint16_t seqNum, CameraFrame& frame);
 	EventObserver& GetEventObserver();
 
 private:

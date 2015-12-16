@@ -9,7 +9,7 @@ class SingleByteNumber : public FixedSizeData<1>
 public:
 	SingleByteNumber();
 	~SingleByteNumber();
-	uint8_t Value();
+	uint8_t Value() const ;
 protected:
 	void Filled();
 private:
@@ -21,7 +21,7 @@ class WByteNumber : public FixedSizeData<2>
 public:
 	WByteNumber();
 	~WByteNumber();
-	uint16_t Value();
+	uint16_t Value() const;
 protected:
 	void Filled();
 private:
@@ -33,7 +33,7 @@ class TriByteNumber : public FixedSizeData<3>
 public:
 	TriByteNumber() : _value(0) {}
 	~TriByteNumber(){}
-	uint32_t Value() { return _value; }
+	uint32_t Value() const { return _value; }
 protected:
 	void Filled()
 	{
@@ -41,7 +41,7 @@ protected:
 		const uint8_t val0 = *(data + 0);
 		const uint8_t val1 = *(data + 1);
 		const uint8_t val2 = *(data + 2);
-
+		// todo:endian
 		_value = val0 << 16 | val1 << 8 | val2;
 	}
 private:
@@ -53,6 +53,7 @@ class QuadByteNumber : public FixedSizeData<4>
 public:
 	QuadByteNumber() : _value(0) {}
 	~QuadByteNumber(){}
+	uint32_t Value() const { return _value; }
 protected:
 	void Filled()
 	{
@@ -61,10 +62,9 @@ protected:
 		const uint8_t val1 = *(data + 1);
 		const uint8_t val2 = *(data + 2);
 		const uint8_t val3 = *(data + 3);
-
+		// todo:endian
 		_value = val0 << 24 | val1 << 16 | val2 << 8 | val3;
 	}
-	uint32_t Value() { return _value; }
 private:
 	uint32_t _value;
 };
@@ -76,7 +76,7 @@ class ByteEnum : public FixedSizeData<1>
 public:
 	ByteEnum(){}
 	~ByteEnum(){}
-	T Value() { return _value; }
+	T Value() const { return _value; }
 	virtual bool Fill(boost::asio::streambuf& buf)
 	{
 		const T* cp = boost::asio::buffer_cast<const T*>(buf.data());

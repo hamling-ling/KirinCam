@@ -56,6 +56,10 @@ const VariableSizeData* LiveViewPacket::GetImage() const {
 	return sptr->GetImage();
 }
 
+const shared_ptr<CommonHeader>& LiveViewPacket::GetHeader() const {
+	return commonHeader_;
+}
+
 void LiveViewPacket::SkipUntil(char c, boost::asio::streambuf& buf) {
 	if (Pos() == 0) {
 		/* “ªo‚µ */

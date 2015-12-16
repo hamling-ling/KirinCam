@@ -26,7 +26,15 @@ CommonHeader::CommonHeader()
 
 CommonHeader::~CommonHeader(){}
 
-PayloadType CommonHeader::PayloadType() {
+PayloadType CommonHeader::PayloadType() const {
 	return _payloadType.Value();
+}
+
+uint16_t CommonHeader::GetSequenceNumber() const {
+	return _sequenceNumber.Value();
+}
+
+uint32_t CommonHeader::GetTimeStamp() const {
+	return _timeStamp.Value();
 }
 

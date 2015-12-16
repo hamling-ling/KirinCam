@@ -5,7 +5,7 @@ SingleByteNumber::SingleByteNumber() : _value(0) {}
 
 SingleByteNumber::~SingleByteNumber(){}
 
-uint8_t SingleByteNumber::Value() { return _value; }
+uint8_t SingleByteNumber::Value() const { return _value; }
 
 void SingleByteNumber::Filled()
 {
@@ -16,12 +16,12 @@ void SingleByteNumber::Filled()
 
 WByteNumber::WByteNumber() : _value(0) {}
 WByteNumber::~WByteNumber(){}
-uint16_t WByteNumber::Value() { return _value; }
+uint16_t WByteNumber::Value() const { return _value; }
 void WByteNumber::Filled()
 {
 	const uint8_t *data = Data();
 	const uint8_t val0 = *(data + 0);
 	const uint8_t val1 = *(data + 1);
-
+	// todo:endian
 	_value = val0 << 8 | val1;
 }

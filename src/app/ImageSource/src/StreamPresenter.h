@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StreamFlow.h"
+#include "ImageSourceDefs.h"
 #include <queue>
 #include <vector>
 
@@ -13,10 +14,11 @@ public:
 	StreamPresenter();
 	virtual ~StreamPresenter();
 	void Push(std::shared_ptr<LiveViewPacket> packet);
-	void GetImage(std::vector<uint8_t>& buf);
+	void GetImage(uint16_t seqNum, CameraFrame& frameData);
 protected:
 	virtual void Run();
 private:
 	static const int kQueueSize = 32;
-	std::queue<std::shared_ptr<LiveViewPacket> > _queue;
+	std::queue<std::shared_ptr<LiveViewPacket> > _imgQueue;
+	std::queue<std::shared_ptr<LiveViewPacket> > _infoQueue;
 };

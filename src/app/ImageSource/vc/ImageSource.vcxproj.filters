@@ -59,5 +59,8 @@
     <ClInclude Include="..\src\ImageSource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\ImageSourceDefs.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

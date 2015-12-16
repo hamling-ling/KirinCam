@@ -25,15 +25,17 @@ bool g_stop = false;
 void playImages(std::shared_ptr<CameraController>& cp)
 {
 	cv::namedWindow("ImageWindow", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
-	vector<uint8_t> image;
+
+	CameraFrame frame;
+	frame.sequenceNumber = 0;
 	while (!g_stop) {
-		cp->GetImage(image);
-		if (image.empty()) {
+		cp->GetImage(frame.sequenceNumber, frame);
+		if (frame.image.empty()) {
 			//somethimes empty. why ?
 			continue;
 		}
 
-		cv::Mat dst_img = cv::imdecode(cv::Mat(image), 1);
+		cv::Mat dst_img = cv::imdecode(cv::Mat(frame.image), 1);
 		try {
 			cv::imshow("ImageWindow", dst_img);
 			cv::waitKey(10);
