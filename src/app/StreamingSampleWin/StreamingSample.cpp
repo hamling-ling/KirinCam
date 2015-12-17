@@ -42,8 +42,7 @@ void playImages(std::shared_ptr<CameraController>& cp)
 		}
 		catch (cv::Exception &ex) {
 			cout << ex.what() << endl;
-			// 1st imgshow throws exception. don't know why ?
-			//break;
+			break;
 		}
 	}
 	cv::destroyAllWindows();
@@ -79,35 +78,12 @@ int main()
 				}
 				break;
 			}
-			else if ("c" == input) {
-				if (!cp) {
-					cp = make_shared<CameraController>(finder.GetDeviceDescription());
-				}
-			}
 			else if ("g" == input) {
 				g_stop = false;
 				if (!cp) {
 					cp = make_shared<CameraController>(finder.GetDeviceDescription());
 				}
-				cp->StartStreaming();
-			}
-			else if ("s" == input) {
-				// if not started yet
-				if (!playThread.joinable()) {
-					// draw different thread. hope it's okey.
-					playThread = std::thread(playImages, cp);
-				}
-			}
-			else if ("e" == input) {
-				if (!cp) {
-					cp = make_shared<CameraController>(finder.GetDeviceDescription());
-				}
-				cp->SubscribeEvent();
-			}
-			else if ("b" == input) {
-				if (!cp) {
-					cp = make_shared<CameraController>(finder.GetDeviceDescription());
-				}
+
 				EventObserver& observer = cp->GetEventObserver();
 				observer.GetAvailableApiListChanged.connect(eventHandler);
 				observer.CameraStatusChanged.connect(eventHandler);
@@ -118,6 +94,22 @@ int main()
 				observer.SteadyModeChanged.connect(eventHandler);
 				observer.ViewAngleChanged.connect(eventHandler);
 				observer.ShootModeChanged.connect(eventHandler);
+				cp->SubscribeEvent();
+
+				cp->StartStreaming();
+
+				// if not started yet
+				if (!playThread.joinable()) {
+					// draw different thread. hope it's okey.
+					playThread = std::thread(playImages, cp);
+				}
+			}
+			else if ("s" == input) {
+				// if not started yet
+				if (!playThread.joinable()) {
+					// draw different thread. hope it's okey.
+					playThread = std::thread(playImages, cp);
+				}
 			}
 		}
 	}

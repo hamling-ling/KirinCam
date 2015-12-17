@@ -60,6 +60,10 @@ const shared_ptr<CommonHeader>& LiveViewPacket::GetHeader() const {
 	return commonHeader_;
 }
 
+const shared_ptr<Payload>& LiveViewPacket::GetPayload() const {
+	return payload_;
+}
+
 void LiveViewPacket::SkipUntil(char c, boost::asio::streambuf& buf) {
 	if (Pos() == 0) {
 		/* “ªo‚µ */

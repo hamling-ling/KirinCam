@@ -211,6 +211,11 @@ public:
 		CalcSize();
 	}
 	~FrameInformation(){}
+	const Coordinate& GetTopLeft() const { return _topLeft; }
+	const Coordinate& GetBottomRight() const { return _buttomRight; }
+	const Category& GetCategory() const { return _category; }
+	const Status& GetStatus() const { return _status; }
+	const AdditionalStatus& GetAdditiopnalStatus() const { return _additionalStatus; }
 private:
 	Coordinate _topLeft;
 	Coordinate _buttomRight;
@@ -259,8 +264,8 @@ public:
 
 		CalcSize();
 	}
-	const std::list<std::shared_ptr<FrameInformation> >& Frames() {
-		_frameInformations;
+	const std::list<std::shared_ptr<FrameInformation> >& Frames() const {
+		return _frameInformations;
 	}
 private:
 	std::list<std::shared_ptr<FrameInformation> > _frameInformations;
@@ -272,6 +277,7 @@ class Payload : public BaseField
 public:
 	Payload(){}
 	~Payload(){}
+	virtual const PayloadHeader& GetPayloadHeader() const = 0;
 };
 
 class ImagePayload : public Payload
@@ -284,6 +290,9 @@ public:
 	}
 	~ImagePayload(){}
 	const VariableSizeData* GetImage() const { return _imageData.GetImage(); }
+	virtual const PayloadHeader& GetPayloadHeader() const {
+		return _header;
+	}
 protected:
 	virtual void Fulfilled(int idx) {
 		if (idx == 0) {
@@ -308,6 +317,12 @@ public:
 		_elements.push_back(&_frameData);
 	}
 	~FramePayload(){}
+	virtual const PayloadHeader& GetPayloadHeader() const {
+		return _header;
+	}
+	const FrameData& GetFrameData() const {
+		return _frameData;
+	}
 
 protected:
 	virtual void Fulfilled(int idx) {

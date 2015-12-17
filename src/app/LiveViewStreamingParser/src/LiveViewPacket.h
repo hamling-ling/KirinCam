@@ -11,6 +11,8 @@ public:
 	virtual bool Fill(boost::asio::streambuf& buf);
 	const VariableSizeData* GetImage() const;
 	const std::shared_ptr<CommonHeader>& GetHeader() const;
+	const std::shared_ptr<Payload>& GetPayload() const;
+
 private:
 	std::shared_ptr<CommonHeader> commonHeader_;
 	std::shared_ptr<Payload> payload_;

@@ -25,4 +25,9 @@ struct CameraFrame {
 	uint32_t timeStamp;
 	std::vector<uint8_t> image;
 	std::vector<CameraFrameInformation> info;
+public:
+	CameraFrame() {
+		sequenceNumber = 0;
+		timeStamp = 0;
+	}
 };
