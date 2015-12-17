@@ -184,4 +184,9 @@ int InvokeCommand(	const std::string& server,
 	return InvokeCommand(socket, server, port, path, json_command, resultJson);
 }
 
-
+void PrintPtree(boost::property_tree::ptree &pt)
+{
+	stringstream ss;
+	write_json(ss, pt);
+	cout << ss.str() << endl;
+}

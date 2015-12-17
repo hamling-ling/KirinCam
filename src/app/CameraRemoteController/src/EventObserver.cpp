@@ -127,14 +127,12 @@ void EventObserver::EventReceiveProc()
 		}
 
 		retryCount = 0;
+
+		PrintPtree(pt);
+
 		if (!updateState(pt)) {
 			return;
 		}
-
-		// debug
-		stringstream ss;
-		write_json(ss, pt);
-		cout << ss.str() << endl;
 	}
 	cout << __FUNCTION__ << " EXIT" << endl;
 }

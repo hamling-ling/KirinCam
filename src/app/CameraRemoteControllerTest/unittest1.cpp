@@ -18,15 +18,7 @@ namespace CameraRemoteControllerTest
 	{
 	public:
 		
-		TEST_METHOD(TestJsonFileExist)
-		{
-			ifstream ifs("getevent_1_0.json", ios::in);
-			if (!ifs) {
-				Assert::Fail(L"failed to load getevent_1_0.jsont");
-			}
-		}
-
-		TEST_METHOD(TestGetEventJesonParser)
+		TEST_METHOD(JsonParserGetEvent)
 		{
 			ifstream ifs("getevent_1_0.json", ios::in);
 			istreambuf_iterator<char> it(ifs);
@@ -34,11 +26,15 @@ namespace CameraRemoteControllerTest
 			string strjson(it, last);
 
 			CameraStateManager csm;
-			array<bool,35> updatedObjIndexes;
+			array<bool, EVENT_IDX_MAX> updatedObjIndexes;
+			for (int i = 0; i < updatedObjIndexes.size(); i++) {
+				updatedObjIndexes[i] = false;
+			}
+
 			csm.UpdateState(strjson, updatedObjIndexes);
 		}
 
-		TEST_METHOD(TestErrorStatusJesonParser)
+		TEST_METHOD(JsonParserErrorStatus)
 		{
 			ptree pt;
 			read_json("errorstatus.json", pt);
@@ -47,13 +43,42 @@ namespace CameraRemoteControllerTest
 			Assert::IsTrue(es.SetStatus(pt));
 		}
 
-		TEST_METHOD(TestErrorStatusJesonParserFailure)
+		TEST_METHOD(JsonParserErrorStatusFailure)
 		{
 			ptree pt;
 			read_json("getevent_1_0.json", pt);
 
 			ErrorStatus es;
 			Assert::IsFalse(es.SetStatus(pt));
+		}
+
+		TEST_METHOD(JsonParserRecStartStatusChanged)
+		{
+			string strJson1 = readJson("getevent_1_0.json");
+			string strJson2 = readJson("getevent_1_0_recstart.json");
+
+			CameraStateManager csm;
+			array<bool, EVENT_IDX_MAX> updatedObjIndexes;
+			for (int i = 0; i < updatedObjIndexes.size(); i++) {
+				updatedObjIndexes[i] = false;
+			}
+			csm.UpdateState(strJson1, updatedObjIndexes);
+
+			for (int i = 0; i < updatedObjIndexes.size(); i++) {
+				updatedObjIndexes[i] = false;
+			}
+			csm.UpdateState(strJson2, updatedObjIndexes);
+		}
+
+	private:
+		string readJson(const char* fileName)
+		{
+			ifstream ifs(fileName, ios::in);
+			istreambuf_iterator<char> it(ifs);
+			istreambuf_iterator<char> last;
+			string strjson(it, last);
+
+			return strjson;
 		}
 	};
 }

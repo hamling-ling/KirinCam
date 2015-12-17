@@ -73,8 +73,10 @@ void CameraStateManager::UpdateState(ptree& pt, updatedObjects_t& updates)
 	BOOST_FOREACH(const boost::property_tree::ptree::value_type& e, result)
 	{
 		ptree child = e.second;
+
 		parserFunc_t parser = _funcs[count];
-		(this->*parser)(child, updates);
+		try { (this->*parser)(child, updates); }
+		catch (boost::exception& e) {}
 
 		count++;
 		if (_funcs.size() <= count) {
@@ -123,8 +125,6 @@ bool CameraStateManager::parseLiveviewStatust(ptree& pt, updatedObjects_t& updat
 
 bool CameraStateManager::parse10th(ptree& pt, updatedObjects_t& updates)
 {
-	ptree& child = pt.get_child(".");
-
 	vector<CameraStorageInformation> storageInfo;
 	BOOST_FOREACH(const boost::property_tree::ptree::value_type& e, pt)
 	{
