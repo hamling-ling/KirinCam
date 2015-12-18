@@ -87,6 +87,11 @@ void EventObserver::Subscribe(const std::string& url)
 	Start(NULL);
 }
 
+const CameraState& EventObserver::GetCameraState() const
+{
+	return _stateManager.GetCameraState();
+}
+
 void EventObserver::EventReceiveProc()
 {
 	cout << __FUNCTION__ << " ENT" << endl;
@@ -128,7 +133,7 @@ void EventObserver::EventReceiveProc()
 
 		retryCount = 0;
 
-		PrintPtree(pt);
+		//PrintPtree(pt);
 
 		if (!updateState(pt)) {
 			return;
@@ -185,6 +190,9 @@ void EventObserver::raiseEvents(updatedObjects_t updatedIndexes)
 
 void EventObserver::raiseSingleEvent(int index) {
 	const char* eventName = _events[index].first;
+
+	CameraEventArgs args(eventName, _stateManager.GetCameraState());
+	
 	CameraEvent_t* pevt = _events[index].second;
-	(*pevt)(*this, eventName);
+	(*pevt)(*this, args);
 }

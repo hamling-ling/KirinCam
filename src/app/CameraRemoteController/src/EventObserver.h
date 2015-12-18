@@ -8,9 +8,18 @@
 #include <boost/property_tree/ptree.hpp>
 #define kGetEventRetryMax	5
 
-class EventObserver;
+struct CameraEventArgs {
+public:
+	const char* propertyName;
+	const CameraState& cameraState;
+	CameraEventArgs(const char* name, const CameraState& state)
+		: propertyName(name), cameraState(state)
+	{
+	}
+};
 
-typedef boost::signals2::signal<void(const EventObserver&, const char*)> CameraEvent_t;
+class EventObserver;
+typedef boost::signals2::signal<void(const EventObserver&, const CameraEventArgs&)> CameraEvent_t;
 
 class EventObserver :
 	public AsyncTask
@@ -31,6 +40,9 @@ public:
 	void Subscribe(const std::string& url);
 	void EventReceiveProc();
 	void Stop();
+
+	const CameraState& GetCameraState() const;
+
 private:
 	std::string _server;
 	std::string _port;

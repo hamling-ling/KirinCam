@@ -48,9 +48,12 @@ void playImages(std::shared_ptr<CameraController>& cp)
 	cv::destroyAllWindows();
 }
 
-void eventHandler(const EventObserver& observer, const char* eventName)
+void eventHandler(const EventObserver& observer, const CameraEventArgs& args)
 {
-	cout << "event " << eventName << " received" << endl;
+	cout << "event " << args.propertyName << " received" << endl;
+	if (strcmp(args.propertyName, kCameraStatus) == 0) {
+		cout << "CameraStatus:" << args.cameraState.GetCameraStatus() << endl;;
+	}
 }
 
 int main()

@@ -37,6 +37,7 @@ class CameraStateManager
 public:
 	CameraStateManager();
 	virtual ~CameraStateManager();
+	const CameraState& GetCameraState() const;
 	void UpdateState(const std::string& json, updatedObjects_t& updates);
 	void UpdateState(boost::property_tree::ptree& pt, updatedObjects_t& updates);
 

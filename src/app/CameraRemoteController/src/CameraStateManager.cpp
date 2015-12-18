@@ -54,6 +54,11 @@ CameraStateManager::~CameraStateManager()
 {
 }
 
+const CameraState& CameraStateManager::GetCameraState() const
+{
+	return _cameraState;
+}
+
 void CameraStateManager::UpdateState(const string& json, updatedObjects_t& updates)
 {
 	ptree pt;
