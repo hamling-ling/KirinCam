@@ -58,19 +58,28 @@ void CameraStateManager::UpdateState(const string& json, updatedObjects_t& updat
 {
 	ptree pt;
 	stringstream ss(json);
-	read_json(ss, pt);
+	try {
+		read_json(ss, pt);
+	}
+	catch (boost::exception& e) {
+		cerr << "read_json failed" << endl;
+		cerr << ss.str() << endl;
+		return;
+	}
 
 	return UpdateState(pt, updates);
 }
  
 void CameraStateManager::UpdateState(ptree& pt, updatedObjects_t& updates)
 {
-	ptree& result = pt.get_child(kResult);
-	unsigned int count = 0;
+	boost::optional< ptree& > result = pt.get_child_optional(kResult);
+	if (!result) {
+		return;
+	}
 
 	lock_guard<recursive_mutex> lock(_mutex);
-
-	BOOST_FOREACH(const boost::property_tree::ptree::value_type& e, result)
+	unsigned int count = 0;
+	BOOST_FOREACH(const boost::property_tree::ptree::value_type& e, result.get())
 	{
 		ptree child = e.second;
 
@@ -87,9 +96,13 @@ void CameraStateManager::UpdateState(ptree& pt, updatedObjects_t& updates)
 
 bool CameraStateManager::parseAvailableApiList(ptree& pt, updatedObjects_t& updates)
 {
-	ptree& names = pt.get_child(kNames);
+	boost::optional< ptree& > names = pt.get_child_optional(kNames);
+	if (!names) {
+		return false;
+	}
+
 	vector<string> list;
-	BOOST_FOREACH(const boost::property_tree::ptree::value_type& e, names)
+	BOOST_FOREACH(const boost::property_tree::ptree::value_type& e, names.get())
 	{
 		list.push_back(e.second.data());
 	}
@@ -126,6 +139,10 @@ bool CameraStateManager::parseLiveviewStatust(ptree& pt, updatedObjects_t& updat
 bool CameraStateManager::parse10th(ptree& pt, updatedObjects_t& updates)
 {
 	vector<CameraStorageInformation> storageInfo;
+	if (pt.empty()) {
+		return false;
+	}
+
 	BOOST_FOREACH(const boost::property_tree::ptree::value_type& e, pt)
 	{
 		CameraStorageInformation info;
@@ -270,12 +287,16 @@ bool CameraStateManager::parsePropWithCandidates(
 	CameraState* p = &_cameraState;
 	if (!(p->*candexist)()) {
 		set<string> candidates;
-		BOOST_FOREACH(const ptree::value_type& e, pt.get_child(candName))
-		{
-			cout << e.second.data() << endl;
-			candidates.insert(e.second.data());
+
+		boost::optional< ptree& > cand = pt.get_child_optional(candName);
+		if (cand) {
+			BOOST_FOREACH(const ptree::value_type& e, pt.get_child(candName))
+			{
+				cout << e.second.data() << endl;
+				candidates.insert(e.second.data());
+			}
+			(p->*candsetter)(candidates);
 		}
-		(p->*candsetter)(candidates);
 	}
 
 	if ((p->*updator)(val.get())) {

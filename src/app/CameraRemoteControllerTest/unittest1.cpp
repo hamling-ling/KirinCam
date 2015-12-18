@@ -32,6 +32,27 @@ namespace CameraRemoteControllerTest
 			}
 
 			csm.UpdateState(strjson, updatedObjIndexes);
+
+			for (int i = 0; i < updatedObjIndexes.size(); i++) {
+				bool expectation = false;
+				switch (i) {
+				case 0:
+				case 1:
+				case 3:
+				case 10:
+				case 12:
+				case 13:
+				case 16:
+				case 17:
+				case 21:
+					expectation = true;
+					break;
+				default:
+					break;
+				}
+
+				Assert::IsTrue(updatedObjIndexes[i]==expectation);
+			}
 		}
 
 		TEST_METHOD(JsonParserErrorStatus)
@@ -68,6 +89,12 @@ namespace CameraRemoteControllerTest
 				updatedObjIndexes[i] = false;
 			}
 			csm.UpdateState(strJson2, updatedObjIndexes);
+
+			Assert::IsFalse(updatedObjIndexes[0]);
+			Assert::IsTrue(updatedObjIndexes[1]);
+			for (int i = 2; i < updatedObjIndexes.size(); i++) {
+				Assert::IsFalse(updatedObjIndexes[i]);
+			}
 		}
 
 	private:
