@@ -47,7 +47,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -55,7 +55,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\mt\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>LiveViewStreamingParser.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -69,7 +69,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -78,7 +78,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\mt\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>LiveViewStreamingParser.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
