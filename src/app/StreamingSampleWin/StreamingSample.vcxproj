@@ -61,6 +61,9 @@
       <AdditionalLibraryDirectories>D:\usr\local\opencv\install\x86\vc14\lib;D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir);C:\usr\local\opencv\build\x86\vc12\staticlib</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;CameraRemoteController.lib;LiveViewStreamingParser.lib;Common.lib;ImageSource.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)..\..\..\vendor\opencv\*.dll" "$(OutDir"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -82,6 +85,9 @@
       <AdditionalLibraryDirectories>D:\usr\local\opencv\install\x86\vc14\lib;D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir);C:\usr\local\opencv\build\x86\vc12\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;CameraRemoteController.lib;LiveViewStreamingParser.lib;Common.lib;ImageSource.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)..\..\..\vendor\opencv\*.dll" "$(OutDir"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
