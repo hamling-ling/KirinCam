@@ -77,13 +77,13 @@ void CameraController::GetImage(uint16_t seqNum, CameraFrame& frame)
 
 bool CameraController::StartRecording()
 {
-	string json_request("{\"method\": \"stopRecMode\",\"params\": [],\"id\": 1,\"version\": \"1.0\"} \r\n");
+	string json_request("{\"method\": \"startMovieRec\",\"params\": [],\"id\": 1,\"version\": \"1.0\"} \r\n");
 	return (invokeCameraService(json_request) != 0);
 }
 
 bool CameraController::StopRecording()
 {
-	string json_request("{\"method\": \"stopRecMode\",\"params\": [],\"id\": 1,\"version\": \"1.0\"} \r\n");
+	string json_request("{\"method\": \"stopMovieRec\",\"params\": [],\"id\": 1,\"version\": \"1.0\"} \r\n");
 	return (invokeCameraService(json_request) != 0);
 }
 
@@ -94,13 +94,8 @@ EventObserver& CameraController::GetEventObserver()
 
 void CameraController::StartStreamingInternal()
 {
-	{
-		std::string server;
-		std::string port;
-		std::string path;
-
-		splitUrl(deviceDescription_.CameraServiceUrl(), server, port, path);
-		startLiveView(server, port, path);
+	if (startLiveView() != 0) {
+		return;
 	}
 
 	lock_guard<recursive_mutex> lock(imageSourceMutex_);
@@ -108,18 +103,19 @@ void CameraController::StartStreamingInternal()
 	imageSource_->Start();
 }
 
-int CameraController::startLiveView(const std::string& server, const std::string& port, const std::string& path)
+int CameraController::startLiveView()
 {
 	// prepare request command
 	string json_request("{\"method\": \"startLiveview\",\"params\" : [],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
 	ptree pt;
 
-	if (InvokeCommand(server, port, path, json_request, pt) != 0) {
+	if (invokeCameraService(json_request, pt) != 0) {
 		return 1;
 	}
 
 	Success success;
 	if (success.SetStatus(pt)) {
+		liveViewUrl_ = success.ContentAsString();
 		return 0;
 	}
 

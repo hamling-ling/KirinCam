@@ -107,11 +107,14 @@ int main()
 					playThread = std::thread(playImages, cp);
 				}
 			}
-			else if ("s" == input) {
-				// if not started yet
-				if (!playThread.joinable()) {
-					// draw different thread. hope it's okey.
-					playThread = std::thread(playImages, cp);
+			else if ("r" == input) {
+				EventObserver& observer = cp->GetEventObserver();
+				string& status = observer.GetCameraState().GetCameraStatus();
+				if (status.compare("IDLE") == 0) {
+					cp->StartRecording();
+				}
+				else if(status.compare("MovieRecording") == 0) {
+					cp->StopRecording();
 				}
 			}
 		}

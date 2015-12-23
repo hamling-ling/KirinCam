@@ -42,7 +42,7 @@ private:
 		@param port 10000
 		@param path /sony/camera
 	 */
-	int startLiveView(const std::string& server, const std::string& port, const std::string& path);
+	int startLiveView();
 
 	int invokeCameraService(const std::string& cmd, boost::property_tree::ptree& result);
 	int invokeCameraService(const std::string& cmd);
