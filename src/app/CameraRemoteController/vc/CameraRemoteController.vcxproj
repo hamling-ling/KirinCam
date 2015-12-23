@@ -21,6 +21,7 @@
     <ClCompile Include="..\src\ErrorStatus.cpp" />
     <ClCompile Include="..\src\EventObserver.cpp" />
     <ClCompile Include="..\src\stdafx.cpp" />
+    <ClCompile Include="..\src\Success.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\CameraRemoteController.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="..\src\ErrorStatus.h" />
     <ClInclude Include="..\src\EventObserver.h" />
     <ClInclude Include="..\src\stdafx.h" />
+    <ClInclude Include="..\src\Success.h" />
     <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

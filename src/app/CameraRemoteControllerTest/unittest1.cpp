@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../CameraRemoteController/src/CameraStateManager.h"
 #include "../CameraRemoteController/src/ErrorStatus.h"
+#include "../CameraRemoteController/src/Success.h"
 #include <fstream>
 #include <array>
 
@@ -95,6 +96,27 @@ namespace CameraRemoteControllerTest
 			for (int i = 2; i < updatedObjIndexes.size(); i++) {
 				Assert::IsFalse(updatedObjIndexes[i]);
 			}
+		}
+
+		TEST_METHOD(JsonParserSuccess)
+		{
+			ptree pt;
+			read_json("success.json", pt);
+
+			Success s;
+			Assert::IsTrue(s.SetStatus(pt));
+			Assert::IsTrue(s.IsZero());
+		}
+
+		TEST_METHOD(JsonParserStartLiveView)
+		{
+			ptree pt;
+			read_json("startliveview_1_0.json", pt);
+
+			Success s;
+			Assert::IsTrue(s.SetStatus(pt));
+			Assert::IsFalse(s.IsZero());
+			Assert::IsTrue(s.ContentAsString().compare("http://ip:port/liveview/liveviewstream") == 0);
 		}
 
 	private:

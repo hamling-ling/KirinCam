@@ -11,6 +11,8 @@
 #include "Common.h"
 #include "ImageSourceApi.h"
 #include "EventObserver.h"
+#include "Success.h"
+#include "ErrorStatus.h"
 
 using namespace std;
 using boost::asio::ip::tcp;
@@ -73,6 +75,18 @@ void CameraController::GetImage(uint16_t seqNum, CameraFrame& frame)
 	imageSource_->GetImage(seqNum, frame);
 }
 
+bool CameraController::StartRecording()
+{
+	string json_request("{\"method\": \"stopRecMode\",\"params\": [],\"id\": 1,\"version\": \"1.0\"} \r\n");
+	return (invokeCameraService(json_request) != 0);
+}
+
+bool CameraController::StopRecording()
+{
+	string json_request("{\"method\": \"stopRecMode\",\"params\": [],\"id\": 1,\"version\": \"1.0\"} \r\n");
+	return (invokeCameraService(json_request) != 0);
+}
+
 EventObserver& CameraController::GetEventObserver()
 {
 	return *eventObserver_;
@@ -94,7 +108,7 @@ void CameraController::StartStreamingInternal()
 	imageSource_->Start();
 }
 
-int CameraController::startLiveView(const std::string& server, const std::string port, const std::string path)
+int CameraController::startLiveView(const std::string& server, const std::string& port, const std::string& path)
 {
 	// prepare request command
 	string json_request("{\"method\": \"startLiveview\",\"params\" : [],\"id\" : 1,\"version\" : \"1.0\"}\r\n");
@@ -104,9 +118,49 @@ int CameraController::startLiveView(const std::string& server, const std::string
 		return 1;
 	}
 
-	BOOST_FOREACH(const ptree::value_type& child, pt.get_child("result")) {
-		liveViewUrl_ = child.second.get_value<std::string>();
+	Success success;
+	if (success.SetStatus(pt)) {
+		return 0;
 	}
 
-	return 0;
+	return -1;
+}
+
+int CameraController::invokeCameraService(const string& cmd, ptree& result)
+{
+	string url = deviceDescription_.CameraServiceUrl();
+	if (url.empty()) {
+		return false;
+	}
+
+	return InvokeCommand(url, cmd, result);
+}
+
+int CameraController::invokeCameraService(const string& cmd)
+{
+	string url = deviceDescription_.CameraServiceUrl();
+	if (url.empty()) {
+		return false;
+	}
+
+	ptree pt;
+	if (InvokeCommand(url, cmd, pt) != 0) {
+		return false;
+	}
+
+	Success success;
+	if (success.SetStatus(pt)) {
+		if (success.IsZero()) {
+			return 0;
+		}
+	}
+
+	ErrorStatus err;
+	if (err.SetStatus(pt)) {
+		cerr << err.StatusCode() << ":" << err.StatusMessage() << endl;
+		return false;
+	}
+
+	cerr << "InvokeCameraService returned unknown response" << endl;
+	return false;
 }

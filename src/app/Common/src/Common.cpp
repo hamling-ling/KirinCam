@@ -155,7 +155,8 @@ int InvokeCommand(
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Exception: " << e.what() << "\n";
+		cerr << "Exception: " << e.what() << endl;
+		cerr << "json:" << json_command << endl;
 		retCode = -1;
 	}
 	return retCode;
@@ -178,10 +179,24 @@ int InvokeCommand(	const std::string& server,
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Exception: " << e.what() << "\n";
+		cout << "Exception: " << e.what() << endl;
+		cout << "json:" << json_command << endl;
 		retCode = -1;
 	}
 	return InvokeCommand(socket, server, port, path, json_command, resultJson);
+}
+
+int InvokeCommand(	const std::string& url,
+					const std::string& json_command,
+					boost::property_tree::ptree& resultJson)
+{
+	std::string server;
+	std::string port;
+	std::string path;
+
+	splitUrl(url, server, port, path);
+
+	return InvokeCommand(server, port, path, json_command, resultJson);
 }
 
 void PrintPtree(boost::property_tree::ptree &pt)

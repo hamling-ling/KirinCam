@@ -46,4 +46,10 @@ int InvokeCommand(	const std::string& server,
 					const std::string& json_command,
 					boost::property_tree::ptree& result);
 
+/**
+ */
+int InvokeCommand(	const std::string& url,
+					const std::string& json_command,
+					boost::property_tree::ptree& resultJson);
+
 void PrintPtree(boost::property_tree::ptree &pt);
