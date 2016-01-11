@@ -31,19 +31,20 @@ bool ErrorStatus::SetStatus(boost::property_tree::ptree& pt)
 	int iErrorCode = 0;
 	string strErrorMsg;
 	try {
-		ptree& names = pt.get_child("error");
-		if (names.empty()) {
+		boost::optional< ptree& > erropt = pt.get_child_optional("error");
+		if (!erropt) {
 			return false;
 		}
 
+		ptree& err = erropt.get();
 		string strErrorCode;
 		string strErrorMsg;
-		ptree::iterator it = names.begin();
-		if (it != names.end()) {
+		ptree::iterator it = err.begin();
+		if (it != err.end()) {
 			strErrorCode = it->second.data();
 			it++;
 		}
-		if (it != names.end()) {
+		if (it != err.end()) {
 			strErrorMsg = it->second.data();
 			it++;
 		}

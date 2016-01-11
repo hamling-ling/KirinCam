@@ -4,12 +4,14 @@
 #include <mutex>
 #include <vector>
 #include <boost/asio.hpp>
+#include <boost/property_tree/ptree.hpp>
 #include "AsyncTask.h"
 #include "DeviceDescription.h"
 #include "ImageSourceApi.h"
 
 class ImageSource;
 class EventObserver;
+class Success;
 
 class CameraController : public AsyncTask
 {
@@ -20,6 +22,8 @@ public:
 	bool StartStreaming();
 	void StopStreaming();
 	void GetImage(uint16_t seqNum, CameraFrame& frame);
+	bool StartRecording();
+	bool StopRecording();
 	EventObserver& GetEventObserver();
 
 private:
@@ -38,7 +42,9 @@ private:
 		@param port 10000
 		@param path /sony/camera
 	 */
-	int startLiveView(const std::string& server, const std::string port, const std::string path);
-	void Dump(boost::asio::streambuf& bu);
+	int startLiveView();
+
+	int invokeCameraService(const std::string& cmd, boost::property_tree::ptree& result);
+	int invokeCameraService(const std::string& cmd);
 };
 
