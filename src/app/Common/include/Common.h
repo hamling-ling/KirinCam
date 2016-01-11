@@ -5,6 +5,9 @@
 #include <boost/asio.hpp>
 #include <boost/property_tree/ptree.hpp>
 
+#include "../src/AsyncWork.h"
+#include "../src/DataFlow.h"
+
 /**
  */
 bool isIpV4Address(const char* url);
