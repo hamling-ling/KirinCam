@@ -83,15 +83,21 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\StreamDecoder.cpp" />
+    <ClCompile Include="..\src\StreamFrameInfoPresenter.cpp" />
     <ClCompile Include="..\src\ImageSource.cpp" />
     <ClCompile Include="..\src\stdafx.cpp" />
     <ClCompile Include="..\src\StreamDemuxer.cpp" />
     <ClCompile Include="..\src\StreamFlow.cpp" />
+    <ClCompile Include="..\src\StreamImagePresenter.cpp" />
     <ClCompile Include="..\src\StreamPresenter.cpp" />
     <ClCompile Include="..\src\StreamSource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImageSourceApi.h" />
+    <ClInclude Include="..\src\StreamDecoder.h" />
+    <ClInclude Include="..\src\StreamFrameInfoPresenter.h" />
+    <ClInclude Include="..\src\StreamImagePresenter.h" />
     <ClInclude Include="..\src\ImageSource.h" />
     <ClInclude Include="..\src\ImageSourceDefs.h" />
     <ClInclude Include="..\src\stdafx.h" />

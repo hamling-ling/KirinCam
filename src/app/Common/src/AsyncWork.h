@@ -20,7 +20,7 @@ class  AsyncWork
 public:
 	AsyncWork();
 	virtual ~AsyncWork();
-	virtual void Start(AsyncWorkFunc func, AsyncWorkArg arg);
+	virtual void Start(AsyncWorkFunc func, AsyncWorkArg& arg);
 	virtual void Stop();
 	bool IsRunning();
 

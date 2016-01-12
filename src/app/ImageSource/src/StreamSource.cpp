@@ -2,6 +2,7 @@
 #include "StreamSource.h"
 #include <sstream>
 #include <iostream>//debug
+#include <functional>
 #include "Common.h"
 
 using namespace std;
@@ -21,7 +22,15 @@ StreamSource::~StreamSource()
 
 void StreamSource::Start()
 {
-	StreamFlow::Start();
+	AsyncWorkArg arg;
+
+	AsyncWorkFunc workFunc;/* = std::bind(
+		&StreamSource::Run,
+		this,
+		std::placeholders::_1,
+		std::placeholders::_2);*/
+
+	//_work->Start(workFunc, arg);
 }
 
 void StreamSource::Stop()
@@ -29,7 +38,7 @@ void StreamSource::Stop()
 	StreamFlow::Stop();
 }
 
-void StreamSource::Run()
+void StreamSource::Run(atomic<bool>& canceled, AsyncWorkArg& arg)
 {
 	try {
 		downloadStream();
@@ -38,7 +47,6 @@ void StreamSource::Run()
 	{
 		std::cout << "Exception: " << e.what() << "\n";
 	}
-	_isRunning = false;
 }
 
 void StreamSource::downloadStream() throw(std::exception)
@@ -94,7 +102,7 @@ void StreamSource::downloadStream() throw(std::exception)
 	std::ostream os(&contentbuf, ios::binary);
 
 	while (
-		!_isStopping &&
+		/* check cancelation  && */
 		boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)
 		) {
 		const char* cp = boost::asio::buffer_cast<const char*>(response.data());
@@ -108,7 +116,9 @@ void StreamSource::downloadStream() throw(std::exception)
 		}
 #else
 		if (contentbuf.size() > 1024) {
-			_downStream->Push(contentbuf);
+			for (auto it : _downStreams) {
+				it->Push(contentbuf);
+			}
 		}
 #endif
 	}

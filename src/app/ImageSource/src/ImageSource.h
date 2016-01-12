@@ -8,7 +8,9 @@
 
 class StreamSource;
 class StreamDemuxer;
-class StreamPresenter;
+class StreamDecoder;
+class StreamImagePresenter;
+class StreamFrameInfoPresenter;
 
 class ImageSource
 {
@@ -21,6 +23,8 @@ private:
 	std::recursive_mutex _mutex;
 	std::shared_ptr<StreamSource> _source;
 	std::shared_ptr<StreamDemuxer> _demuxer;
-	std::shared_ptr<StreamPresenter> _presenter;
+	std::shared_ptr<StreamDecoder> _decoder;
+	std::shared_ptr<StreamImagePresenter> _imagePresenter;
+	std::shared_ptr<StreamFrameInfoPresenter> _frameInfoPresenter;
 };
 

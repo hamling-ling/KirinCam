@@ -62,7 +62,7 @@ private:
 	void ConsumeLoop(std::atomic<bool>& canceled, AsyncWorkArg& arg)
 	{
 		while (!canceled) {
-			int x = 0;
+			T x;
 			{
 				unique_lock<mutex> lock(_mutex);
 

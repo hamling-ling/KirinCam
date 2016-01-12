@@ -16,7 +16,7 @@ AsyncWork::~AsyncWork()
 	Stop();
 }
 
-void AsyncWork::Start(AsyncWorkFunc func, AsyncWorkArg arg)
+void AsyncWork::Start(AsyncWorkFunc func, AsyncWorkArg& arg)
 {
 	lock_guard<recursive_mutex> lock(_mutex);
 
