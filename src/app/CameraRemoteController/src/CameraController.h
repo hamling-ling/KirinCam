@@ -21,7 +21,7 @@ public:
 	bool SubscribeEvent();
 	bool StartStreaming();
 	void StopStreaming();
-	void GetImage(uint16_t seqNum, CameraFrame& frame);
+	bool GetImage(uint16_t seqNum, CameraFrame& frame);
 	bool StartRecording();
 	bool StopRecording();
 	EventObserver& GetEventObserver();

@@ -17,7 +17,7 @@ public:
 	ImageSource(const std::string& url);
 	~ImageSource();
 	uint32_t Start();
-	void GetImage(uint16_t seqNum, CameraFrame& frame);
+	bool GetImage(uint16_t seqNum, CameraFrame& frame);
 private:
 	std::recursive_mutex _mutex;
 	std::shared_ptr<StreamSource> _source;

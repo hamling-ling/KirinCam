@@ -57,13 +57,16 @@ uint32_t ImageSource::Start()
 	return 0;
 }
 
-void ImageSource::GetImage(uint16_t seqNum, CameraFrame& frame)
+bool ImageSource::GetImage(uint16_t seqNum, CameraFrame& frame)
 {
 	lock_guard<recursive_mutex> lock(_mutex);
 
 	if (!_imagePresenter) {
-		return;
+		return false;
 	}
 
+	if (_frameInfoPresenter) {
+		_frameInfoPresenter->GetCameraFrame(seqNum, frame);
+	}
 	_imagePresenter->GetCameraFrame(seqNum, frame);
 }

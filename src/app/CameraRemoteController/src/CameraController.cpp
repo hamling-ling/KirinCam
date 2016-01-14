@@ -64,15 +64,15 @@ void CameraController::StopStreaming()
 	Stop();
 }
 
-void CameraController::GetImage(uint16_t seqNum, CameraFrame& frame)
+bool CameraController::GetImage(uint16_t seqNum, CameraFrame& frame)
 {
 	lock_guard<recursive_mutex> lock(imageSourceMutex_);
 
 	if (!imageSource_) {
-		return;
+		return false;
 	}
 
-	imageSource_->GetImage(seqNum, frame);
+	return imageSource_->GetImage(seqNum, frame);
 }
 
 bool CameraController::StartRecording()
