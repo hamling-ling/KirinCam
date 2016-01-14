@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <thread>
 #include <mutex>
 #include <vector>
 #include <boost/asio.hpp>

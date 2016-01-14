@@ -3,6 +3,7 @@
 #include "StreamFlow.h"
 #include <atomic>
 #include <memory>
+#include <string>
 
 class AsyncWork;
 class AsyncWorkArg;
