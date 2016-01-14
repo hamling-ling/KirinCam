@@ -29,15 +29,15 @@ void playImages(std::shared_ptr<CameraController>& cp)
 	CameraFrame frame;
 	frame.sequenceNumber = 0;
 	while (!g_stop) {
-		cp->GetImage(frame.sequenceNumber, frame);
+		if (!cp->GetImage(frame.sequenceNumber, frame)) {
+			continue;
+		}
 		if (frame.image.empty()) {
-			//somethimes empty. why ?
 			continue;
 		}
 
-		cv::Mat dst_img = cv::imdecode(cv::Mat(frame.image), 1);
 		try {
-			cv::imshow("ImageWindow", dst_img);
+			cv::imshow("ImageWindow", frame.image);
 			cv::waitKey(10);
 		}
 		catch (cv::Exception &ex) {
