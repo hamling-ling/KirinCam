@@ -26,6 +26,16 @@ void StreamFlow::Push(std::shared_ptr<LiveViewPacket> packet)
 {
 }
 
+void StreamFlow::Push(std::vector<uint8_t> data)
+{
+
+}
+
+void StreamFlow::Push(CameraFrame& camFrame)
+{
+
+}
+
 void StreamFlow::Start()
 {
 }

@@ -15,8 +15,6 @@ public:
 	virtual ~StreamSource();
 	virtual void Start();
 	virtual void Stop();
-protected:
-	virtual void Run();
 private:
 	std::string _url;
 	std::string _server;

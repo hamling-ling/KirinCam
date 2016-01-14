@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include <vector>
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
 
 struct FramePoint {
 	uint16_t x;
@@ -23,7 +25,7 @@ struct CameraFrameInformation {
 struct CameraFrame {
 	uint16_t sequenceNumber;
 	uint32_t timeStamp;
-	std::vector<uint8_t> image;
+	cv::Mat image;
 	std::vector<CameraFrameInformation> info;
 public:
 	CameraFrame() {

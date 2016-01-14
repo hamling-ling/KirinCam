@@ -46,7 +46,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;D:\usr\local\opencv\include;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -55,8 +55,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>LiveViewStreamingParser.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\opencv\x86\vc14\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LiveViewStreamingParser.lib;Common.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,7 +68,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;D:\usr\local\opencv\include;..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -78,8 +78,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>LiveViewStreamingParser.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\opencv\x86\vc14\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LiveViewStreamingParser.lib;Common.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

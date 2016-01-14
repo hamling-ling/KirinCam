@@ -24,13 +24,13 @@ void StreamSource::Start()
 {
 	AsyncWorkArg arg;
 
-	AsyncWorkFunc workFunc;/* = std::bind(
+	AsyncWorkFunc workFunc = std::bind(
 		&StreamSource::Run,
 		this,
 		std::placeholders::_1,
-		std::placeholders::_2);*/
+		std::placeholders::_2);
 
-	//_work->Start(workFunc, arg);
+	_work->Start(workFunc, arg);
 }
 
 void StreamSource::Stop()

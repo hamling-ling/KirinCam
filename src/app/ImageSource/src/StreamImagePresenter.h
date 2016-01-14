@@ -11,5 +11,6 @@ class StreamImagePresenter :
 public:
 	StreamImagePresenter();
 	virtual ~StreamImagePresenter();
+	virtual void Push(CameraFrame& camFrame);
 };
 

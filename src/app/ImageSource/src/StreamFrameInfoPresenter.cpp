@@ -14,8 +14,6 @@ StreamFrameInfoPresenter::~StreamFrameInfoPresenter()
 
 void StreamFrameInfoPresenter::Push(shared_ptr<LiveViewPacket> packet)
 {
-	lock_guard<recursive_mutex> lock(_mutex);
-
 	if (packet->GetHeader()->PayloadType() != kPayloadTypeLiveViewFrameInformation) {
 		return;
 	}
@@ -45,6 +43,7 @@ void StreamFrameInfoPresenter::Push(shared_ptr<LiveViewPacket> packet)
 		camFrame.info.push_back(info);
 	}
 
+	lock_guard<recursive_mutex> lock(_mutex);
 	_queue.push(camFrame);
 
 	while (_queue.size() > kMaxQueueSize) {
