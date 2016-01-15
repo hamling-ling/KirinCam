@@ -11,29 +11,23 @@ StreamPresenter::~StreamPresenter()
 {
 }
 
-void StreamPresenter::Push(std::shared_ptr<LiveViewPacket> packet)
+bool StreamPresenter::GetCameraFrame(uint16_t seqNum, CameraFrame& camFrame)
 {
 	lock_guard<recursive_mutex> lock(_mutex);
-	if (packet->GetHeader()->PayloadType() == kPayloadTypeLiveViewImages) {
-		_imgQueue.push(packet);
-
-		while (_imgQueue.size() > MAX_QUEUE_SIZE) {
-			_imgQueue.pop();
-		}
+	if (_queue.empty()) {
+		return false;
 	}
-	else if (packet->GetHeader()->PayloadType() == kPayloadTypeLiveViewFrameInformation) {
-		_infoQueue.push(packet);
 
-		while (_infoQueue.size() > MAX_QUEUE_SIZE) {
-			_infoQueue.pop();
+	while (!_queue.empty()) {
+		if (seqNum < _queue.front().sequenceNumber) {
+			camFrame = _queue.front();
+			_queue.pop();
+			break;
 		}
+		_queue.pop();
 	}
-}
-
-void StreamPresenter::GetImage(uint16_t seqNum, CameraFrame& camFrame)
-{
-	lock_guard<recursive_mutex> lock(_mutex);
-
+	return true;
+#if 0
 	camFrame.image.clear();
 	camFrame.info.clear();
 
@@ -100,9 +94,5 @@ void StreamPresenter::GetImage(uint16_t seqNum, CameraFrame& camFrame)
 		}
 		_infoQueue.pop();
 	}
-}
-
-void StreamPresenter::Run()
-{
-	// do nothing
+#endif
 }

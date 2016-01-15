@@ -75,7 +75,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_SCL_SECURE_NO_WARNINGS;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\ImageSource\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;D:\usr\local\opencv\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\ImageSource\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -84,7 +84,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Common.lib;ImageSource.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\opencv\x86\vc14\lib;$(OutDir)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,7 +96,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_SCL_SECURE_NO_WARNINGS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\ImageSource\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;D:\usr\local\opencv\include;$(ProjectDir)..\..\Common\include;$(ProjectDir)..\..\LiveViewStreamingParser\include;$(ProjectDir)..\..\ImageSource\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,7 +106,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>Common.lib;ImageSource.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\opencv\x86\vc14\lib;$(OutDir)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

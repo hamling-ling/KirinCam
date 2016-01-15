@@ -84,11 +84,17 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\AsyncWork.cpp" />
+    <ClCompile Include="..\src\AsyncWorkArg.cpp" />
     <ClCompile Include="..\src\Common.cpp" />
+    <ClCompile Include="..\src\DataFlow.cpp" />
     <ClCompile Include="..\src\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Common.h" />
+    <ClInclude Include="..\src\AsyncWork.h" />
+    <ClInclude Include="..\src\AsyncWorkArg.h" />
+    <ClInclude Include="..\src\DataFlow.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>

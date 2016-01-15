@@ -2,6 +2,7 @@
 #include "StreamSource.h"
 #include <sstream>
 #include <iostream>//debug
+#include <functional>
 #include "Common.h"
 
 using namespace std;
@@ -13,6 +14,7 @@ StreamSource::StreamSource(const std::string& url)
 	: _url(url)
 {
 	splitUrl(url, _server, _port, _path);
+	_work = make_shared<AsyncWork>();
 }
 
 StreamSource::~StreamSource()
@@ -21,7 +23,15 @@ StreamSource::~StreamSource()
 
 void StreamSource::Start()
 {
-	StreamFlow::Start();
+	AsyncWorkArg arg;
+
+	AsyncWorkFunc workFunc = std::bind(
+		&StreamSource::Run,
+		this,
+		std::placeholders::_1,
+		std::placeholders::_2);
+
+	_work->Start(workFunc, arg);
 }
 
 void StreamSource::Stop()
@@ -29,19 +39,18 @@ void StreamSource::Stop()
 	StreamFlow::Stop();
 }
 
-void StreamSource::Run()
+void StreamSource::Run(atomic<bool>& canceled, AsyncWorkArg& arg)
 {
 	try {
-		downloadStream();
+		downloadStream(canceled);
 	}
 	catch (std::exception& e)
 	{
 		std::cout << "Exception: " << e.what() << "\n";
 	}
-	_isRunning = false;
 }
 
-void StreamSource::downloadStream() throw(std::exception)
+void StreamSource::downloadStream(std::atomic<bool>& canceled) throw(std::exception)
 {
 	boost::system::error_code error = boost::asio::error::host_not_found;
 	boost::asio::io_service io_service;
@@ -94,7 +103,7 @@ void StreamSource::downloadStream() throw(std::exception)
 	std::ostream os(&contentbuf, ios::binary);
 
 	while (
-		!_isStopping &&
+		!canceled &&
 		boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)
 		) {
 		const char* cp = boost::asio::buffer_cast<const char*>(response.data());
@@ -108,7 +117,9 @@ void StreamSource::downloadStream() throw(std::exception)
 		}
 #else
 		if (contentbuf.size() > 1024) {
-			_downStream->Push(contentbuf);
+			for (auto it : _downStreams) {
+				it->Push(contentbuf);
+			}
 		}
 #endif
 	}

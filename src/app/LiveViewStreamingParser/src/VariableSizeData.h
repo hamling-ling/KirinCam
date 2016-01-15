@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BaseElement.h"
+#include <vector>
 
 class VariableSizeData : public BaseElement
 {
@@ -34,6 +35,7 @@ public:
 		return true;
 	}
 	const uint8_t* Data() const { return &_data[0]; }
+	const std::vector<uint8_t>& Vec() const { return _data; }
 
 private:
 	std::vector<uint8_t> _data;

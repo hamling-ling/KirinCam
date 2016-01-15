@@ -2,18 +2,25 @@
 #include "ImageSource.h"
 #include "StreamSource.h"
 #include "StreamDemuxer.h"
-#include "StreamPresenter.h"
+#include "StreamDecoder.h"
+#include "StreamImagePresenter.h"
+#include "StreamFrameInfoPresenter.h"
 
 using namespace std;
 
 ImageSource::ImageSource(const std::string& url)
 {
-	_source = std::make_shared<StreamSource>(url);
-	_demuxer = std::make_shared<StreamDemuxer>();
-	_presenter = std::make_shared<StreamPresenter>();
+	_source = make_shared<StreamSource>(url);
+	_demuxer = make_shared<StreamDemuxer>();
+	_decoder = make_shared<StreamDecoder>();
+	_imagePresenter = make_shared<StreamImagePresenter>();
+	_frameInfoPresenter = make_shared<StreamFrameInfoPresenter>();
 
 	_source->Connect(_demuxer);
-	_demuxer->Connect(_presenter);
+	_demuxer->Connect(_decoder);
+	_demuxer->Connect(_frameInfoPresenter);
+
+	_decoder->Connect(_imagePresenter);
 }
 
 ImageSource::~ImageSource()
@@ -26,8 +33,14 @@ ImageSource::~ImageSource()
 	if (_demuxer) {
 		_demuxer->Stop();
 	}
-	if (_presenter) {
-		_presenter->Stop();
+	if (_frameInfoPresenter) {
+		_frameInfoPresenter->Stop();
+	}
+	if (_decoder) {
+		_decoder->Stop();
+	}
+	if (_imagePresenter) {
+		_imagePresenter->Stop();
 	}
 }
 
@@ -36,20 +49,24 @@ uint32_t ImageSource::Start()
 	lock_guard<recursive_mutex> lock(_mutex);
 	// TODO:avoid multiple call
 	// TODO:error event
-	_presenter->Start();
+	_frameInfoPresenter->Start();
+	_imagePresenter->Start();
 	_demuxer->Start();
 	_source->Start();
 
 	return 0;
 }
 
-void ImageSource::GetImage(uint16_t seqNum, CameraFrame& frame)
+bool ImageSource::GetImage(uint16_t seqNum, CameraFrame& frame)
 {
 	lock_guard<recursive_mutex> lock(_mutex);
 
-	if (!_presenter) {
-		return;
+	if (!_imagePresenter) {
+		return false;
 	}
 
-	_presenter->GetImage(seqNum, frame);
+	if (_frameInfoPresenter) {
+		_frameInfoPresenter->GetCameraFrame(seqNum, frame);
+	}
+	return _imagePresenter->GetCameraFrame(seqNum, frame);
 }
