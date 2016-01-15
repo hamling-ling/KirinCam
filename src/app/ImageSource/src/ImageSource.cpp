@@ -68,5 +68,5 @@ bool ImageSource::GetImage(uint16_t seqNum, CameraFrame& frame)
 	if (_frameInfoPresenter) {
 		_frameInfoPresenter->GetCameraFrame(seqNum, frame);
 	}
-	_imagePresenter->GetCameraFrame(seqNum, frame);
+	return _imagePresenter->GetCameraFrame(seqNum, frame);
 }

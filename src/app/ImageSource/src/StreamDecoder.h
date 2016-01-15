@@ -13,7 +13,7 @@ class StreamDecoder :
 public:
 	StreamDecoder();
 	virtual ~StreamDecoder();
-
+	virtual void Push(std::shared_ptr<LiveViewPacket> packet);
 private:
 	typedef std::shared_ptr<LiveViewPacket> decoderFlowData_t;
 	std::shared_ptr<DataFlow<decoderFlowData_t> > _flow;

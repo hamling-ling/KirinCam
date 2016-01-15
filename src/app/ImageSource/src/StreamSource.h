@@ -4,6 +4,7 @@
 #include <atomic>
 #include <memory>
 #include <string>
+#include <atomic>
 
 class AsyncWork;
 class AsyncWorkArg;
@@ -25,6 +26,6 @@ private:
 
 	void Run(std::atomic<bool>& canceled, AsyncWorkArg& arg);
 	std::string makeGetRequest(const std::string& server, const std::string& path);
-	void downloadStream();
+	void downloadStream(std::atomic<bool>& canceled);
 };
 

@@ -14,6 +14,7 @@ StreamSource::StreamSource(const std::string& url)
 	: _url(url)
 {
 	splitUrl(url, _server, _port, _path);
+	_work = make_shared<AsyncWork>();
 }
 
 StreamSource::~StreamSource()
@@ -41,7 +42,7 @@ void StreamSource::Stop()
 void StreamSource::Run(atomic<bool>& canceled, AsyncWorkArg& arg)
 {
 	try {
-		downloadStream();
+		downloadStream(canceled);
 	}
 	catch (std::exception& e)
 	{
@@ -49,7 +50,7 @@ void StreamSource::Run(atomic<bool>& canceled, AsyncWorkArg& arg)
 	}
 }
 
-void StreamSource::downloadStream() throw(std::exception)
+void StreamSource::downloadStream(std::atomic<bool>& canceled) throw(std::exception)
 {
 	boost::system::error_code error = boost::asio::error::host_not_found;
 	boost::asio::io_service io_service;
@@ -102,7 +103,7 @@ void StreamSource::downloadStream() throw(std::exception)
 	std::ostream os(&contentbuf, ios::binary);
 
 	while (
-		/* check cancelation  && */
+		!canceled &&
 		boost::asio::read(socket, response, boost::asio::transfer_at_least(1), error)
 		) {
 		const char* cp = boost::asio::buffer_cast<const char*>(response.data());

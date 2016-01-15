@@ -20,6 +20,11 @@ StreamDecoder::~StreamDecoder()
 
 }
 
+void StreamDecoder::Push(std::shared_ptr<LiveViewPacket> packet)
+{
+	_flow->Enqueue(packet);
+}
+
 void StreamDecoder::Run(std::atomic<bool>& canceled, decoderFlowData_t packet)
 {
 	// push
