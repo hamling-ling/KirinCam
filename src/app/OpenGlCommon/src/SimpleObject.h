@@ -12,9 +12,9 @@ using namespace std;
 class SimpleObject
 {
 private:
-	GLuint g_bufferObject;
-	GLuint g_vertexArrayObject;
-	GLuint g_textureObject;
+	GLuint m_bufferObject;
+	GLuint m_vertexArrayObject;
+	GLuint m_textureObject;
 	GLuint m_verticesLen;
 	vector<CTriangle3v> m_vertices;
 

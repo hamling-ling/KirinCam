@@ -9,14 +9,14 @@ SimpleObject::SimpleObject()
 
 SimpleObject::~SimpleObject(void)
 {
-	glDeleteTextures(1, &g_textureObject);
-	glDeleteVertexArrays(1, &g_vertexArrayObject);
-	glDeleteBuffers(1, &g_bufferObject);
+	glDeleteTextures(1, &m_textureObject);
+	glDeleteVertexArrays(1, &m_vertexArrayObject);
+	glDeleteBuffers(1, &m_bufferObject);
 }
 
 GLuint SimpleObject::GetVertexArrayObject()
 {
-	return g_vertexArrayObject;
+	return m_vertexArrayObject;
 }
 
 GLuint SimpleObject::GetVertexArrayLen()
@@ -26,7 +26,7 @@ GLuint SimpleObject::GetVertexArrayLen()
 
 GLuint SimpleObject::GetTextureObject()
 {
-	return g_textureObject;
+	return m_textureObject;
 }
 
 vector<CTriangle3v>& SimpleObject::GetVertexArray()
@@ -38,14 +38,14 @@ void SimpleObject::BindBuffer(GLint vertexLocation, GLint normalLocation, GLint 
 							  const GLfloat *normalsAndVertices, GLuint verticesLen,
 							  CTexture& texture)
 {
-	glGenBuffers(1, &g_bufferObject);
-	glBindBuffer(GL_ARRAY_BUFFER, g_bufferObject);
+	glGenBuffers(1, &m_bufferObject);
+	glBindBuffer(GL_ARRAY_BUFFER, m_bufferObject);
 	glBufferData(GL_ARRAY_BUFFER, sizeof (GLfloat) * 8 * verticesLen, normalsAndVertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenVertexArrays(1, &g_vertexArrayObject);
-	glBindVertexArray(g_vertexArrayObject);
-	glBindBuffer(GL_ARRAY_BUFFER, g_bufferObject);
+	glGenVertexArrays(1, &m_vertexArrayObject);
+	glBindVertexArray(m_vertexArrayObject);
+	glBindBuffer(GL_ARRAY_BUFFER, m_bufferObject);
 	glVertexAttribPointer(vertexLocation,	3, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat), (GLvoid *)(0 * sizeof (GLfloat)));
 	glVertexAttribPointer(normalLocation,	3, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat), (GLvoid *)(3 * sizeof (GLfloat)));
 	glVertexAttribPointer(texCoordLocation,	2, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat), (GLvoid *)(6 * sizeof (GLfloat)));
@@ -57,8 +57,8 @@ void SimpleObject::BindBuffer(GLint vertexLocation, GLint normalLocation, GLint 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glGenTextures(1, &g_textureObject);
-	glBindTexture(GL_TEXTURE_2D, g_textureObject);
+	glGenTextures(1, &m_textureObject);
+	glBindTexture(GL_TEXTURE_2D, m_textureObject);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
