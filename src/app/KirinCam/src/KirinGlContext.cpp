@@ -1,6 +1,7 @@
 #include "KirinGlContext.h"
 #include <GL/glew.h>
 #include <GL/wglew.h>
+#include "CvTexture.h"
 
 KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	: wxGLContext(canvas)
@@ -35,10 +36,10 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	glDeleteShader(g_vertexShader);
 	glDeleteShader(g_fragmentShader);
 
-	CTexture texture;
-	if (!texture.LoadBitmapFile("texture.bmp"))
+	CvTexture texture;
+	if (!texture.LoadBitmapFile("texture.jpg"))
 	{
-		wxLogError(wxT("Texture %s not found"), wxT("texture.bmp"));
+		wxLogError(wxT("Texture %s not found"), wxT("texture.jpg"));
 	}
 	pOrigObj = new SimpleObject();
 	CheckGLError();

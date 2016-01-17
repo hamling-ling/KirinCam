@@ -19,10 +19,10 @@ public:
 
 	const BITMAPINFO* GetTexBitmapInfo() const;
 
-	int GetTexWidth() const;
-	int GetTexHeight() const;
+	virtual int GetTexWidth() const;
+	virtual int GetTexHeight() const;
 
-	const unsigned char* GetTexImage() const;
+	virtual const unsigned char* GetTexImage() const;
 
 	virtual bool LoadBitmapFile(const char* file_name);
 

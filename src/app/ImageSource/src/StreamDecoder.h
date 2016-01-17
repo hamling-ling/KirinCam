@@ -5,6 +5,7 @@
 #include <atomic>
 
 #define MAX_DECODER_QUEUE_SIZE	32
+#define DUMPJPEG
 
 template<class T> class DataFlow;
 class StreamDecoder :
@@ -19,4 +20,7 @@ private:
 	std::shared_ptr<DataFlow<decoderFlowData_t> > _flow;
 
 	void Run(std::atomic<bool>& canceled, decoderFlowData_t packetg);
+#ifdef DUMPJPEG
+	bool dumped;
+#endif
 };
