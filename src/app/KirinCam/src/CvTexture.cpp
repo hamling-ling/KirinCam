@@ -15,12 +15,12 @@ CvTexture::~CvTexture()
 
 int CvTexture::GetTexWidth() const
 {
-	return _frame.size().width;
+	return _frame.cols;
 }
 
 int CvTexture::GetTexHeight() const
 {
-	return _frame.size().height;
+	return _frame.rows;
 
 }
 

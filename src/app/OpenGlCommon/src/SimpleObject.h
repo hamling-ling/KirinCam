@@ -12,11 +12,17 @@ using namespace std;
 class SimpleObject
 {
 private:
+	struct textureSize {
+		GLint width;
+		GLint height;
+	};
+
 	GLuint m_bufferObject;
 	GLuint m_vertexArrayObject;
 	GLuint m_textureObject;
 	GLuint m_verticesLen;
 	vector<CTriangle3v> m_vertices;
+	textureSize m_texSize;
 
 public:
 	SimpleObject();
@@ -26,8 +32,12 @@ public:
 	GLuint GetTextureObject();
 	vector<CTriangle3v> &GetVertexArray();
 
-	void SimpleObject::BindBuffer(GLint vertexLocation, GLint normalLocation, GLint texCoordLocation,
-							  const GLfloat *normalsAndVertices, GLuint verticesLen,
-							  CTexture& texture);
+	void BindBuffer(GLint vertexLocation,
+					GLint normalLocation,
+					GLint texCoordLocation,
+					const GLfloat *normalsAndVertices,
+					GLuint verticesLen,
+					CTexture& texture);
+	void ReplaceTexture(CTexture& texture);
 };
 

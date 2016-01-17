@@ -4,6 +4,8 @@
 
 SimpleObject::SimpleObject()
 {
+	m_texSize.width = 0;
+	m_texSize.height = 0;
 }
 
 
@@ -64,6 +66,8 @@ void SimpleObject::BindBuffer(GLint vertexLocation, GLint normalLocation, GLint 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.GetTexWidth(), texture.GetTexHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, texture.GetTexImage());
+	m_texSize.width = texture.GetTexWidth();
+	m_texSize.height = texture.GetTexHeight();
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	m_verticesLen = verticesLen;
@@ -78,4 +82,39 @@ void SimpleObject::BindBuffer(GLint vertexLocation, GLint normalLocation, GLint 
 
 		m_vertices.push_back(tri);
 	}
+}
+
+void SimpleObject::ReplaceTexture(CTexture& texture)
+{
+	glBindTexture(GL_TEXTURE_2D, m_textureObject);
+
+	if (texture.GetTexWidth() != m_texSize.width ||
+		texture.GetTexHeight() != m_texSize.height) {
+		// delete old one and create new texture
+		glDeleteTextures(1, &m_textureObject);
+		glGenTextures(1, &m_textureObject);
+		glBindTexture(GL_TEXTURE_2D, m_textureObject);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.GetTexWidth(), texture.GetTexHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, texture.GetTexImage());
+		m_texSize.width = texture.GetTexWidth();
+		m_texSize.height = texture.GetTexHeight();
+	}
+	else {
+		// replace with new image
+		glTexSubImage2D(
+			GL_TEXTURE_2D,				// target
+			0,							// level
+			0,							// xoffset
+			0,							// yoffset
+			texture.GetTexWidth(),		// width
+			texture.GetTexHeight(),		// height
+			GL_RGB,
+			GL_UNSIGNED_BYTE,
+			texture.GetTexImage()
+			);
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

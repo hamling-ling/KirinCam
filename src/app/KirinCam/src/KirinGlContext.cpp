@@ -47,7 +47,6 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 		&(normalsAndVertices[0][0]), 3,
 		texture);
 	CheckGLError();
-
 	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "Vertex"));
 	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "Normal"));
 	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "TexCoord"));
@@ -67,8 +66,8 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	const GLfloat lightAmbient[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
 	const GLfloat lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	const GLfloat cubeDiffuse[4] = { 0.75f, 0.0f, 1.0f, 1.0f };
-	const GLfloat cubeAmbient[4] = { 0.3f, 0.25f, 0.4f, 1.0f };
+	const GLfloat cubeDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	const GLfloat cubeAmbient[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
 	const GLfloat cubeSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	const GLfloat cubeShininess[1] = { 32.0f };
 
@@ -112,6 +111,12 @@ void KirinGlContext::Draw(float nWidth, float nHeight)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 #else
+	CvTexture tex;
+	if (nWidth > 512) {
+		tex.LoadBitmapFile("texture2.jpg");
+		pOrigObj->ReplaceTexture(tex);
+	}
+
 	CMatrix4x4f perspective;;
 
 	float l, r, b, t, n = 0.1f, f = 10.0f;
