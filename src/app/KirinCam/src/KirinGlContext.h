@@ -23,11 +23,14 @@ private:
 	GLuint g_fragmentShader;
 	GLuint g_shaderProgram;
 
-	const GLfloat normalsAndVertices[3][8] =
+	const GLfloat normalsAndVertices[6][8] =
 	{
-		{ -0.5f, -0.5f, 0.5f, 0.0f,  0.0f,  1.0f, 0.0f, 0.0f },
-		{ 0.5f, -0.5f, 0.5f, 0.0f,  0.0f,  1.0f, 1.0f, 0.0f },
-		{ 0.0f,  1.0f, 0.5f, 0.0f,  0.0f,  1.0f, 0.5f, 1.0f },
+		{ -0.5f, -0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 0.0f },
+		{ 0.5f, -0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 0.0f },
+		{ 0.5f,  0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 1.0f },
+		{ -0.5f, -0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 0.0f },
+		{ 0.5f,  0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 1.0f },
+		{ -0.5f,  0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 1.0f },
 	};
 
 	SimpleObject* pOrigObj;

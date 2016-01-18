@@ -30,7 +30,6 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	glLinkProgram(g_shaderProgram);
 
 	GLint vertexLocation = glGetAttribLocation(g_shaderProgram, "Vertex");
-	GLint normalLocation = glGetAttribLocation(g_shaderProgram, "Normal");
 	GLint texCoordLocation = glGetAttribLocation(g_shaderProgram, "TexCoord");
 
 	glDeleteShader(g_vertexShader);
@@ -43,12 +42,11 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	}
 	pOrigObj = new SimpleObject();
 	CheckGLError();
-	pOrigObj->BindBuffer(vertexLocation, normalLocation, texCoordLocation,
-		&(normalsAndVertices[0][0]), 3,
+	pOrigObj->BindBuffer(vertexLocation, -1, texCoordLocation,
+		&(normalsAndVertices[0][0]), 6,
 		texture);
 	CheckGLError();
 	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "Vertex"));
-	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "Normal"));
 	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "TexCoord"));
 
 	glUseProgram(g_shaderProgram);
@@ -61,25 +59,7 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 
 	glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 
-	const GLfloat lightPosition[4] = { 3.0f, 4.0f, 0.0f, 0.0f };
-	const GLfloat lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	const GLfloat lightAmbient[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
-	const GLfloat lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	const GLfloat cubeDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	const GLfloat cubeAmbient[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
-	const GLfloat cubeSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	const GLfloat cubeShininess[1] = { 32.0f };
-
 	glUseProgram(g_shaderProgram);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "lightPosition"), 1, lightPosition);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ld"), 1, lightDiffuse);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "La"), 1, lightAmbient);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ls"), 1, lightSpecular);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Kd"), 1, cubeDiffuse);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ka"), 1, cubeAmbient);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ks"), 1, cubeSpecular);
-	glUniform1fv(glGetUniformLocation(g_shaderProgram, "shininess"), 1, cubeShininess);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -152,28 +132,7 @@ void KirinGlContext::Draw(float nWidth, float nHeight)
 
 	CheckGLError();
 	glUseProgram(g_shaderProgram);
-	glUniformMatrix4fv(glGetUniformLocation(g_shaderProgram, "modelViewProjectionMatrix"), 1, GL_FALSE, modelViewProjectionMatrix);
-	glUniformMatrix4fv(glGetUniformLocation(g_shaderProgram, "modelViewMatrix"), 1, GL_FALSE, modelViewMatrix);
-	glUniformMatrix4fv(glGetUniformLocation(g_shaderProgram, "viewMatrix"), 1, GL_FALSE, viewMatrix);
-
-	const GLfloat lightPosition[4] = { 3.0f, 4.0f, 0.0f, 0.0f };
-	const GLfloat lightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	const GLfloat lightAmbient[4] = { 0.25f, 0.25f, 0.25f, 1.0f };
-	const GLfloat lightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	const GLfloat cubeDiffuse[4] = { 0.75f, 0.0f, 1.0f, 1.0f };
-	const GLfloat cubeAmbient[4] = { 0.3f, 0.25f, 0.4f, 1.0f };
-	const GLfloat cubeSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	const GLfloat cubeShininess[1] = { 32.0f };
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "lightPosition"), 1, lightPosition);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ld"), 1, lightDiffuse);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "La"), 1, lightAmbient);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ls"), 1, lightSpecular);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Kd"), 1, cubeDiffuse);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ka"), 1, cubeAmbient);
-	glUniform4fv(glGetUniformLocation(g_shaderProgram, "Ks"), 1, cubeSpecular);
-	glUniform1fv(glGetUniformLocation(g_shaderProgram, "shininess"), 1, cubeShininess);
-
+	//glUniformMatrix4fv(glGetUniformLocation(g_shaderProgram, "modelViewProjectionMatrix"), 1, GL_FALSE, modelViewProjectionMatrix);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glBindTexture(GL_TEXTURE_2D, pOrigObj->GetTextureObject());

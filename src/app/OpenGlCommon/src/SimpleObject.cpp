@@ -48,13 +48,18 @@ void SimpleObject::BindBuffer(GLint vertexLocation, GLint normalLocation, GLint 
 	glGenVertexArrays(1, &m_vertexArrayObject);
 	glBindVertexArray(m_vertexArrayObject);
 	glBindBuffer(GL_ARRAY_BUFFER, m_bufferObject);
-	glVertexAttribPointer(vertexLocation,	3, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat), (GLvoid *)(0 * sizeof (GLfloat)));
-	glVertexAttribPointer(normalLocation,	3, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat), (GLvoid *)(3 * sizeof (GLfloat)));
-	glVertexAttribPointer(texCoordLocation,	2, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat), (GLvoid *)(6 * sizeof (GLfloat)));
-
-	glEnableVertexAttribArray(vertexLocation);
-	glEnableVertexAttribArray(normalLocation);
-	glEnableVertexAttribArray(texCoordLocation);
+	if (vertexLocation != -1) {
+		glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(0 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(vertexLocation);
+	}
+	if (normalLocation != -1) {
+		glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(normalLocation);
+	}
+	if (texCoordLocation != -1) {
+		glVertexAttribPointer(texCoordLocation, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(texCoordLocation);
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
