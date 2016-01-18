@@ -69,8 +69,10 @@
     <None Include="..\resources\Texture.frag">
       <Filter>リソース ファイル</Filter>
     </None>
-    <None Include="..\resources\Texture.vert">
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\resources\Texture.vert">
       <Filter>リソース ファイル</Filter>
-    </None>
+    </Text>
   </ItemGroup>
 </Project>

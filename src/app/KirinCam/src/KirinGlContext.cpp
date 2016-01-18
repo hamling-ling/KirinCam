@@ -6,34 +6,41 @@
 KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	: wxGLContext(canvas)
 {
+	m_screenSize.SetValue(0.0f, 0.0f);
+	m_imageSize.SetValue(640, 360);
+
 	SetCurrent(*canvas);
 
 	CheckGLError();
 	glewInit();
 	CheckGLError();
-#if 0
-#else
-	g_vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	LoadShaderSource(g_vertexShader, "Texture.vert");
-	glCompileShader(g_vertexShader);
+
+	GLuint vertexShader;
+	GLuint fragmentShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	LoadShaderSource(vertexShader, "Texture.vert");
+	glCompileShader(vertexShader);
+	DisplayCompileError(vertexShader);
 	CheckGLError();
 
-	g_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	LoadShaderSource(g_fragmentShader, "Texture.frag");
-	glCompileShader(g_fragmentShader);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	LoadShaderSource(fragmentShader, "Texture.frag");
+	glCompileShader(fragmentShader);
+	DisplayCompileError(fragmentShader);
 	CheckGLError();
 
-	g_shaderProgram = glCreateProgram();
-	glAttachShader(g_shaderProgram, g_vertexShader);
-	glAttachShader(g_shaderProgram, g_fragmentShader);
+	m_shaderProgram = glCreateProgram();
+	glAttachShader(m_shaderProgram, vertexShader);
+	glAttachShader(m_shaderProgram, fragmentShader);
 
-	glLinkProgram(g_shaderProgram);
+	glLinkProgram(m_shaderProgram);
+	DisplayLinkError(m_shaderProgram);
 
-	GLint vertexLocation = glGetAttribLocation(g_shaderProgram, "Vertex");
-	GLint texCoordLocation = glGetAttribLocation(g_shaderProgram, "TexCoord");
+	GLint vertexLocation = glGetAttribLocation(m_shaderProgram, "Vertex");
+	GLint texCoordLocation = glGetAttribLocation(m_shaderProgram, "TexCoord");
 
-	glDeleteShader(g_vertexShader);
-	glDeleteShader(g_fragmentShader);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 
 	CvTexture texture;
 	if (!texture.LoadBitmapFile("texture.jpg"))
@@ -46,11 +53,11 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 		&(normalsAndVertices[0][0]), 6,
 		texture);
 	CheckGLError();
-	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "Vertex"));
-	glDisableVertexAttribArray(glGetAttribLocation(g_shaderProgram, "TexCoord"));
+	glDisableVertexAttribArray(glGetAttribLocation(m_shaderProgram, "Vertex"));
+	glDisableVertexAttribArray(glGetAttribLocation(m_shaderProgram, "TexCoord"));
 
-	glUseProgram(g_shaderProgram);
-	GLint tex = glGetUniformLocation(g_shaderProgram, "surfaceTexture");
+	glUseProgram(m_shaderProgram);
+	GLint tex = glGetUniformLocation(m_shaderProgram, "surfaceTexture");
 	glUniform1i(tex, 0);
 	glUseProgram(0);
 
@@ -59,7 +66,7 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 
 	glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 
-	glUseProgram(g_shaderProgram);
+	glUseProgram(m_shaderProgram);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -72,68 +79,35 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	glFlush();
 
 	glUseProgram(0);
-#endif
+
 	CheckGLError();
 }
 
 KirinGlContext::~KirinGlContext()
 {
 	delete pOrigObj;
-	glDeleteProgram(g_shaderProgram);
+	glDeleteProgram(m_shaderProgram);
 }
 
 
-void KirinGlContext::Draw(float nWidth, float nHeight)
+void KirinGlContext::Draw(float width, float height)
 {
 	CheckGLError();
-#if 0
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 
-#else
+	// texture replacement test
 	CvTexture tex;
-	if (nWidth > 512) {
+	if (width > 512) {
 		tex.LoadBitmapFile("texture2.jpg");
 		pOrigObj->ReplaceTexture(tex);
 	}
 
-	CMatrix4x4f perspective;;
-
-	float l, r, b, t, n = 0.1f, f = 10.0f;
-	t = n * tanf(PI * (45.0f / 2.0f) / 180.0f);
-	b = -t;
-	r = t * (float)nWidth / (float)nHeight;
-	l = -r;
-	perspective.MakePerspective(l, r, b, t, n, f);
-	float projection[16];
-	perspective.GetGLMat(projection);
-
-	CMatrix4x4f rotationX;
-	CMatrix4x4f rotationY;
-	CMatrix4x4f translation;
-	CMatrix4x4f lookAt;
-
-	float distance = sqrtf(3.0f * 2.5f * 2.5f);
-	float angle = atan2f(1.0f, sqrtf(2.0f)) * 180.0f / PI;
-
-	translation.MakeTranslation(CVector3f(0.0f, 0.0f, -distance));
-	rotationX.MakeRotation(CVector3f(1.0f, 0.0f, 0.0f), angle);
-	rotationY.MakeRotation(CVector3f(0.0f, 1.0f, 0.0f), 0.0f);
-	lookAt = translation * rotationX * rotationY;
-	float modelViewMatrix[16];
-	float viewMatrix[16];
-	lookAt.GetGLMat(modelViewMatrix);
-	lookAt.GetGLMat(viewMatrix);
-
-	CMatrix4x4f lookAtPerspective;
-	lookAtPerspective = perspective * lookAt;
-	float modelViewProjectionMatrix[16];
-	lookAtPerspective.GetGLMat(modelViewProjectionMatrix);
-
 	CheckGLError();
-	glUseProgram(g_shaderProgram);
-	//glUniformMatrix4fv(glGetUniformLocation(g_shaderProgram, "modelViewProjectionMatrix"), 1, GL_FALSE, modelViewProjectionMatrix);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glUseProgram(m_shaderProgram);
+
+	UpdateScalling(width, height);
 
 	glBindTexture(GL_TEXTURE_2D, pOrigObj->GetTextureObject());
 	glBindVertexArray(pOrigObj->GetVertexArrayObject());
@@ -142,8 +116,37 @@ void KirinGlContext::Draw(float nWidth, float nHeight)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glFlush();
 	glUseProgram(0);
-#endif
+
 	CheckGLError();
+}
+
+void KirinGlContext::UpdateScalling(float width, float height)
+{
+	CVector2f latestScreenSize(width, height);
+	if (m_screenSize != latestScreenSize) {
+		float imgYovX = m_imageSize[CVector2f::Y] / m_imageSize[CVector2f::X];
+		float scaleX = 1.0;
+		float scaleY = 1.0;
+		// scalling to fit image width to screen width
+		float imageX = latestScreenSize[CVector2f::X];
+		float imageY = m_imageSize[CVector2f::Y] * imageX / m_imageSize[CVector2f::X];
+		if (latestScreenSize[CVector2f::Y] < imageY) {
+			// if Y exceed screen height, use scalling to fit height
+			imageY = latestScreenSize[CVector2f::Y];
+			imageX = m_imageSize[CVector2f::X] * imageY / m_imageSize[CVector2f::Y];
+			// in shader image is 1x1. height fixed so compute ? x 1
+			scaleX = imageX / latestScreenSize[CVector2f::X];
+		}
+		else {
+			scaleY = imageY / latestScreenSize[CVector2f::Y];
+		}
+
+		m_screenSize = latestScreenSize;
+
+		GLint scallingSlot = glGetUniformLocation(m_shaderProgram, "Scalling");
+		glUniform2f(scallingSlot, scaleX, scaleY);
+		CheckGLError();
+	}
 }
 
 void KirinGlContext::CheckGLError()
@@ -198,3 +201,40 @@ void KirinGlContext::LoadShaderSource(GLuint shader, const char* fileName)
 
 }
 
+void KirinGlContext::DisplayCompileError(GLuint shader)
+{
+	GLint compiled;
+	int size;
+	int len;
+	char* buf;
+
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+	if (compiled == GL_FALSE) {
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &size);
+		if (size > 0) {
+			buf = (char *)malloc(size);
+			glGetShaderInfoLog(shader, size, &len, buf);
+			wxLogError(wxT("Shader Compile error %s"), buf);
+			free(buf);
+		}
+	}
+}
+
+void KirinGlContext::DisplayLinkError(GLuint program)
+{
+	GLint linked;
+	int size;
+	int len;
+	char* buf;
+
+	glGetProgramiv(program, GL_LINK_STATUS, &linked);
+	if (linked == GL_FALSE) {
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &size);
+		if (size > 0) {
+			buf = (char *)malloc(size);
+			glGetProgramInfoLog(program, size, &len, buf);
+			wxLogError(wxT("Shader Link error %s"), buf);
+			free(buf);
+		}
+	}
+}

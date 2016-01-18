@@ -12,27 +12,28 @@ class KirinGlContext :
 public:
 	KirinGlContext(wxGLCanvas *canvas);
 	virtual ~KirinGlContext();
-	void Draw(float xangle, float yangle);
+	void Draw(float width, float height);
+	void UpdateScalling(float width, float height);
 	static void CheckGLError();
 	static void LoadShaderSource(GLuint shader, const char* fileName);
+	static void DisplayCompileError(GLuint shader);
+	static void DisplayLinkError(GLuint program);
 
 private:
 	GLuint m_textures[6];
-
-	GLuint g_vertexShader;
-	GLuint g_fragmentShader;
-	GLuint g_shaderProgram;
+	GLuint m_shaderProgram;
 
 	const GLfloat normalsAndVertices[6][8] =
 	{
-		{ -0.5f, -0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 0.0f },
-		{ 0.5f, -0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 0.0f },
-		{ 0.5f,  0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 1.0f },
-		{ -0.5f, -0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 0.0f },
-		{ 0.5f,  0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 1.0f },
-		{ -0.5f,  0.5f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 1.0f },
+		{ -1.0f, -1.0f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 0.0f },
+		{ 1.0f, -1.0f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 0.0f },
+		{ 1.0f,  1.0f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 1.0f },
+		{ -1.0f, -1.0f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 0.0f },
+		{ 1.0f,  1.0f, 0.0f, 0.0f,  0.0f,  1.0f, 1.0f, 1.0f },
+		{ -1.0f,  1.0f, 0.0f, 0.0f,  0.0f,  1.0f, 0.0f, 1.0f },
 	};
 
 	SimpleObject* pOrigObj;
-	std::vector<SimpleObject*> objects;
+	CVector2f m_screenSize;
+	CVector2f m_imageSize;
 };
