@@ -9,6 +9,7 @@ wxBEGIN_EVENT_TABLE(KirinGlCanvas, wxGLCanvas)
 EVT_PAINT(KirinGlCanvas::OnPaint)
 EVT_KEY_DOWN(KirinGlCanvas::OnKeyDown)
 EVT_TIMER(SpinTimer, KirinGlCanvas::OnSpinTimer)
+EVT_IDLE(KirinGlCanvas::OnIdle)
 wxEND_EVENT_TABLE()
 
 static const int attributes[] = {
@@ -43,6 +44,11 @@ void KirinGlCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
 	KirinGlContext& canvas = wxGetApp().GetContext(this);
 	canvas.Draw(ClientSize.x, ClientSize.y);
 	SwapBuffers();
+}
+
+void KirinGlCanvas::OnIdle(wxIdleEvent &event)
+{
+	Refresh(false);
 }
 
 void KirinGlCanvas::OnKeyDown(wxKeyEvent& event)

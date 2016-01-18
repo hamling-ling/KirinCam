@@ -20,6 +20,7 @@ private:
 	void Spin(float xSpin, float ySpin);
 	void OnKeyDown(wxKeyEvent& event);
 	void OnSpinTimer(wxTimerEvent& WXUNUSED(event));
+	void OnIdle(wxIdleEvent &event);
 
 	// angles of rotation around x- and y- axis
 	float m_xangle,
