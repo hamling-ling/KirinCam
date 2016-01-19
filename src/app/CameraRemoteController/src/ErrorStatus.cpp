@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ErrorStatus.h"
 #include <string>
 #include <boost/lexical_cast.hpp>

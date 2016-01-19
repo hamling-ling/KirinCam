@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "LiveViewPacket.h"
 #include <istream>
 

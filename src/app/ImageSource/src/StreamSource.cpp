@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StreamSource.h"
 #include <sstream>
 #include <iostream>//debug

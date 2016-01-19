@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Success.h"
 #include <string>
 #include <boost/foreach.hpp>

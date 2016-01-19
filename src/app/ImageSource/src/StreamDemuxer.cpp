@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StreamDemuxer.h"
 
 using namespace std;

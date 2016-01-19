@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "EventObserver.h"
 #include "Common.h"
 #include "ErrorStatus.h"

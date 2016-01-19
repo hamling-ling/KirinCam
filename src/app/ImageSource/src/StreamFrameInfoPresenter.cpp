@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StreamFrameInfoPresenter.h"
 
 using namespace std;

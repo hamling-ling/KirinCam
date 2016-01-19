@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "BaseElement.h"
 
 using namespace std;

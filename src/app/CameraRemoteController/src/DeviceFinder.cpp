@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "DeviceFinder.h"
 #include <iostream>
 #include <boost/lexical_cast.hpp>

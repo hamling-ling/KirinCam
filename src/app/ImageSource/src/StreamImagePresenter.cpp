@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StreamImagePresenter.h"
 #include <queue>
 #include <memory>

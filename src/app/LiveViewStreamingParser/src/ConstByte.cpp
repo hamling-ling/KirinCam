@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ConstByte.h"
 
 ConstByte::ConstByte(uint8_t val) : _expectedValue(val) { }

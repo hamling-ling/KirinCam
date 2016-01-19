@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "DeviceDescription.h"
 #include <iostream>
 #include <sstream>

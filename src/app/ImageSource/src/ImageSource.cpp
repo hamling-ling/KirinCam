@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ImageSource.h"
 #include "StreamSource.h"
 #include "StreamDemuxer.h"

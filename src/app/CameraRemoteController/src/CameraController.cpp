@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "CameraController.h"
 #include <ostream>
 #include <fstream>
