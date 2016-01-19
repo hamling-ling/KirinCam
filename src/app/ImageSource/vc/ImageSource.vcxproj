@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ImageSourceApi.h" />
+    <ClInclude Include="..\src\opencvlib.h" />
     <ClInclude Include="..\src\StreamDecoder.h" />
     <ClInclude Include="..\src\StreamFrameInfoPresenter.h" />
     <ClInclude Include="..\src\StreamImagePresenter.h" />
