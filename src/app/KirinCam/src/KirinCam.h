@@ -16,7 +16,7 @@ public:
 	virtual bool OnInit() wxOVERRIDE;
 	virtual int OnExit() wxOVERRIDE;
 private:
-	KirinGlContext *m_glContext;
+	KirinGlContext* m_glContext;
 };
 
 DECLARE_APP(KirinCam)

@@ -6,6 +6,8 @@
 
 wxIMPLEMENT_APP(KirinCam);
 
+using namespace std;
+
 KirinCam::KirinCam()
 {
 	m_glContext = NULL;
@@ -35,11 +37,9 @@ int KirinCam::OnExit()
 
 KirinGlContext& KirinCam::GetContext(wxGLCanvas *canvas)
 {
-	KirinGlContext *glContext;
+	KirinGlContext* glContext;
 	if (!m_glContext)
 	{
-		// Create the OpenGL context for the first mono window which needs it:
-		// subsequently created windows will all share the same context.
 		m_glContext = new KirinGlContext(canvas);
 	}
 	glContext = m_glContext;

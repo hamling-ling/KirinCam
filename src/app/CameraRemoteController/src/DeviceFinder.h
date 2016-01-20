@@ -28,6 +28,7 @@ private:
 	char data_[kDataMaxLength];
 
 	std::stringstream content_;
+	asyncTaskCallback_t callback_;
 
 	void handleSendToMSearch(const boost::system::error_code& error);
 	void handleMSearchRespHeader(const boost::system::error_code& err, size_t bytes_recvd);
