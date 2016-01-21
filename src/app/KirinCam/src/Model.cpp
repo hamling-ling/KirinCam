@@ -15,6 +15,9 @@ Model::Model()
 
 bool Model::Initialize()
 {
+	function<void(AsyncTask*, uint32_t)> handler = bind(&Model::devFinderEventHandler,
+		this, std::placeholders::_1, std::placeholders::_2);
+	m_deviceFinder->Start(handler);
 	return true;
 }
 
@@ -28,7 +31,8 @@ shared_ptr<CameraController> Model::GetCameraController()
 	return m_cameraController;
 }
 
-void Model::devFinderEventHandler(AsyncTask* task)
+void Model::devFinderEventHandler(AsyncTask* task, uint32_t errorCode)
 {
-
+	DeviceFinderEventArgs arg(errorCode);
+	SearchComplete(*this, arg);
 }

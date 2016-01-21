@@ -3,6 +3,7 @@
 #include <wx/glcanvas.h>
 #include "KirinGlContext.h"
 #include "MainFrame.h"
+#include "Model.h"
 
 wxIMPLEMENT_APP(KirinCam);
 
@@ -24,6 +25,8 @@ bool KirinCam::OnInit()
 		return false;
 
 	new MainFrame();
+
+	Model::Instance().Initialize();
 
 	return true;
 }
