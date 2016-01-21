@@ -77,6 +77,12 @@ void AsyncTask::RaiseEvent(const boost::system::error_code &e) {
 	}
 
 	if (_callback) {
-		_callback(this);
+		_callback(this, e.value());
+	}
+}
+
+void AsyncTask::RaiseEvent(uint32_t errorCode) {
+	if (_callback) {
+		_callback(this, errorCode);
 	}
 }

@@ -50,8 +50,8 @@ DeviceDescription& DeviceFinder::GetDeviceDescription()
 void DeviceFinder::handleSendToMSearch(const boost::system::error_code& error)
 {
 	if (error) {
-		cout << "handleSendToMSearch error: " << error.message() <<  endl;
 		Cleanup();
+		handleError(error, __FUNCTION__);
 		return;
 	}
 
@@ -65,7 +65,7 @@ void DeviceFinder::handleSendToMSearch(const boost::system::error_code& error)
 void DeviceFinder::handleMSearchRespHeader(const boost::system::error_code& error, size_t bytes_recvd)
 {
 	if (error) {
-		cout << "handleMSearchRespHeader error: " << error.message() << endl;
+		handleError(error, __FUNCTION__);
 		return;
 	}
 
@@ -78,14 +78,13 @@ void DeviceFinder::handleMSearchRespHeader(const boost::system::error_code& erro
 	string status_message;
 	getline(http_response, status_message);
 	if (!http_response || http_version.substr(0, 5) != "HTTP/") {
-		std::cout << "Invalid response" << endl;
 		Cleanup();
+		handleStatusError(-1, status_message);
 		return;
 	}
 	if (status_code != 200) {
-		std::cout << "Response returned with status code ";
-		std::cout << status_code << endl;
 		Cleanup();
+		handleStatusError(status_code, status_message);
 		return;
 	}
 	string header;
@@ -131,27 +130,27 @@ void DeviceFinder::GetDeviceDescription(std::string description_url)
 		tcp_socket_,
 		tcp_request_,
 		boost::bind(&DeviceFinder::handleGetDeviceDescriptionResponseHeader,
-					this,
-					boost::asio::placeholders::error));
+this,
+boost::asio::placeholders::error));
 }
 
 void DeviceFinder::handleGetDeviceDescriptionResponseHeader(const boost::system::error_code& error)
 {
 	if (error) {
-		cout << "handleGetDeviceDescriptionResponseHeader error: " << error.message() << endl;
 		Cleanup();
+		handleError(error, __FUNCTION__);
 		return;
 	}
 
 	boost::asio::async_read_until(tcp_socket_, tcp_response_, "\0",
 		boost::bind(&DeviceFinder::handleGetDeviceDescriptionResponseHeaderStatusCode, this,
-		boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+			boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void DeviceFinder::handleGetDeviceDescriptionResponseHeaderStatusCode(const boost::system::error_code& error, const size_t bytes_transferred)
 {
 	if (error) {
-		cout << "handleGetDeviceDescriptionResponseHeaderStatusCode error: " << error.message() << endl;
+		handleError(error, __FUNCTION__);
 		Cleanup();
 		return;
 	}
@@ -165,26 +164,25 @@ void DeviceFinder::handleGetDeviceDescriptionResponseHeaderStatusCode(const boos
 	std::string status_message;
 	std::getline(response_stream, status_message);
 	if (!response_stream || http_version.substr(0, 5) != "HTTP/") {
-		std::cout << "Invalid response" << endl;
 		Cleanup();
+		handleStatusError(-1, status_message);
 		return;
 	}
 	if (status_code != 200) {
-		std::cout << "Response returned with status code ";
-		std::cout << status_code << endl;
 		Cleanup();
+		handleStatusError(status_code, status_message);
 		return;
 	}
 	// Read the response headers, which are terminated by a blank line.
 	boost::asio::async_read_until(tcp_socket_, tcp_response_, "\r\n\r\n",
 		boost::bind(&DeviceFinder::handleGetDeviceDescriptionRensponseHeader, this,
-		boost::asio::placeholders::error));
+			boost::asio::placeholders::error));
 }
 
 void DeviceFinder::handleGetDeviceDescriptionRensponseHeader(const boost::system::error_code& error)
 {
 	if (error) {
-		cout << "handleGetDeviceDescriptionRensponseHeader error: " << error.message() << endl;
+		handleError(error, __FUNCTION__);
 		return;
 	}
 
@@ -198,7 +196,7 @@ void DeviceFinder::handleGetDeviceDescriptionRensponseHeader(const boost::system
 
 	boost::asio::async_read_until(tcp_socket_, tcp_response_, "\0",
 		boost::bind(&DeviceFinder::handleGetDeviceDescriptionRensponseContent, this,
-		boost::asio::placeholders::error));
+			boost::asio::placeholders::error));
 }
 
 void DeviceFinder::handleGetDeviceDescriptionRensponseContent(const boost::system::error_code& error)
@@ -215,18 +213,32 @@ void DeviceFinder::handleGetDeviceDescriptionRensponseContent(const boost::syste
 		boost::asio::async_read(tcp_socket_, tcp_response_,
 			boost::asio::transfer_at_least(1),
 			boost::bind(&DeviceFinder::handleGetDeviceDescriptionRensponseContent, this,
-			boost::asio::placeholders::error));
+				boost::asio::placeholders::error));
 	}
 	else if (error == boost::asio::error::eof) {
-		std::cout << "End of Content" << endl;
+		cout << "End of Content" << endl;
 
 		deviceDescription_.ParseXml(content_.str());
 		Cleanup();
+
+		handleStatusError(0, "success");// no error
 	}
 	else {
-		std::cout << "Error: " << error << endl;
 		Cleanup();
+		handleError(error, __FUNCTION__);
 	}
+}
+
+void DeviceFinder::handleError(const boost::system::error_code& error, const std::string& msg)
+{
+	cerr << msg << " : " << error.message() << endl;
+	RaiseEvent(error);
+}
+
+void DeviceFinder::handleStatusError(unsigned int statusCode, const std::string& msg)
+{
+	cerr << "error status_code : " << statusCode << endl;
+	RaiseEvent((uint32_t)statusCode);
 }
 
 void DeviceFinder::Cleanup()

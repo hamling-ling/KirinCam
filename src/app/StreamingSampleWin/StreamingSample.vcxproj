@@ -62,7 +62,12 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;CameraRemoteController.lib;LiveViewStreamingParser.lib;Common.lib;ImageSource.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(SolutionDir)..\..\..\vendor\opencv\*d.dll" "$(OutDir)"</Command>
+      <Command>copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_core3??d.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgcodecs3??d.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgproc3??d.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_videoio3??d.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_highgui3??d.dll "$(OutDir)"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,7 +91,12 @@
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;CameraRemoteController.lib;LiveViewStreamingParser.lib;Common.lib;ImageSource.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "$(SolutionDir)..\..\..\vendor\opencv\*0.dll" "$(OutDir)"</Command>
+      <Command>copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_core3??.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgcodecs3??.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgproc3??.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_videoio3??.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_highgui3??.dll "$(OutDir)"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
