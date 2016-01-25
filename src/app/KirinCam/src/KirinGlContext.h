@@ -1,10 +1,12 @@
 #pragma once
 #include "wx/wxprec.h"
 #include <vector>
+#include <mutex>
 #include <GL/glew.h>
 #include <GL/wglew.h>
 #include "wx/glcanvas.h"
 #include "OpenGlCommon.h"
+#include "CameraRemoteController.h"
 
 class KirinGlContext :
 	public wxGLContext
@@ -36,4 +38,6 @@ private:
 	SimpleObject* pOrigObj;
 	CVector2f m_screenSize;
 	CVector2f m_imageSize;
+	CameraFrame m_camFrame;
+	std::recursive_mutex m_mutex;
 };

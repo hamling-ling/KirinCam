@@ -4,7 +4,7 @@
 
 using namespace std;
 
-StreamDecoder::StreamDecoder()
+StreamDecoder::StreamDecoder(bool flip) : _flip(flip)
 {
 	DataFlow<decoderFlowData_t>::DataFlowConsumeFunc func = bind(
 		&StreamDecoder::Run,
@@ -47,6 +47,9 @@ void StreamDecoder::Run(std::atomic<bool>& canceled, decoderFlowData_t packet)
 		return;
 	}
 	camFrame.image = cv::imdecode(cv::Mat(data->Vec()), 1);
+	if (_flip) {
+		cv::flip(camFrame.image, camFrame.image, 0);
+	}
 	camFrame.sequenceNumber = packet->GetHeader()->GetSequenceNumber();
 	camFrame.timeStamp = packet->GetHeader()->GetTimeStamp();
 

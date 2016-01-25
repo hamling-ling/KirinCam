@@ -37,4 +37,11 @@ bool CvTexture::LoadBitmapFile(const char* file_name)
 	}
 
 	cv::flip(_frame, _frame, 0);
+	return true;
+}
+
+bool CvTexture::SetFrame(cv::Mat frame)
+{
+	_frame = frame;
+	return true;
 }

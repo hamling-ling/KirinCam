@@ -35,4 +35,8 @@ void Model::devFinderEventHandler(AsyncTask* task, uint32_t errorCode)
 {
 	DeviceFinderEventArgs arg(errorCode);
 	SearchComplete(*this, arg);
+	if (errorCode == 0) {
+		m_cameraController = make_shared<CameraController>(m_deviceFinder->GetDeviceDescription());
+		m_cameraController->StartStreaming(true);
+	}
 }

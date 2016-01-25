@@ -21,6 +21,7 @@ CameraController::CameraController(DeviceDescription& deviceDescription)
 {
 	deviceDescription_ = deviceDescription;
 	eventObserver_ = std::make_shared<EventObserver>();
+	flipImage_ = false;
 }
 
 CameraController::~CameraController()
@@ -42,11 +43,13 @@ bool CameraController::SubscribeEvent()
 	return true;
 }
 
-bool CameraController::StartStreaming()
+bool CameraController::StartStreaming(bool flipImage)
 {
 	if (IsStarted()) {
-		return true;
+		return false;
 	}
+
+	flipImage_ = flipImage;
 
 	IoService().post(boost::bind(&CameraController::StartStreamingInternal, this));
 	Start(NULL);
@@ -98,7 +101,7 @@ void CameraController::StartStreamingInternal()
 	}
 
 	lock_guard<recursive_mutex> lock(imageSourceMutex_);
-	imageSource_ = std::make_shared<ImageSource>(liveViewUrl_);
+	imageSource_ = std::make_shared<ImageSource>(liveViewUrl_, flipImage_);
 	imageSource_->Start();
 }
 

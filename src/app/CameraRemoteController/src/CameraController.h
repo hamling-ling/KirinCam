@@ -19,7 +19,7 @@ public:
 	CameraController(DeviceDescription& deviceDescription);
 	virtual ~CameraController();
 	bool SubscribeEvent();
-	bool StartStreaming();
+	bool StartStreaming(bool flipImage);
 	void StopStreaming();
 	bool GetImage(uint16_t seqNum, CameraFrame& frame);
 	bool StartRecording();
@@ -34,6 +34,7 @@ private:
 	std::string liveViewUrl_;
 	std::shared_ptr<ImageSource> imageSource_;
 	std::shared_ptr<EventObserver> eventObserver_;
+	bool flipImage_;
 
 	void StartStreamingInternal();
 

@@ -2,13 +2,14 @@
 #include <GL/glew.h>
 #include <GL/wglew.h>
 #include "CvTexture.h"
+#include "Model.h"
 
 KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	: wxGLContext(canvas)
 {
 	m_screenSize.SetValue(0.0f, 0.0f);
 	m_imageSize.SetValue(640, 360);
-
+	pOrigObj = NULL;
 	SetCurrent(*canvas);
 
 	CheckGLError();
@@ -36,22 +37,10 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	glLinkProgram(m_shaderProgram);
 	DisplayLinkError(m_shaderProgram);
 
-	GLint vertexLocation = glGetAttribLocation(m_shaderProgram, "Vertex");
-	GLint texCoordLocation = glGetAttribLocation(m_shaderProgram, "TexCoord");
-
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	CvTexture texture;
-	if (!texture.LoadBitmapFile("texture.jpg"))
-	{
-		wxLogError(wxT("Texture %s not found"), wxT("texture.jpg"));
-	}
-	pOrigObj = new SimpleObject();
-	CheckGLError();
-	pOrigObj->BindBuffer(vertexLocation, -1, texCoordLocation,
-		&(normalsAndVertices[0][0]), 6,
-		texture);
+
 	CheckGLError();
 	glDisableVertexAttribArray(glGetAttribLocation(m_shaderProgram, "Vertex"));
 	glDisableVertexAttribArray(glGetAttribLocation(m_shaderProgram, "TexCoord"));
@@ -64,19 +53,11 @@ KirinGlContext::KirinGlContext(wxGLCanvas *canvas)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glUseProgram(m_shaderProgram);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glBindTexture(GL_TEXTURE_2D, pOrigObj->GetTextureObject());
-	glBindVertexArray(pOrigObj->GetVertexArrayObject());
-	glDrawArrays(GL_TRIANGLES, 0, pOrigObj->GetVertexArrayLen());
-	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glFlush();
 
 	glUseProgram(0);
 
@@ -94,28 +75,49 @@ void KirinGlContext::Draw(float width, float height)
 {
 	CheckGLError();
 
-	// texture replacement test
-	CvTexture tex;
-	if (width > 512) {
-		tex.LoadBitmapFile("texture2.jpg");
-		pOrigObj->ReplaceTexture(tex);
-	}
-
-	CheckGLError();
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(m_shaderProgram);
+	lock_guard<recursive_mutex> lock(m_mutex);
+	shared_ptr<CameraController> cam = Model::Instance().GetCameraController();
 
-	UpdateScalling(width, height);
+	if (cam) {
+		cam->GetImage(m_camFrame.sequenceNumber, m_camFrame);
+		if (!m_camFrame.image.empty()) {
 
-	glBindTexture(GL_TEXTURE_2D, pOrigObj->GetTextureObject());
-	glBindVertexArray(pOrigObj->GetVertexArrayObject());
-	glDrawArrays(GL_TRIANGLES, 0, pOrigObj->GetVertexArrayLen());
-	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glFlush();
-	glUseProgram(0);
+			CvTexture texture;
+			texture.SetFrame(m_camFrame.image);
+
+			glUseProgram(m_shaderProgram);
+
+			if (!pOrigObj) {
+				GLint vertexLocation = glGetAttribLocation(m_shaderProgram, "Vertex");
+				GLint texCoordLocation = glGetAttribLocation(m_shaderProgram, "TexCoord");
+				pOrigObj = new SimpleObject();
+				pOrigObj->BindBuffer(vertexLocation, -1, texCoordLocation,
+					&(normalsAndVertices[0][0]), 6,
+					texture);
+				CheckGLError();
+				GLint tex = glGetUniformLocation(m_shaderProgram, "surfaceTexture");
+				glUniform1i(tex, 0);
+			}
+			else {
+				pOrigObj->ReplaceTexture(texture);
+			}
+			CheckGLError();
+
+			UpdateScalling(width, height);
+
+			glBindTexture(GL_TEXTURE_2D, pOrigObj->GetTextureObject());
+			glBindVertexArray(pOrigObj->GetVertexArrayObject());
+			glDrawArrays(GL_TRIANGLES, 0, pOrigObj->GetVertexArrayLen());
+			glBindVertexArray(0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			CheckGLError();
+
+			glFlush();
+			glUseProgram(0);
+		}
+	}
 
 	CheckGLError();
 }

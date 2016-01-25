@@ -16,6 +16,7 @@ public:
 	virtual const unsigned char* GetTexImage() const;
 
 	virtual bool LoadBitmapFile(const char* file_name);
+	bool SetFrame(cv::Mat frame);
 private:
 	cv::Mat _frame;
 };
