@@ -107,7 +107,7 @@ int main()
 				observer.ShootModeChanged.connect(eventHandler);
 				cp->SubscribeEvent();
 
-				cp->StartStreaming();
+				cp->StartStreaming(false);
 
 				// if not started yet
 				if (!playThread.joinable()) {
