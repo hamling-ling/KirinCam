@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SimpleObject.h"
 
-
 SimpleObject::SimpleObject()
 {
 	m_texSize.width = 0;
@@ -70,7 +69,7 @@ void SimpleObject::BindBuffer(GLint vertexLocation, GLint normalLocation, GLint 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.GetTexWidth(), texture.GetTexHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, texture.GetTexImage());
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.GetTexWidth(), texture.GetTexHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, texture.GetTexImage());
 	m_texSize.width = texture.GetTexWidth();
 	m_texSize.height = texture.GetTexHeight();
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -103,7 +102,7 @@ void SimpleObject::ReplaceTexture(CTexture& texture)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.GetTexWidth(), texture.GetTexHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, texture.GetTexImage());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.GetTexWidth(), texture.GetTexHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, texture.GetTexImage());
 		m_texSize.width = texture.GetTexWidth();
 		m_texSize.height = texture.GetTexHeight();
 	}
@@ -116,7 +115,7 @@ void SimpleObject::ReplaceTexture(CTexture& texture)
 			0,							// yoffset
 			texture.GetTexWidth(),		// width
 			texture.GetTexHeight(),		// height
-			GL_RGB,
+			GL_BGR,
 			GL_UNSIGNED_BYTE,
 			texture.GetTexImage()
 			);

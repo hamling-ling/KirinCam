@@ -26,6 +26,7 @@ void AsyncTask::Start(asyncTaskCallback_t callback)
 	_callback = callback;
 
 	_thread = boost::thread(boost::bind(&AsyncTask::Run, this));
+	_ioService.reset();
 }
 
 void AsyncTask::Stop()
