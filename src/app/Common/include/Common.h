@@ -7,6 +7,7 @@
 
 #include "../src/AsyncWork.h"
 #include "../src/DataFlow.h"
+#include "../src/Log.h"
 
 /**
  */

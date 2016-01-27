@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Common.h"
 
 using namespace std;
 
@@ -33,6 +34,7 @@ shared_ptr<CameraController> Model::GetCameraController()
 
 void Model::devFinderEventHandler(AsyncTask* task, uint32_t errorCode)
 {
+	LogInfo("SearchComplete");
 	DeviceFinderEventArgs arg(errorCode);
 	SearchComplete(*this, arg);
 	if (errorCode == 0) {
