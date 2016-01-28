@@ -6,7 +6,7 @@
 #include <functional>
 
 #include "AsyncWork.h"
-
+#include "Log.h"
 
 template<class T>
 class DataFlow
@@ -43,6 +43,7 @@ public:
 		_queue.push(x);
 		while (kMaxQueueSize < _queue.size()) {
 			_queue.pop();
+			LogWarn("queue overflow");
 		}
 
 		if (wasEmpty) {

@@ -5,7 +5,7 @@
 #include <atomic>
 
 #define MAX_DECODER_QUEUE_SIZE	32
-#define DUMPJPEG
+//#define DUMPJPEG
 
 template<class T> class DataFlow;
 class StreamDecoder :

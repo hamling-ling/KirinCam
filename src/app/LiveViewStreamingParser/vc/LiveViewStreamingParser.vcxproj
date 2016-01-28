@@ -85,7 +85,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\BaseElement.cpp" />
     <ClCompile Include="..\src\BaseField.cpp" />
-    <ClCompile Include="..\src\CameraStreamCommon.cpp" />
     <ClCompile Include="..\src\CommonHeader.cpp" />
     <ClCompile Include="..\src\ConstByte.cpp" />
     <ClCompile Include="..\src\EmptyData.cpp" />
@@ -105,7 +104,6 @@
     <ClInclude Include="..\include\LiveViewStreamParser.h" />
     <ClInclude Include="..\src\BaseElement.h" />
     <ClInclude Include="..\src\BaseField.h" />
-    <ClInclude Include="..\src\CameraStreamCommon.h" />
     <ClInclude Include="..\src\CommonHeader.h" />
     <ClInclude Include="..\src\ConstByte.h" />
     <ClInclude Include="..\src\EmptyData.h" />
