@@ -155,10 +155,10 @@ int CameraController::invokeCameraService(const string& cmd)
 
 	ErrorStatus err;
 	if (err.SetStatus(pt)) {
-		cerr << err.StatusCode() << ":" << err.StatusMessage() << endl;
+		LogError("error %d:%s", err.StatusCode(), err.StatusMessage());
 		return false;
 	}
 
-	cerr << "InvokeCameraService returned unknown response" << endl;
+	LogWarn("InvokeCameraService returned unknown response");
 	return false;
 }

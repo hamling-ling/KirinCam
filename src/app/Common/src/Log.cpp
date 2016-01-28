@@ -33,14 +33,14 @@ string timeString()
 	return ss.str();
 }
 
-void log(char* file, char* func, int line, const char* format, ...)
+void log(const char* file, const char* func, int line, const char* level, const char* format, ...)
 {
 	char buf[1024] = { 0 };
 	va_list list;
 
-	stringstream ssLoc;
-	ssLoc << setw(22) << (string(func) + string(","));
-	ssLoc << " " << setw(4) << setfill('0') << line;
+	stringstream ssFunc, ssLoc;
+	ssFunc << setw(22) << (string(func) + string(","));
+	ssLoc << ssFunc.str().substr(0, 21) << ", " << setw(4) << setfill('0') << line;
 
 	string time = timeString();
 
@@ -52,8 +52,20 @@ void log(char* file, char* func, int line, const char* format, ...)
 	ss << "[" << time << "]";
 	ss << "[" << ssLoc.str() << "]";
 	ss << "[" << setw(6) << this_thread::get_id() << "]";
+	ss << "[" << level << "]";
 	ss << buf << endl;
 
-	cout << ss.str();
+	cerr << ss.str();
 	OutputDebugStringA(ss.str().c_str());
+}
+
+ScopeLog::ScopeLog(const char* scopeName)
+{
+	_scopeName = scopeName;
+	LogInfo("%s ENT", _scopeName);
+}
+
+ScopeLog::~ScopeLog()
+{
+	LogInfo("%s EXT", _scopeName);
 }

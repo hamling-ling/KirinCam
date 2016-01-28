@@ -2,6 +2,7 @@
 #include <iostream>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
+#include "Common.h"
 
 using namespace std;
 using namespace boost;
@@ -25,6 +26,8 @@ DeviceFinder::~DeviceFinder()
 
 void DeviceFinder::Start(asyncTaskCallback_t callback)
 {
+	LogEntExt;
+
 	stringstream os;
 	os << "M-SEARCH * HTTP/1.1\r\n";
 	os << "HOST: " << kMcAddrStr << ":" << kMcPortStr << "\r\n";
@@ -93,9 +96,8 @@ void DeviceFinder::handleMSearchRespHeader(const boost::system::error_code& erro
 		if (header.substr(0, 9) == "LOCATION:") {
 			description_url = header.substr(10, header.length() - 11);
 		}
-		cout << header << "\n";
+		LogInfo(header.c_str());
 	}
-	cout << "\n";
 
 	GetDeviceDescription(description_url);
 }
@@ -117,9 +119,9 @@ void DeviceFinder::GetDeviceDescription(std::string description_url)
 	ostream request_stream(&tcp_request_);
 	request_stream << ss.str();
 
-	cout << "-- device description get request ---" << endl;
-	cout << ss.str() << endl;
-	cout << "-- end of device description get request --" << endl;
+	LogInfo("-- device description get request ---");
+	LogInfo(ss.str().c_str());
+	LogInfo("-- end of device description get request --");
 
 	// The connection was successful. Send the request.
 	boost::asio::ip::address addr = boost::asio::ip::address::from_string(server);
@@ -130,8 +132,8 @@ void DeviceFinder::GetDeviceDescription(std::string description_url)
 		tcp_socket_,
 		tcp_request_,
 		boost::bind(&DeviceFinder::handleGetDeviceDescriptionResponseHeader,
-this,
-boost::asio::placeholders::error));
+		this,
+		boost::asio::placeholders::error));
 }
 
 void DeviceFinder::handleGetDeviceDescriptionResponseHeader(const boost::system::error_code& error)
@@ -205,10 +207,6 @@ void DeviceFinder::handleGetDeviceDescriptionRensponseContent(const boost::syste
 		// Write all of the data that has been read so far.
 		content_ << &tcp_response_;
 
-		cout << "-- Device Description --" << endl;
-		cout << content_.str();
-		cout << "-- End of Device Description --" << endl;
-
 		// Continue reading remaining data until EOF.
 		boost::asio::async_read(tcp_socket_, tcp_response_,
 			boost::asio::transfer_at_least(1),
@@ -216,8 +214,7 @@ void DeviceFinder::handleGetDeviceDescriptionRensponseContent(const boost::syste
 				boost::asio::placeholders::error));
 	}
 	else if (error == boost::asio::error::eof) {
-		cout << "End of Content" << endl;
-
+		LogInfo("End of DeviceDescription");
 		deviceDescription_.ParseXml(content_.str());
 		Cleanup();
 
@@ -231,13 +228,18 @@ void DeviceFinder::handleGetDeviceDescriptionRensponseContent(const boost::syste
 
 void DeviceFinder::handleError(const boost::system::error_code& error, const std::string& msg)
 {
-	cerr << msg << " : " << error.message() << endl;
+	LogError("%s : %d", error.message(), error.value());
 	RaiseEvent(error);
 }
 
 void DeviceFinder::handleStatusError(unsigned int statusCode, const std::string& msg)
 {
-	cerr << "error status_code : " << statusCode << endl;
+	if (statusCode) {
+		LogError("error status_code : %d", statusCode);
+	}
+	else {
+		LogInfo("status_code : %d", statusCode);
+	}
 	RaiseEvent((uint32_t)statusCode);
 }
 
