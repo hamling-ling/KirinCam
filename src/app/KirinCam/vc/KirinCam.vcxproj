@@ -185,7 +185,7 @@ copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_videoio3??d.dll  "$(OutDir)"
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);D:\usr\local\opencv\x86\vc14\lib;D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\glew-1.13.0\lib\Release\Win32;D:\usr\local\wxWidgets\lib\vc_dll\mswu;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);D:\usr\local\opencv\x86\vc14\lib;D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\glew-1.13.0\lib\Release\Win32;D:\usr\local\wxWidgets\lib\vc_dll;D:\usr\local\wxWidgets\lib\vc_dll\mswu;</AdditionalLibraryDirectories>
       <AdditionalDependencies>OpenGlCommon.lib;CameraRemoteController.lib;LiveViewStreamingParser.lib;Common.lib;ImageSource.lib;wxmsw31u_gl.lib;opengl32.lib;glu32.lib;wxmsw31u_core.lib;wxbase31u.lib;wxtiff.lib;wxjpeg.lib;wxpng.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
@@ -199,7 +199,7 @@ copy /Y "$(SolutionDir)resources\texture.bmp" "$(ProjectDir)"
 copy /Y "$(SolutionDir)resources\texture.jpg" "$(ProjectDir)"
 copy /Y "$(SolutionDir)resources\texture2.jpg" "$(ProjectDir)"
 
-copy /Y D:\usr\local\glew-1.13.0\bin\Debug\Win32\glew32.dll "$(OutDir)"
+copy /Y D:\usr\local\glew-1.13.0\bin\Release\Win32\glew32.dll "$(OutDir)"
 copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxbase310u_vc_custom.dll "$(OutDir)"
 copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxmsw310u_core_vc_custom.dll "$(OutDir)"
 copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxmsw310u_gl_vc_custom.dll "$(OutDir)"

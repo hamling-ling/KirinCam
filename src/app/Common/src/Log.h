@@ -11,10 +11,10 @@
 #else
 #define LogDebug(fmt, ...)
 #define LogInfo(fmt, ...)
-#define LogWarn(...)
 #define LogWarn(fmt, ...)
 #define LogError(fmt, ...)
 #define LogFatal(fmt, ...)
+#define LogEntExt
 #endif
 
 void log(const char* file, const char* func, int line, const char* level, const char* format, ...);
