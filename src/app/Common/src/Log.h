@@ -1,7 +1,8 @@
 #pragma once
 
+#define LOG_ENABLED
 
-#if defined(_DEBUG)
+#if defined(LOG_ENABLED)
 #define LogDebug(fmt, ...)	log(__FILE__, __FUNCTION__, __LINE__, "DEBUG", fmt, __VA_ARGS__)
 #define LogInfo(fmt, ...)	log(__FILE__, __FUNCTION__, __LINE__, "INFO ", fmt, __VA_ARGS__)
 #define LogWarn(fmt, ...)	log(__FILE__, __FUNCTION__, __LINE__, "WARN ", fmt, __VA_ARGS__)

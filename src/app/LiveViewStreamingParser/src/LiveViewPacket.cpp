@@ -1,5 +1,5 @@
 #include "LiveViewPacket.h"
-#include <istream>
+#include "Common.h"
 
 using namespace std;
 
@@ -18,6 +18,7 @@ bool LiveViewPacket::Fill(boost::asio::streambuf& buf)
 
 	if (!commonHeader_->IsFull()) {
 		if (!commonHeader_->Fill(buf)) {
+			LogError("Fill failed");
 			return false;
 		}
 		CalcPos();
@@ -49,9 +50,14 @@ bool LiveViewPacket::Fill(boost::asio::streambuf& buf)
 
 const VariableSizeData* LiveViewPacket::GetImage() const {
 	if (commonHeader_->PayloadType() != kPayloadTypeLiveViewImages) {
+		LogError("wrong payload");
 		return NULL;
 	}
 	std::shared_ptr<ImagePayload> sptr = std::dynamic_pointer_cast<ImagePayload>(payload_);
+	if (!sptr) {
+		LogError("unknown payload");
+		return NULL;
+	}
 	return sptr->GetImage();
 }
 
@@ -72,6 +78,7 @@ void LiveViewPacket::SkipUntil(char c, boost::asio::streambuf& buf) {
 			if (c == static_cast<char>(0xFF)) {
 				break;
 			}
+			LogWarn("searching header header");
 			ifs.read(&c, sizeof(c));
 		}
 	}

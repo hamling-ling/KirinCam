@@ -1,6 +1,7 @@
 #include "StreamDecoder.h"
 #include "Common.h"
 #include <functional>
+#include <exception>
 
 using namespace std;
 
@@ -29,6 +30,7 @@ void StreamDecoder::Push(std::shared_ptr<LiveViewPacket> packet)
 
 void StreamDecoder::Run(std::atomic<bool>& canceled, decoderFlowData_t packet)
 {
+	assert(packet);
 #ifdef DUMPJPEG
 	if (!dumped) {
 		// debug
@@ -44,8 +46,10 @@ void StreamDecoder::Run(std::atomic<bool>& canceled, decoderFlowData_t packet)
 	// decode
 	const VariableSizeData* data = packet->GetImage();
 	if (data == NULL || data->Size() == UNDEFINED_SIZE) {
+		LogError("broken data");
 		return;
 	}
+
 	camFrame.image = cv::imdecode(cv::Mat(data->Vec()), 1);
 	if (_flip) {
 		cv::flip(camFrame.image, camFrame.image, 0);

@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
@@ -56,7 +56,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,7 +69,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
@@ -79,7 +80,8 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
