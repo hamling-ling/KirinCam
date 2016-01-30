@@ -28,7 +28,7 @@ string timeString()
 	strftime(str, sizeof(str), "%Y/%m/%d %H:%I:%S", &tm);
 
 	stringstream ss;
-	ss << str << "." << mills;
+	ss << str << "." << setw(3) << setfill('0') << left << mills;
 
 	return ss.str();
 }
@@ -39,8 +39,8 @@ void log(const char* file, const char* func, int line, const char* level, const 
 	va_list list;
 
 	stringstream ssFunc, ssLoc;
-	ssFunc << setw(22) << (string(func) + string(","));
-	ssLoc << ssFunc.str().substr(0, 21) << ", " << setw(4) << setfill('0') << line;
+	ssFunc << setw(32) << left << func;
+	ssLoc << ssFunc.str().substr(0, 31) << ", " << setw(4) << setfill('0') << line;
 
 	string time = timeString();
 
