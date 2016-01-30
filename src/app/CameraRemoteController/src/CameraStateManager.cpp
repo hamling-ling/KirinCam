@@ -1,10 +1,9 @@
-#include "stdafx.h"
 #include "CameraStateManager.h"
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 
-#include <iostream> // debug
+#include "Common.h"
 
 using namespace std;
 using boost::property_tree::ptree;
@@ -67,8 +66,7 @@ void CameraStateManager::UpdateState(const string& json, updatedObjects_t& updat
 		read_json(ss, pt);
 	}
 	catch (boost::exception& e) {
-		cerr << "read_json failed" << endl;
-		cerr << ss.str() << endl;
+		LogError("read_json failed: %s", ss.str().c_str());
 		return;
 	}
 
@@ -297,7 +295,7 @@ bool CameraStateManager::parsePropWithCandidates(
 		if (cand) {
 			BOOST_FOREACH(const ptree::value_type& e, pt.get_child(candName))
 			{
-				cout << e.second.data() << endl;
+				LogInfo(e.second.data().c_str());
 				candidates.insert(e.second.data());
 			}
 			(p->*candsetter)(candidates);

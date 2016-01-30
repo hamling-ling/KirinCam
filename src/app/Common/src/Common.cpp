@@ -57,11 +57,11 @@ void Dump(boost::asio::streambuf& buf)
 {
 	std::ofstream ofs("out.dat", std::ios::binary | std::ios::trunc);
 	if (!ofs) {
-		cout << "dump failed" << endl;
+		LogError("dump failed");
 		return;
 	}
 
-	cout << "content size:" << buf.size() << endl;
+	LogInfo("content size:%d", buf.size());
 	ofs << &buf;
 }
 
@@ -69,7 +69,7 @@ void Dump(const vector<uint8_t>& buf, const string& filename)
 {
 	std::ofstream ofs(filename, std::ios::binary | std::ios::trunc);
 	if (!ofs) {
-		cout << "dump failed" << endl;
+		LogError("dump failed");
 		return;
 	}
 
@@ -121,12 +121,12 @@ int InvokeCommand(
 		std::getline(response_stream, status_message);
 		if (!response_stream || http_version.substr(0, 5) != "HTTP/")
 		{
-			std::cout << "Invalid response\n";
+			LogError("Invalid response");
 			retCode = -1;
 		}
 		if (status_code != 200)
 		{
-			std::cout << "Response returned with status code " << status_code << "\n";
+			LogError("Response returned with status code %d", status_code);
 			retCode = status_code;
 			return retCode;
 		}
@@ -155,8 +155,8 @@ int InvokeCommand(
 	}
 	catch (std::exception& e)
 	{
-		cerr << "Exception: " << e.what() << endl;
-		cerr << "json:" << json_command << endl;
+		LogError("Exception: %s", e.what());
+		LogError("json:%s", json_command);
 		retCode = -1;
 	}
 	return retCode;
@@ -179,8 +179,8 @@ int InvokeCommand(	const std::string& server,
 	}
 	catch (std::exception& e)
 	{
-		cout << "Exception: " << e.what() << endl;
-		cout << "json:" << json_command << endl;
+		LogError("Exception: %s", e.what());
+		LogError("json:%s", json_command);
 		retCode = -1;
 	}
 	return InvokeCommand(socket, server, port, path, json_command, resultJson);

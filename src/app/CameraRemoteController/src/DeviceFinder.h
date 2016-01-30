@@ -2,6 +2,7 @@
 
 #include <string>
 #include <sstream>
+#include <string>
 #include <boost/asio.hpp>
 #include "DeviceDescription.h"
 #include "AsyncTask.h"
@@ -28,6 +29,7 @@ private:
 	char data_[kDataMaxLength];
 
 	std::stringstream content_;
+	asyncTaskCallback_t callback_;
 
 	void handleSendToMSearch(const boost::system::error_code& error);
 	void handleMSearchRespHeader(const boost::system::error_code& err, size_t bytes_recvd);
@@ -36,6 +38,8 @@ private:
 	void handleGetDeviceDescriptionResponseHeaderStatusCode(const boost::system::error_code& error, const size_t bytes_transferred);
 	void handleGetDeviceDescriptionRensponseHeader(const boost::system::error_code& error);
 	void handleGetDeviceDescriptionRensponseContent(const boost::system::error_code& error);
+	void handleError(const boost::system::error_code& error, const std::string& msg);
+	void handleStatusError(unsigned int statusCode, const std::string& msg);
 	void Cleanup();
 };
 

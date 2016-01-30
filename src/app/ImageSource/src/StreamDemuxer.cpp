@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #include "StreamDemuxer.h"
+#include "Common.h"
 
 using namespace std;
 
@@ -19,8 +19,8 @@ void StreamDemuxer::Push(boost::asio::streambuf& stream)
 			if (_packet->IsFull()) {
 				for (auto it : _downStreams) {
 					PushPacket(_packet);
-					_packet = std::make_shared<LiveViewPacket>();
 				}
+				_packet = std::make_shared<LiveViewPacket>();
 			}
 		}
 	}

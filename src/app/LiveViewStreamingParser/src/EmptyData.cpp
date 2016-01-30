@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "EmptyData.h"
 
 EmptyData::EmptyData()

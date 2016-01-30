@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\CvTexture.cpp" />
+    <ClCompile Include="..\src\KirinCam.cpp" />
+    <ClCompile Include="..\src\KirinGlCanvas.cpp" />
+    <ClCompile Include="..\src\KirinGlContext.cpp" />
+    <ClCompile Include="..\src\MainFrame.cpp" />
+    <ClCompile Include="..\src\Model.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\CvTexture.h" />
+    <ClInclude Include="..\src\KirinCam.h" />
+    <ClInclude Include="..\src\KirinGlCanvas.h" />
+    <ClInclude Include="..\src\KirinGlContext.h" />
+    <ClInclude Include="..\src\MainFrame.h" />
+    <ClInclude Include="..\src\Model.h" />
+    <ClInclude Include="..\src\opencvlib.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\texture.bmp">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\resources\Texture.frag" />
+    <Text Include="..\resources\Texture.vert">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <FileType>Document</FileType>
+    </Text>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CBCCF9A8-AA90-457D-A988-4D138F3E86D4}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>KirinCam</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_SCL_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;__WXMSW__;_UNICODE;WXUSINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;D:\usr\local\glew-1.13.0\include;D:\usr\local\opencv\include;$(SolutionDir)..\OpenGlCommon\include;$(SolutionDir)..\Common\include;$(SolutionDir)..\LiveViewStreamingParser\include;$(SolutionDir)..\ImageSource\include;$(SolutionDir)..\CameraRemoteController\include;D:\usr\local\wxWidgets\lib\vc_dll\mswud;D:\usr\local\wxWidgets\include;</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir);D:\usr\local\opencv\x86\vc14\lib;D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\glew-1.13.0\lib\Debug\Win32;D:\usr\local\wxWidgets\lib\vc_dll;D:\usr\local\wxWidgets\lib\vc_dll\mswud</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGlCommon.lib;CameraRemoteController.lib;LiveViewStreamingParser.lib;Common.lib;ImageSource.lib;wxmsw31ud_gl.lib;opengl32.lib;glu32.lib;wxmsw31ud_core.lib;wxbase31ud.lib;wxtiffd.lib;wxjpegd.lib;wxpngd.lib;wxzlibd.lib;wxregexud.lib;wxexpatd.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;glew32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)resources\Texture.vert" "$(OutDir)"
+copy /Y "$(SolutionDir)resources\Texture.frag" "$(OutDir)"
+copy /Y "$(SolutionDir)resources\texture.bmp" "$(OutDir)"
+
+copy /Y "$(SolutionDir)resources\Texture.vert" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\Texture.frag" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\texture.bmp" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\texture.jpg" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\texture2.jpg" "$(ProjectDir)"
+
+copy /Y D:\usr\local\glew-1.13.0\bin\Debug\Win32\glew32d.dll "$(OutDir)"
+copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxbase310ud_vc_custom.dll "$(OutDir)"
+copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxmsw310ud_core_vc_custom.dll "$(OutDir)"
+copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxmsw310ud_gl_vc_custom.dll "$(OutDir)"
+
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_core3??d.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgcodecs3??d.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgproc3??d.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_videoio3??d.dll  "$(OutDir)"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_SCL_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;__WXMSW__;_UNICODE;WXUSINGDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;D:\usr\local\glew-1.13.0\include;D:\usr\local\opencv\include;$(SolutionDir)..\OpenGlCommon\include;$(SolutionDir)..\Common\include;$(SolutionDir)..\LiveViewStreamingParser\include;$(SolutionDir)..\ImageSource\include;$(SolutionDir)..\CameraRemoteController\include;D:\usr\local\wxWidgets\lib\vc_dll\mswu;D:\usr\local\wxWidgets\include;</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(OutDir);D:\usr\local\opencv\x86\vc14\lib;D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;D:\usr\local\glew-1.13.0\lib\Release\Win32;D:\usr\local\wxWidgets\lib\vc_dll;D:\usr\local\wxWidgets\lib\vc_dll\mswu;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenGlCommon.lib;CameraRemoteController.lib;LiveViewStreamingParser.lib;Common.lib;ImageSource.lib;wxmsw31u_gl.lib;opengl32.lib;glu32.lib;wxmsw31u_core.lib;wxbase31u.lib;wxtiff.lib;wxjpeg.lib;wxpng.lib;wxzlib.lib;wxregexu.lib;wxexpat.lib;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;winspool.lib;winmm.lib;shell32.lib;shlwapi.lib;comctl32.lib;ole32.lib;oleaut32.lib;uuid.lib;rpcrt4.lib;advapi32.lib;version.lib;wsock32.lib;wininet.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)resources\Texture.vert" "$(OutDir)"
+copy /Y "$(SolutionDir)resources\Texture.frag" "$(OutDir)"
+copy /Y "$(SolutionDir)resources\texture.bmp" "$(OutDir)"
+
+copy /Y "$(SolutionDir)resources\Texture.vert" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\Texture.frag" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\texture.bmp" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\texture.jpg" "$(ProjectDir)"
+copy /Y "$(SolutionDir)resources\texture2.jpg" "$(ProjectDir)"
+
+copy /Y D:\usr\local\glew-1.13.0\bin\Release\Win32\glew32.dll "$(OutDir)"
+copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxbase310u_vc_custom.dll "$(OutDir)"
+copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxmsw310u_core_vc_custom.dll "$(OutDir)"
+copy /Y D:\usr\local\wxWidgets\lib\vc_dll\wxmsw310u_gl_vc_custom.dll "$(OutDir)"
+
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_core3??.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgcodecs3??.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_imgproc3??.dll  "$(OutDir)"
+copy /Y D:\usr\local\opencv\x86\vc14\bin\opencv_videoio3??.dll  "$(OutDir)"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "AsyncTask.h"
 
 #include <boost/bind.hpp>
@@ -27,6 +26,7 @@ void AsyncTask::Start(asyncTaskCallback_t callback)
 	_callback = callback;
 
 	_thread = boost::thread(boost::bind(&AsyncTask::Run, this));
+	_ioService.reset();
 }
 
 void AsyncTask::Stop()
@@ -78,6 +78,12 @@ void AsyncTask::RaiseEvent(const boost::system::error_code &e) {
 	}
 
 	if (_callback) {
-		_callback(this);
+		_callback(this, e.value());
+	}
+}
+
+void AsyncTask::RaiseEvent(uint32_t errorCode) {
+	if (_callback) {
+		_callback(this, errorCode);
 	}
 }

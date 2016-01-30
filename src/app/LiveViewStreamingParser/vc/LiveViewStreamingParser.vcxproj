@@ -42,20 +42,22 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,8 +69,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\usr\local\boost_1_60_0;$(ProjectDir)..\..\Common\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -77,13 +80,13 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\usr\local\boost_1_60_0\stage\x86\vc14\static\md\lib;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\BaseElement.cpp" />
     <ClCompile Include="..\src\BaseField.cpp" />
-    <ClCompile Include="..\src\CameraStreamCommon.cpp" />
     <ClCompile Include="..\src\CommonHeader.cpp" />
     <ClCompile Include="..\src\ConstByte.cpp" />
     <ClCompile Include="..\src\EmptyData.cpp" />
@@ -93,14 +96,16 @@
     <ClCompile Include="..\src\LiveViewPacket.cpp" />
     <ClCompile Include="..\src\NByteNumber.cpp" />
     <ClCompile Include="..\src\Payloads.cpp" />
-    <ClCompile Include="..\src\stdafx.cpp" />
+    <ClCompile Include="..\src\stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\src\VariableSizeData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\LiveViewStreamParser.h" />
     <ClInclude Include="..\src\BaseElement.h" />
     <ClInclude Include="..\src\BaseField.h" />
-    <ClInclude Include="..\src\CameraStreamCommon.h" />
     <ClInclude Include="..\src\CommonHeader.h" />
     <ClInclude Include="..\src\ConstByte.h" />
     <ClInclude Include="..\src\EmptyData.h" />

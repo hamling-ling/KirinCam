@@ -14,7 +14,7 @@ class StreamFrameInfoPresenter;
 class ImageSource
 {
 public:
-	ImageSource(const std::string& url);
+	ImageSource(const std::string& url, bool flipImage);
 	~ImageSource();
 	uint32_t Start();
 	bool GetImage(uint16_t seqNum, CameraFrame& frame);

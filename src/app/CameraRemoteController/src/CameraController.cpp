@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "CameraController.h"
 #include <ostream>
 #include <fstream>
@@ -22,6 +21,7 @@ CameraController::CameraController(DeviceDescription& deviceDescription)
 {
 	deviceDescription_ = deviceDescription;
 	eventObserver_ = std::make_shared<EventObserver>();
+	flipImage_ = false;
 }
 
 CameraController::~CameraController()
@@ -43,11 +43,13 @@ bool CameraController::SubscribeEvent()
 	return true;
 }
 
-bool CameraController::StartStreaming()
+bool CameraController::StartStreaming(bool flipImage)
 {
 	if (IsStarted()) {
-		return true;
+		return false;
 	}
+
+	flipImage_ = flipImage;
 
 	IoService().post(boost::bind(&CameraController::StartStreamingInternal, this));
 	Start(NULL);
@@ -99,7 +101,7 @@ void CameraController::StartStreamingInternal()
 	}
 
 	lock_guard<recursive_mutex> lock(imageSourceMutex_);
-	imageSource_ = std::make_shared<ImageSource>(liveViewUrl_);
+	imageSource_ = std::make_shared<ImageSource>(liveViewUrl_, flipImage_);
 	imageSource_->Start();
 }
 
@@ -153,10 +155,10 @@ int CameraController::invokeCameraService(const string& cmd)
 
 	ErrorStatus err;
 	if (err.SetStatus(pt)) {
-		cerr << err.StatusCode() << ":" << err.StatusMessage() << endl;
+		LogError("error %d:%s", err.StatusCode(), err.StatusMessage());
 		return false;
 	}
 
-	cerr << "InvokeCameraService returned unknown response" << endl;
+	LogWarn("InvokeCameraService returned unknown response");
 	return false;
 }

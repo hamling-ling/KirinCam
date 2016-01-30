@@ -8,7 +8,7 @@
 
 class AsyncTask;
 
-typedef boost::function<void(AsyncTask*)> asyncTaskCallback_t;
+typedef boost::function<void(AsyncTask*, uint32_t)> asyncTaskCallback_t;
 
 class AsyncTask
 {
@@ -23,6 +23,8 @@ public:
 protected:
 	boost::asio::io_service& IoService();
 	boost::asio::io_service _ioService;
+	void RaiseEvent(const boost::system::error_code &e);
+	void RaiseEvent(uint32_t errorCode);
 
 private:
 	asyncTaskCallback_t _callback;
@@ -33,6 +35,5 @@ private:
 	bool _isStopping;
 
 	void Run();
-	void RaiseEvent(const boost::system::error_code &e);
 };
 

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StreamSource.h"
 #include <sstream>
 #include <iostream>//debug
@@ -46,7 +45,7 @@ void StreamSource::Run(atomic<bool>& canceled, AsyncWorkArg& arg)
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Exception: " << e.what() << "\n";
+		LogError("Exception:", e.what());
 	}
 }
 
@@ -77,12 +76,12 @@ void StreamSource::downloadStream(std::atomic<bool>& canceled) throw(std::except
 	std::getline(response_stream, status_message);
 	if (!response_stream || http_version.substr(0, 5) != "HTTP/")
 	{
-		std::cout << "Invalid response\n";
+		LogError("Invalid response");
 		throw std::runtime_error("Invalid response");
 	}
 	if (status_code != 200)
 	{
-		std::cout << "Response returned with status code " << status_code << "\n";
+		LogError("Response returned with status code %d", status_code);
 		throw std::runtime_error("200");
 	}
 

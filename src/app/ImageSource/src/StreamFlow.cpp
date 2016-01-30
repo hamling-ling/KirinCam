@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StreamFlow.h"
 #include "Common.h"
 

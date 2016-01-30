@@ -22,6 +22,10 @@ using boost::lexical_cast;
 
 bool g_stop = false;
 
+void finderCallback(AsyncTask* task, uint32_t errorCode) {
+	cout << "finderCallback : " << errorCode << endl;
+}
+
 void playImages(std::shared_ptr<CameraController>& cp)
 {
 	cv::namedWindow("ImageWindow", CV_WINDOW_AUTOSIZE | CV_WINDOW_FREERATIO);
@@ -62,7 +66,11 @@ int main()
 	try
 	{
 		DeviceFinder finder;
-		finder.Start(NULL);
+		asyncTaskCallback_t findCallback = std::bind(
+			&finderCallback,
+			std::placeholders::_1,
+			std::placeholders::_2);
+		finder.Start(findCallback);
 		std::shared_ptr<CameraController> cp;
 
 		std::string input;
@@ -99,7 +107,7 @@ int main()
 				observer.ShootModeChanged.connect(eventHandler);
 				cp->SubscribeEvent();
 
-				cp->StartStreaming();
+				cp->StartStreaming(false);
 
 				// if not started yet
 				if (!playThread.joinable()) {

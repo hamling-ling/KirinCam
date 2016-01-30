@@ -1,10 +1,6 @@
-#include "stdafx.h"
 #include "EventObserver.h"
 #include "Common.h"
 #include "ErrorStatus.h"
-
-#include <sstream>// debug
-#include <iostream>// debug
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -94,7 +90,7 @@ const CameraState& EventObserver::GetCameraState() const
 
 void EventObserver::EventReceiveProc()
 {
-	cout << __FUNCTION__ << " ENT" << endl;
+	LogEntExt;
 
 	boost::system::error_code error = boost::asio::error::host_not_found;
 	if (!connect()) {
@@ -105,7 +101,7 @@ void EventObserver::EventReceiveProc()
 	ptree pt;
 	{
 		if (InvokeCommand(_socket, _server, _port, _path, kImmediateGetEventRequest, pt) != 0) {
-			cout << "EventSubscription Failed" << endl;
+			LogError("EventSubscription Failed");
 			// todo:Raise event here
 			return;
 		}
@@ -139,7 +135,6 @@ void EventObserver::EventReceiveProc()
 			return;
 		}
 	}
-	cout << __FUNCTION__ << " EXIT" << endl;
 }
 
 bool EventObserver::connect()
@@ -151,7 +146,7 @@ bool EventObserver::connect()
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Exception: " << e.what() << "\n";
+		LogError("Exception: %s", e.what());
 		result = false;
 	}
 	return result;
@@ -165,6 +160,7 @@ bool EventObserver::updateState(boost::property_tree::ptree& pt)
 			return true;
 		}
 		cerr << status.StatusCode() << ":" << status.StatusMessage() << endl;
+		LogError("error %d:%s", status.StatusCode(), status.StatusMessage());
 		return false;
 	}
 

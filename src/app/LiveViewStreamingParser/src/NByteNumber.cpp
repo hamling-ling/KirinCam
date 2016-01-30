@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "NByteNumber.h"
 
 SingleByteNumber::SingleByteNumber() : _value(0) {}

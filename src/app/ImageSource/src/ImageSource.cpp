@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ImageSource.h"
 #include "StreamSource.h"
 #include "StreamDemuxer.h"
@@ -8,11 +7,11 @@
 
 using namespace std;
 
-ImageSource::ImageSource(const std::string& url)
+ImageSource::ImageSource(const std::string& url, bool flipImage)
 {
 	_source = make_shared<StreamSource>(url);
 	_demuxer = make_shared<StreamDemuxer>();
-	_decoder = make_shared<StreamDecoder>();
+	_decoder = make_shared<StreamDecoder>(flipImage);
 	_imagePresenter = make_shared<StreamImagePresenter>();
 	_frameInfoPresenter = make_shared<StreamFrameInfoPresenter>();
 
